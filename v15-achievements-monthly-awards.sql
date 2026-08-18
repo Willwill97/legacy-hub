@@ -1,0 +1,3 @@
+-- Legacy Hub V15 backend is installed in the connected Supabase project.
+-- Adds achievement_definitions, creator_achievements, monthly_awards,
+-- refresh_my_achievements(date), and generate_monthly_awards(date).

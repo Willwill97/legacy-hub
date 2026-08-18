@@ -1,0 +1,3 @@
+-- Legacy Hub V14 backend is installed in the connected Supabase project.
+-- Adds battle_results, submit/verify RPCs, creator_performance and team_performance views.
+-- Only verified results contribute to official performance stats.

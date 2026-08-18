@@ -1,0 +1,2 @@
+-- V13 backend already installed in connected Supabase.
+-- Adds match_notification_reads and secure accept_match_offer(uuid).
