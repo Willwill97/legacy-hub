@@ -123,11 +123,198 @@
 .motivationSpark{display:inline-block;animation:sparkPulse 1.8s ease-in-out infinite}@keyframes sparkPulse{50%{transform:scale(1.18) rotate(4deg);filter:drop-shadow(0 0 7px rgba(255,137,149,.5))}}
 .motivationNext{margin-left:auto}
 @media(prefers-reduced-motion:reduce){.motivationSpark{animation:none!important}.motivationQuote{transition:none!important}}
+
+/* V25.2 Neon Creator Command Dashboard */
+#Dashboard{position:relative}
+.dash2{display:grid;gap:14px}
+.dashHero{
+  position:relative;overflow:hidden;min-height:210px;
+  background:
+    linear-gradient(rgba(9,9,14,.30),rgba(9,9,14,.30)),
+    radial-gradient(circle at 82% 28%,rgba(185,47,255,.32),transparent 26%),
+    radial-gradient(circle at 95% 85%,rgba(229,43,62,.16),transparent 26%),
+    linear-gradient(135deg,#120f18 0%,#0a0b10 55%,#160b14 100%);
+  border:1px solid #633078;
+  box-shadow:0 0 0 1px rgba(180,50,255,.05) inset,0 14px 40px rgba(0,0,0,.28)
+}
+.dashHero:before{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:.42;
+  background:
+    linear-gradient(115deg,transparent 0 64%,rgba(181,56,255,.08) 64.3% 64.6%,transparent 65%),
+    linear-gradient(160deg,transparent 0 71%,rgba(229,43,62,.07) 71.2% 71.5%,transparent 72%);
+}
+.dashHero:after{
+  content:'';position:absolute;right:26px;bottom:13px;width:210px;height:42px;border-radius:50%;
+  border:2px solid rgba(223,55,255,.46);
+  box-shadow:0 0 24px rgba(223,55,255,.34),0 0 55px rgba(229,43,62,.12) inset;
+  animation:landingRing 2.8s ease-in-out infinite;
+}
+@keyframes landingRing{50%{transform:scaleX(1.08);opacity:.72}}
+.dashHeroText{max-width:75%;position:relative;z-index:2}
+.dashGreeting{font-size:clamp(34px,4.2vw,58px);font-weight:1000;line-height:.98;margin:8px 0 10px;letter-spacing:-1.7px}
+.dashGreeting span{background:linear-gradient(90deg,#9f48ff,#d038ff,#ff4869);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dashTagline{font-size:14px;color:#dddde5}
+.dashAvatar{
+  position:absolute;right:70px;top:22px;width:145px;height:145px;border-radius:50%;object-fit:cover;
+  border:4px solid #bb39ff;background:#0c0d12;z-index:3;
+  box-shadow:0 0 0 5px rgba(198,56,255,.13),0 0 30px rgba(193,48,255,.75),0 0 62px rgba(229,43,62,.28);
+  animation:floatProfile 3.2s ease-in-out infinite;
+}
+@keyframes floatProfile{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.avatarArrow{position:absolute;right:30px;top:62px;color:#ce58ff;font-size:28px;font-weight:1000;animation:arrowFloat 2s ease-in-out infinite;z-index:3}
+.avatarArrow.down{top:126px;animation-delay:.25s}
+@keyframes arrowFloat{50%{transform:translateY(-6px);opacity:.65}}
+
+.dashStats4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:18px;max-width:920px;border:1px solid #2d2d36;border-radius:14px;overflow:hidden;background:rgba(9,10,14,.72);backdrop-filter:blur(10px);position:relative;z-index:2}
+.dashStat{border:0;border-right:1px solid #292a31;border-radius:0;background:linear-gradient(180deg,rgba(20,20,26,.96),rgba(12,13,18,.96));padding:14px 16px;min-height:94px;position:relative}
+.dashStat:last-child{border-right:0}
+.dashStat small{font-size:8px;letter-spacing:1px;color:#a8aab2}
+.dashStat strong{font-size:22px;margin-top:5px}
+.statRing{position:absolute;right:12px;top:18px;width:56px;height:56px;border-radius:50%;background:conic-gradient(#b03cff var(--ring),#2b2d35 0);display:grid;place-items:center;box-shadow:0 0 18px rgba(176,60,255,.14)}
+.statRing.red{background:conic-gradient(#f13a4d var(--ring),#2b2d35 0)}
+.statRing.blue{background:conic-gradient(#50b7ff var(--ring),#2b2d35 0)}
+.statRing:after{content:'';position:absolute;inset:7px;background:#111319;border-radius:50%}
+.dashStat .bar{width:65%;margin-top:12px}
+
+.commandGrid{display:grid;grid-template-columns:.95fr 1.08fr 1.12fr;gap:14px}
+.commandCard{border:1px solid #4c3159;background:linear-gradient(145deg,#111217,#0b0d11);border-radius:16px;padding:18px;position:relative;overflow:hidden;min-height:275px}
+.commandCard h2,.commandCard h3{margin-bottom:4px}
+.commandCard.missionCard{border-color:#6d2f82}
+.missionTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.missionPct{font-size:42px;font-weight:1000;color:#c45cff}
+.missionBars{display:grid;gap:16px;margin-top:14px}
+.missionLine{display:grid;grid-template-columns:100px 1fr 80px;gap:10px;align-items:center}
+.missionLine .bar{height:10px}
+.missionCircleWrap{display:flex;align-items:center;gap:16px;margin-top:18px}
+.missionCircle{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#a72cff var(--pct),#272933 0);position:relative;box-shadow:0 0 22px rgba(167,44,255,.18)}
+.missionCircle:after{content:'';position:absolute;inset:9px;background:#111319;border-radius:50%}
+.missionCircle strong{position:relative;z-index:2;font-size:20px}
+.missionCoach{font-size:15px;font-weight:900}
+.missionArrow{position:absolute;right:12px;bottom:8px;font-size:44px;color:rgba(199,84,255,.35)}
+
+.nextBattleCard{border-color:#8d292f;background:radial-gradient(circle at 50% 50%,rgba(229,43,62,.18),transparent 43%),linear-gradient(145deg,#160e11,#0b0d11)}
+.nextBattleRibbon{position:absolute;right:-31px;top:17px;transform:rotate(45deg);background:#d51f35;color:#fff;padding:5px 34px;font-size:8px;font-weight:1000;letter-spacing:1px}
+.nextBattleTitle{text-align:center;color:#ff4c5f;font-size:17px;font-weight:1000;letter-spacing:1px}
+.battleFaces{display:grid;grid-template-columns:1fr 66px 1fr;align-items:center;gap:10px;margin:16px 0 10px;text-align:center}
+.battleFace img,.battleFaceFallback{width:68px;height:68px;border-radius:50%;margin:auto;border:2px solid #aa34ff;object-fit:cover;background:#19131e;display:grid;place-items:center;font-weight:1000;font-size:20px}
+.battleFace.opponent .battleFaceFallback{border-color:#e53243}
+.battleVs{font-size:42px;font-weight:1000;color:#fff;text-shadow:0 0 18px rgba(229,43,62,.75)}
+.battleTime{text-align:center;font-weight:900;margin:4px 0 8px}
+.battleCountdown{text-align:center;border:1px solid #6d222a;border-radius:10px;padding:10px;background:rgba(31,10,14,.72);font-size:28px;font-weight:1000;letter-spacing:2px}
+.battleCountdown small{font-size:8px;display:block;color:#a9aab2;letter-spacing:1px;margin-top:4px}
+.openCommand{width:100%;margin-top:10px;box-shadow:0 0 18px rgba(229,43,62,.24)}
+
+.quickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.quickAction{min-height:95px;text-align:center;padding:14px 10px;border:1px solid #282a31;border-radius:12px;background:#111319}
+.quickAction:hover{border-color:#7d39a1;background:#18111f;box-shadow:0 0 18px rgba(166,54,255,.12)}
+.quickAction .quickIcon{font-size:26px;display:block}
+.quickAction b{font-size:11px;margin-top:7px}
+.quickAction small{display:none}
+.quickAction.alert{border-color:#6b2530}
+
+.dashboardLower{display:grid;grid-template-columns:1.08fr 1.08fr .98fr .98fr;gap:14px}
+.lowerCard{min-height:260px}
+.feedList{max-height:220px;overflow:auto;padding-right:4px}
+.feedItem{background:transparent;border-left:0;border-bottom:1px solid #24262e;border-radius:0;padding:10px 4px}
+.feedItem:last-child{border-bottom:0}
+.leaderSnapRow{padding:10px 9px}
+.leaderSnapRow.me{border-color:#ce2cff;background:linear-gradient(90deg,#25102e,#17121d)}
+.motivationCard{min-height:260px;display:flex;flex-direction:column;justify-content:space-between}
+.motivationQuote{font-size:clamp(20px,2.2vw,30px)}
+.creatorSpotCard{border-color:#6c347d;background:radial-gradient(circle at 50% 55%,rgba(194,57,255,.13),transparent 45%),linear-gradient(145deg,#15101a,#0e1014)}
+.creatorSpot{flex-direction:column;text-align:center}
+.spotAvatar,.spotAvatarFallback{width:96px;height:96px}
+.creatorSpot .badge{margin-top:8px}
+.spotNavDots{display:flex;justify-content:center;gap:5px;margin-top:10px}.spotNavDots i{width:6px;height:6px;border-radius:50%;background:#40424b}.spotNavDots i:first-child{background:#c438ff}
+
+.sidebarProfileCard{margin-top:auto}
+
+@media(prefers-reduced-motion:reduce){
+  .dashAvatar,.dashHero:after,.avatarArrow{animation:none!important}
+}
+@media(max-width:1150px){
+  .commandGrid{grid-template-columns:1fr 1fr}.commandGrid .quickCard{grid-column:1/-1}
+  .dashboardLower{grid-template-columns:1fr 1fr}
+  .dashHeroText{max-width:70%}
+}
+@media(max-width:780px){
+  .dashHeroText{max-width:100%}.dashAvatar,.avatarArrow,.dashHero:after{display:none}
+  .dashStats4{grid-template-columns:1fr 1fr}.dashStat:nth-child(2){border-right:0}.dashStat:nth-child(-n+2){border-bottom:1px solid #292a31}
+  .commandGrid,.dashboardLower{grid-template-columns:1fr}
+  .quickGrid{grid-template-columns:1fr 1fr}
+  .commandGrid .quickCard{grid-column:auto}
+  .missionLine{grid-template-columns:1fr}
+}
 </style></head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
-<section id="Dashboard" class="section active"><div class="dash2"><div class="card dashHero"><div class="eyebrow">LEGACY CREATOR HOME</div><div id="dashGreeting" class="dashGreeting">WELCOME BACK TO <span>LEGACY HUB</span></div><p class="dashTagline">Together, we build a Legacy. Your progress, battles and network — alive in one place.</p><img id="dashAvatar" class="dashAvatar hidden" alt=""><div class="dashStats4"><div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Progress')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Progress')"><small>🔥 LIVE THIS MONTH</small><strong id="hoursStat">0h 00m</strong><div class="bar"><i id="hoursBar" style="width:0%"></i></div></div><div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Progress')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Progress')"><small>📅 QUALIFYING DAYS</small><strong id="daysStat">0 / 8</strong><div class="bar"><i id="daysBar" style="width:0%"></i></div></div><div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Leaderboard')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Leaderboard')"><small>🏆 BATTLE RECORD</small><strong id="dashRecord">0–0</strong><small id="dashRecordMeta">No verified battles</small></div><div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Profile')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Profile')"><small>💎 BATTLE DIAMONDS</small><strong id="dashDiamonds">0</strong><small id="battleCount">0 upcoming battles</small></div></div></div><div id="dashboardBattleCommand" class="dashBattleShell"></div><div class="dashColumns"><div class="card missionCard dashClickable" id="missionCard" role="button" tabindex="0" onclick="showSection('Progress')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Progress')"><div class="missionTop"><div><div class="eyebrow">🎯 MONTHLY MISSION</div><h2 id="missionMonth" style="margin:5px 0">Creator target</h2></div><div id="missionPct" class="missionPct">0%</div></div><div class="missionBars"><div class="missionLine"><b>🔥 Live hours</b><div class="bar"><i id="missionHoursBar" style="width:0%"></i></div><span id="missionHoursText" class="muted">0 / 20h</span></div><div class="missionLine"><b>📅 Live days</b><div class="bar"><i id="missionDaysBar" style="width:0%"></i></div><span id="missionDaysText" class="muted">0 / 8</span></div></div><p id="missionMessage" class="muted" style="margin-top:14px">Your monthly mission is loading…</p></div><div class="card"><div class="eyebrow">⚡ QUICK ACTIONS</div><h3 style="margin:5px 0">Jump back in</h3><div id="quickActions" class="quickGrid"></div></div></div><div class="card motivationCard"><div class="eyebrow"><span class="motivationSpark">🔥</span> TODAY'S PUSH</div><div id="motivationQuote" class="motivationQuote">Keep showing up. Your next breakthrough could be one LIVE away.</div><div class="motivationMeta"><span id="motivationReason" class="motivationReason">DAILY MOTIVATION</span><button class="btn ghost tiny motivationNext" onclick="nextMotivationQuote()">Give me another →</button></div></div><div class="dashColumns"><div class="card"><div class="teamHead"><div><div class="eyebrow">🔔 YOUR LEGACY FEED</div><h3 style="margin:5px 0">What's happening</h3></div><button class="btn ghost tiny" onclick="openNotificationCentre()">View all</button></div><div id="legacyFeed" class="feedList"><p class="muted">No activity yet.</p></div></div><div style="display:grid;gap:14px"><div class="card dashClickable" role="button" tabindex="0" onclick="if(event.target.tagName!=='BUTTON')showSection('Leaderboard')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Leaderboard')"><div class="teamHead"><div><div class="eyebrow">🏆 LEADERBOARD</div><h3 style="margin:5px 0">This month</h3></div><button class="btn ghost tiny" onclick="showSection('Leaderboard')">Full table</button></div><div id="leaderSnapshot" class="leaderSnapshot"><p class="muted">Leaderboard loading…</p></div></div><div class="card dashClickable" role="button" tabindex="0" onclick="showSection('Creators')" onkeydown="if(event.key==='Enter'||event.key===' ')showSection('Creators')"><div class="eyebrow">⭐ CREATOR SPOTLIGHT</div><div id="creatorSpotlight"><p class="muted">Spotlight loading…</p></div></div></div></div><div id="nextBattle" class="hidden"></div></div></section>
+<section id="Dashboard" class="section active">
+<div class="dash2">
+  <div class="card dashHero">
+    <div class="dashHeroText">
+      <div class="eyebrow">REDBULL LEGACY NETWORK</div>
+      <div id="dashGreeting" class="dashGreeting">GOOD EVENING, WILL 👋<br><span>WELCOME BACK TO LEGACY HUB</span></div>
+      <p class="dashTagline">Together, we build a Legacy.</p>
+      <div class="dashStats4">
+        <div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Progress')"><small>🔥 LIVE THIS MONTH</small><strong id="hoursStat">0h 00m</strong><small id="hoursMeta">0% of 20h goal</small><div class="bar"><i id="hoursBar" style="width:0%"></i></div><div id="hoursRing" class="statRing" style="--ring:0%"></div></div>
+        <div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Progress')"><small>📅 QUALIFYING DAYS</small><strong id="daysStat">0 / 8</strong><small id="daysMeta">0% of 8 days</small><div class="bar"><i id="daysBar" style="width:0%"></i></div><div id="daysRing" class="statRing" style="--ring:0%"></div></div>
+        <div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Leaderboard')"><small>🏆 BATTLE RECORD</small><strong id="dashRecord">0 - 0</strong><small id="dashRecordMeta">No verified battles</small><div id="battleRing" class="statRing red" style="--ring:0%"></div></div>
+        <div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Profile')"><small>💎 BATTLE DIAMONDS</small><strong id="dashDiamonds">0</strong><small id="diamondMeta">Battle total</small><div id="diamondRing" class="statRing blue" style="--ring:100%"></div></div>
+      </div>
+    </div>
+    <img id="dashAvatar" class="dashAvatar hidden" alt="">
+    <div class="avatarArrow">↑</div><div class="avatarArrow down">↓</div>
+  </div>
+
+  <div class="commandGrid">
+    <div class="commandCard missionCard dashClickable" id="missionCard" role="button" tabindex="0" onclick="showSection('Progress')">
+      <div class="missionTop"><div><div class="eyebrow">🎯 MONTHLY MISSION</div><h2 id="missionMonth">AUGUST 2026</h2></div><div id="missionPct" class="missionPct">0%</div></div>
+      <div class="missionBars">
+        <div class="missionLine"><b>🔥 Live Hours</b><div class="bar"><i id="missionHoursBar" style="width:0%"></i></div><span id="missionHoursText" class="muted">0 / 20h</span></div>
+        <div class="missionLine"><b>📅 Live Days</b><div class="bar"><i id="missionDaysBar" style="width:0%"></i></div><span id="missionDaysText" class="muted">0 / 8</span></div>
+      </div>
+      <div class="missionCircleWrap"><div id="missionCircle" class="missionCircle" style="--pct:0%"><strong id="missionCircleText">0%</strong></div><div><div id="missionCoach" class="missionCoach">Keep pushing.</div><p id="missionMessage" class="muted">Your monthly mission is loading…</p></div></div>
+      <div class="missionArrow">↗</div>
+    </div>
+
+    <div id="dashboardNextBattle" class="commandCard nextBattleCard">
+      <div class="nextBattleRibbon">UPCOMING</div><div class="nextBattleTitle">⚔️ NEXT BATTLE</div>
+      <p class="muted" style="text-align:center;margin-top:20px">No upcoming battle booked.</p>
+    </div>
+
+    <div class="commandCard quickCard">
+      <div class="teamHead"><div><div class="eyebrow">⚡ QUICK ACTIONS</div><h3>Jump back in</h3></div><span class="muted">⚙ Customize</span></div>
+      <div id="quickActions" class="quickGrid"></div>
+    </div>
+  </div>
+
+  <div class="dashboardLower">
+    <div class="commandCard lowerCard">
+      <div class="teamHead"><div><div class="eyebrow">🔥 LEGACY FEED</div></div><button class="btn ghost tiny" onclick="openNotificationCentre()">View all</button></div>
+      <div id="legacyFeed" class="feedList"><p class="muted">No activity yet.</p></div>
+    </div>
+
+    <div class="commandCard lowerCard">
+      <div class="teamHead"><div><div class="eyebrow">🏆 LEADERBOARD SNAPSHOT</div></div><span class="badge">THIS MONTH</span></div>
+      <div id="leaderSnapshot" class="leaderSnapshot"><p class="muted">Leaderboard loading…</p></div>
+      <button class="btn ghost" style="width:100%;margin-top:10px" onclick="showSection('Leaderboard')">View Full Leaderboard →</button>
+    </div>
+
+    <div class="commandCard motivationCard">
+      <div><div class="eyebrow"><span class="motivationSpark">🔥</span> TODAY'S PUSH</div><div id="motivationQuote" class="motivationQuote">You don’t need to feel ready. You just need to go LIVE.</div></div>
+      <div><div id="motivationReason" class="motivationReason">DAILY MOTIVATION</div><button class="btn ghost tiny" style="width:100%;margin-top:12px" onclick="nextMotivationQuote()">Give me another →</button></div>
+    </div>
+
+    <div class="commandCard lowerCard creatorSpotCard dashClickable" role="button" tabindex="0" onclick="showSection('Creators')">
+      <div class="eyebrow">⭐ CREATOR SPOTLIGHT</div>
+      <div id="creatorSpotlight"><p class="muted">Spotlight loading…</p></div>
+      <div class="spotNavDots"><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  <div id="nextBattle" class="hidden"></div>
+</div>
+</section>
 <section id="BattleReminders" class="sectionSub"><div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">BATTLE REMINDERS</div><h3 style="margin-bottom:4px">Your upcoming battle alerts</h3><p class="muted">Legacy Hub will surface reminders 24 hours and 1 hour before battles you have claimed.</p></div><span class="badge" id="battleReminderCount">0 alerts</span></div><div id="battleReminderList" class="reminderStack"><p class="muted">No battle reminders right now.</p></div></div></section>
 <section id="Teams" class="section"><div class="card"><div class="eyebrow">NETWORK DIRECTORY</div><h2>Legacy Teams</h2><div id="teamGrid" class="teamGrid"></div></div></section>
 <section id="Battles" class="section">
@@ -400,16 +587,52 @@ function renderBattles(){
 function renderProgress(){const mins=sessions.reduce((a,s)=>a+(s.minutes||0),0),days=new Set(sessions.filter(s=>s.qualifying_day).map(s=>s.session_date)).size;hoursStat.textContent=`${Math.floor(mins/60)}h ${String(mins%60).padStart(2,'0')}m`;daysStat.textContent=`${days} / 8`;hoursBar.style.width=`${Math.min(100,mins/1200*100)}%`;daysBar.style.width=`${Math.min(100,days/8*100)}%`;sessionList.innerHTML=sessions.map(s=>`<div class="battle"><div><b>${s.session_date}</b><small>${s.minutes} minutes ${s.qualifying_day?'· Qualifying LIVE day':''}</small></div></div>`).join('')||'<p class="muted">No LIVE sessions logged yet.</p>'}
 function renderDashboard(){
  const now=new Date(),hour=now.getHours(),greeting=hour<12?'GOOD MORNING':hour<18?'GOOD AFTERNOON':'GOOD EVENING',first=(profile?.display_name||profile?.tiktok_handle||'CREATOR').replace('@','').split(' ')[0].toUpperCase();
- const dg=document.getElementById('dashGreeting');if(dg)dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK.</span>`;
+ const dg=document.getElementById('dashGreeting');if(dg)dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK TO LEGACY HUB</span>`;
  const da=document.getElementById('dashAvatar');if(da&&profile?.avatar_url){da.src=profile.avatar_url;da.classList.remove('hidden')}else da?.classList.add('hidden');
- const mins=sessions.reduce((a,s)=>a+(Number(s.minutes)||0),0),days=new Set(sessions.filter(s=>s.qualifying_day).map(s=>s.session_date)).size,hPct=Math.min(100,mins/1200*100),dPct=Math.min(100,days/8*100),mission=Math.round((hPct+dPct)/2);
- const mp=document.getElementById('missionPct');if(mp)mp.textContent=`${mission}%`;document.getElementById('missionHoursBar').style.width=`${hPct}%`;document.getElementById('missionDaysBar').style.width=`${dPct}%`;document.getElementById('missionHoursText').textContent=`${Math.floor(mins/60)}h ${mins%60}m / 20h`;document.getElementById('missionDaysText').textContent=`${days} / 8`;document.getElementById('missionMonth').textContent=now.toLocaleDateString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
- const mc=document.getElementById('missionCard');mc?.classList.toggle('missionComplete',hPct>=100&&dPct>=100);const remainM=Math.max(0,1200-mins),remainD=Math.max(0,8-days);document.getElementById('missionMessage').innerHTML=hPct>=100&&dPct>=100?'🎉 <b>MONTHLY TARGET COMPLETE.</b> You smashed it.':`Only <b>${Math.floor(remainM/60)}h ${remainM%60}m</b> + <b>${remainD} live day${remainD===1?'':'s'}</b> remaining.`;
- const perf=creatorPerformance.find(x=>x.creator_id===profile?.id)||{};const wins=Number(perf.wins||0),losses=Number(perf.losses||0),diamonds=Number(perf.diamonds||0);document.getElementById('dashRecord').textContent=`${wins}–${losses}`;document.getElementById('dashRecordMeta').textContent=`${Number(perf.battles||0)} verified battle${Number(perf.battles||0)===1?'':'s'}`;document.getElementById('dashDiamonds').textContent=diamonds>=1000000?`${(diamonds/1000000).toFixed(1)}M`:diamonds>=1000?`${(diamonds/1000).toFixed(1)}K`:diamonds.toLocaleString();
- const mine=preview?battles:battles.filter(b=>b.claimed_by===profile.id||b.status==='available'),upcoming=mine.filter(b=>new Date(b.starts_at)>now&&b.status!=='cancelled');battleCount.textContent=`${upcoming.length} upcoming battle${upcoming.length===1?'':'s'}`;const next=upcoming.sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];nextBattle.innerHTML=next?`${new Date(next.starts_at).toLocaleString('en-GB')} vs ${escapeHtml(next.opponent_handle||'TBC')}`:'';
- const quick=document.getElementById('quickActions'),admin=['network_admin','team_manager'].includes(profile?.role);quick.innerHTML=`<button class="quickAction" onclick="showSection('Battles')"><span class="quickIcon">⚔️</span><b>${admin?'Manage Battles':'Find a Battle'}</b><small class="muted">Battle Hub</small></button><button class="quickAction" onclick="showSection('BattlePosters')"><span class="quickIcon">🖼️</span><b>${admin?'Battle Posters':'My Posters'}</b><small class="muted">Open artwork</small></button><button class="quickAction" onclick="showSection('LiveProgress')"><span class="quickIcon">🔥</span><b>Log LIVE Session</b><small class="muted">Update progress</small></button><button class="quickAction" onclick="showSection('${admin?'Announcements':'Creators'}')"><span class="quickIcon">${admin?'📢':'👥'}</span><b>${admin?'Announcement':'Creators'}</b><small class="muted">${admin?'Reach the network':'Explore Legacy'}</small></button>`;
- renderDashboardFeed();renderDashboardLeaderboard();renderCreatorSpotlight();renderMotivationQuote();renderBattleCommandCentre();setTimeout(()=>document.querySelectorAll('.dashStat strong').forEach(x=>{x.classList.remove('countPop');void x.offsetWidth;x.classList.add('countPop')}),40);
+
+ const mins=sessions.reduce((a,s)=>a+(Number(s.minutes)||0),0),days=new Set(sessions.filter(s=>s.qualifying_day).map(s=>s.session_date)).size;
+ const hPct=Math.min(100,mins/1200*100),dPct=Math.min(100,days/8*100),mission=Math.round((hPct+dPct)/2);
+ hoursStat.textContent=`${Math.floor(mins/60)}h ${String(mins%60).padStart(2,'0')}m`;daysStat.textContent=`${days} / 8`;hoursBar.style.width=`${hPct}%`;daysBar.style.width=`${dPct}%`;
+ const hm=document.getElementById('hoursMeta'),dm=document.getElementById('daysMeta');if(hm)hm.textContent=`${Math.round(hPct)}% of 20h goal`;if(dm)dm.textContent=`${Math.round(dPct)}% of 8 days`;
+ document.getElementById('hoursRing')?.style.setProperty('--ring',`${hPct}%`);document.getElementById('daysRing')?.style.setProperty('--ring',`${dPct}%`);
+
+ const perf=creatorPerformance.find(x=>x.creator_id===profile?.id)||{},wins=Number(perf.wins||0),losses=Number(perf.losses||0),battlesN=Number(perf.battles||0),diamonds=Number(perf.diamonds||0),winRate=battlesN?Math.round(wins/battlesN*100):0;
+ document.getElementById('dashRecord').textContent=`${wins} - ${losses}`;document.getElementById('dashRecordMeta').textContent=battlesN?`${winRate}% win rate`:'No verified battles';document.getElementById('battleRing')?.style.setProperty('--ring',`${winRate}%`);
+ document.getElementById('dashDiamonds').textContent=diamonds>=1000000?`${(diamonds/1000000).toFixed(1)}M`:diamonds>=1000?`${(diamonds/1000).toFixed(0)}K`:diamonds.toLocaleString();
+ const diamondMeta=document.getElementById('diamondMeta');if(diamondMeta)diamondMeta.textContent=battlesN?`${battlesN} verified battle${battlesN===1?'':'s'}`:'Battle total';
+
+ document.getElementById('missionPct').textContent=`${mission}%`;document.getElementById('missionCircleText').textContent=`${mission}%`;document.getElementById('missionCircle').style.setProperty('--pct',`${mission}%`);
+ document.getElementById('missionHoursBar').style.width=`${hPct}%`;document.getElementById('missionDaysBar').style.width=`${dPct}%`;
+ document.getElementById('missionHoursText').textContent=`${Math.floor(mins/60)}h ${mins%60}m / 20h`;document.getElementById('missionDaysText').textContent=`${days} / 8`;document.getElementById('missionMonth').textContent=now.toLocaleDateString('en-GB',{month:'long',year:'numeric'}).toUpperCase();
+ const remainM=Math.max(0,1200-mins),remainD=Math.max(0,8-days),coach=document.getElementById('missionCoach');
+ if(hPct>=100&&dPct>=100){if(coach)coach.textContent='Mission complete! 🔥';document.getElementById('missionMessage').innerHTML='You smashed this month’s target. Keep building.'}
+ else{if(coach)coach.textContent=mission>=70?"You're so close!":"Keep going, you've got this!";document.getElementById('missionMessage').innerHTML=`Only <b>${Math.floor(remainM/60)}h ${remainM%60}m</b> + <b>${remainD} live day${remainD===1?'':'s'}</b> remaining to hit your target.`}
+
+ renderDashboardNextBattle();
+
+ const quick=document.getElementById('quickActions'),admin=['network_admin','team_manager'].includes(profile?.role);
+ quick.innerHTML=`<button class="quickAction" onclick="showSection('Battles')"><span class="quickIcon">⚔️</span><b>${admin?'Manage Battles':'Find a Battle'}</b></button><button class="quickAction" onclick="showSection('Battles')"><span class="quickIcon">📅</span><b>My Battles</b></button><button class="quickAction" onclick="showSection('Battle Media')"><span class="quickIcon">🖼️</span><b>My Posters</b></button><button class="quickAction" onclick="showSection('Battle Media')"><span class="quickIcon">🔴</span><b>Battle Media</b></button><button class="quickAction" onclick="showSection('Progress')"><span class="quickIcon">🔥</span><b>Log Live</b></button><button class="quickAction" onclick="showSection('Progress')"><span class="quickIcon">📊</span><b>Progress</b></button><button class="quickAction" onclick="showSection('Leaderboard')"><span class="quickIcon">🏆</span><b>Leaderboard</b></button><button class="quickAction ${Number(unreadCount?.textContent||0)>0?'alert':''}" onclick="showSection('Announcements')"><span class="quickIcon">📣</span><b>Announcements</b></button>`;
+
+ renderDashboardFeed();renderDashboardLeaderboard();renderCreatorSpotlight();renderMotivationQuote();
 }
+
+function renderDashboardNextBattle(){
+ const box=document.getElementById('dashboardNextBattle');if(!box)return;
+ const now=new Date(),mine=battles.filter(b=>b.claimed_by===profile?.id&&b.status!=='cancelled'),next=mine.filter(b=>new Date(b.starts_at)>now).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))[0];
+ if(!next){box.innerHTML=`<div class="nextBattleTitle">⚔️ NEXT BATTLE</div><p class="muted" style="text-align:center;margin-top:34px">No upcoming battle booked.</p><button class="btn ghost openCommand" onclick="showSection('Battles')">Find a Battle →</button>`;return}
+ const creator=creatorDirectory.find(c=>c.id===next.claimed_by)||profile,opp=next.opponent_handle||'TBC',starts=new Date(next.starts_at);
+ const diff=Math.max(0,starts-now),secs=Math.floor(diff/1000),h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60),s=secs%60;
+ const avatar=creator?.avatar_url?`<img src="${escapeHtml(creator.avatar_url)}" alt="">`:`<div class="battleFaceFallback">${escapeHtml((creator?.display_name||creator?.tiktok_handle||'C').replace('@','')[0].toUpperCase())}</div>`;
+ box.innerHTML=`<div class="nextBattleRibbon">UPCOMING</div><div class="nextBattleTitle">⚔️ NEXT BATTLE</div><div class="battleFaces"><div class="battleFace">${avatar}<b>${escapeHtml(creator?.display_name||creator?.tiktok_handle||'You')}</b></div><div class="battleVs">VS</div><div class="battleFace opponent"><div class="battleFaceFallback">${escapeHtml(opp.replace('@','')[0]?.toUpperCase()||'?')}</div><b>${escapeHtml(opp)}</b></div></div><div class="battleTime">${starts.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase()} · ${starts.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div><div class="battleCountdown" data-dash-battle-start="${next.starts_at}">${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}<small>HOURS / MINUTES / SECONDS</small></div><button class="btn red openCommand" onclick="showSection('Battles');openBattleCommand('${next.id}')">OPEN COMMAND CENTRE →</button>`;
+ if(!window.dashboardBattleTicker)window.dashboardBattleTicker=setInterval(updateDashboardBattleCountdown,1000);
+}
+function updateDashboardBattleCountdown(){
+ const el=document.querySelector('[data-dash-battle-start]');if(!el)return;
+ let sec=Math.max(0,Math.floor((new Date(el.dataset.dashBattleStart)-new Date())/1000)),h=Math.floor(sec/3600);sec%=3600;const m=Math.floor(sec/60),s=sec%60;
+ el.childNodes[0].nodeValue=`${String(h).padStart(2,'0')} : ${String(m).padStart(2,'0')} : ${String(s).padStart(2,'0')}`;
+ if(h===0&&m===0&&s===0)renderDashboardNextBattle();
+}
+
 
 const motivationQuotes={
  general:[
@@ -471,20 +694,12 @@ function renderMotivationQuote(forceNext=false){
 function nextMotivationQuote(){renderMotivationQuote(true)}
 function renderDashboardFeed(){const box=document.getElementById('legacyFeed');if(!box)return;let rows=[];(notifications||[]).slice(0,4).forEach(n=>rows.push({icon:n.type==='battle_result'?'🏆':n.type==='poster_ready'?'🖼️':n.type==='announcement'?'📢':'🔔',title:n.title||'Legacy update',body:n.body||'',date:n.created_at}));if(!rows.length)(announcements||[]).slice(0,3).forEach(a=>rows.push({icon:'📢',title:a.title||'Network announcement',body:a.body||'',date:a.created_at}));box.innerHTML=rows.length?rows.map(r=>`<div class="feedItem"><b>${r.icon} ${escapeHtml(r.title)}</b><div class="muted">${escapeHtml((r.body||'').slice(0,115))}</div><div class="annMeta">${r.date?new Date(r.date).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</div></div>`).join(''):'<p class="muted">Your Legacy feed is quiet right now.</p>'}
 function renderDashboardLeaderboard(){const box=document.getElementById('leaderSnapshot');if(!box)return;const rows=[...(creatorPerformance||[])].sort((a,b)=>Number(b.points||0)-Number(a.points||0)||Number(b.wins||0)-Number(a.wins||0)).slice(0,3),medals=['🥇','🥈','🥉'];box.innerHTML=rows.length?rows.map((r,i)=>`<div class="leaderSnapRow ${r.creator_id===profile?.id?'me':''}"><span class="rankMedal">${medals[i]}</span><div><b>${escapeHtml(r.tiktok_handle||r.display_name||'Creator')}</b><div class="annMeta">${Number(r.wins||0)}W · ${Number(r.battles||0)} battles</div></div><b>${Number(r.points||0).toLocaleString()} pts</b></div>`).join(''):'<p class="muted">No verified results yet.</p>'}
-function renderCreatorSpotlight(){const box=document.getElementById('creatorSpotlight');if(!box)return;const ranked=[...(creatorPerformance||[])].sort((a,b)=>Number(b.wins||0)-Number(a.wins||0)||Number(b.diamonds||0)-Number(a.diamonds||0)),top=ranked[0];if(!top){box.innerHTML='<p class="muted">The first verified battle will unlock Creator Spotlight.</p>';return}const c=creatorDirectory.find(x=>x.id===top.creator_id),avatar=c?.avatar_url?`<img class="spotAvatar" src="${escapeHtml(c.avatar_url)}" alt="">`:`<div class="spotAvatarFallback">${escapeHtml((top.tiktok_handle||top.display_name||'?').replace('@','')[0].toUpperCase())}</div>`;box.innerHTML=`<div class="creatorSpot">${avatar}<div><h3 style="margin:0">${escapeHtml(top.tiktok_handle||top.display_name||'Creator')}</h3><div class="muted">🏆 ${Number(top.wins||0)} wins · 💎 ${Number(top.diamonds||0).toLocaleString()} diamonds</div><div class="badge" style="display:inline-block;margin-top:7px">LEGACY SPOTLIGHT</div></div></div>`}
-
-
-function myCommandBattles(){return battles.filter(b=>b.status!=='cancelled'&&(preview||b.claimed_by===profile?.id||['network_admin','team_manager'].includes(profile?.role))).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at))}
-function battlePhaseInfo(b){
- const diff=new Date(b.starts_at)-new Date(),result=battleResults.find(r=>r.battle_id===b.id);
- if(result||b.status==='completed')return {label:'BATTLE COMPLETE',cls:'complete',stage:result?.winner_profile_id===b.claimed_by?'🏆 VICTORY':'RESULT RECORDED'};
- if(diff<=-5*60*1000)return {label:'RESULT PENDING',cls:'',stage:'⏳ BATTLE COMPLETE'};
- if(diff<=0)return {label:'BATTLE LIVE NOW',cls:'live',stage:'🔴 BATTLE LIVE'};
- if(diff<=5*60*1000)return {label:'5 MINUTES',cls:'live',stage:'🚨 BATTLE IMMINENT'};
- if(diff<=15*60*1000)return {label:'15 MINUTES',cls:'',stage:'🔥 BUILD YOUR ROOM'};
- if(diff<=60*60*1000)return {label:'1 HOUR',cls:'',stage:'🔥 GET YOUR ROOM READY'};
- if(diff<=24*60*60*1000)return {label:'BATTLE TODAY',cls:'',stage:'⚔️ FIGHT NIGHT'};
- return {label:'UPCOMING',cls:'',stage:'BATTLE BOOKED'};
+function renderCreatorSpotlight(){
+ const box=document.getElementById('creatorSpotlight');if(!box)return;
+ const ranked=[...(creatorPerformance||[])].sort((a,b)=>Number(b.wins||0)-Number(a.wins||0)||Number(b.diamonds||0)-Number(a.diamonds||0)),top=ranked[0];
+ if(!top){box.innerHTML='<p class="muted">The first verified battle will unlock Creator Spotlight.</p>';return}
+ const c=creatorDirectory.find(x=>x.id===top.creator_id),avatar=c?.avatar_url?`<img class="spotAvatar" src="${escapeHtml(c.avatar_url)}" alt="">`:`<div class="spotAvatarFallback">${escapeHtml((top.tiktok_handle||top.display_name||'?').replace('@','')[0].toUpperCase())}</div>`;
+ box.innerHTML=`<div class="creatorSpot">${avatar}<div><h3 style="margin:0">${escapeHtml(top.tiktok_handle||top.display_name||'Creator')} ✓</h3><div class="muted" style="margin-top:8px">🔥 ${Number(top.wins||0)} battle wins</div><div class="muted">💎 ${Number(top.diamonds||0).toLocaleString()} diamonds</div><div class="muted">🏆 #1 Legacy Creator</div><button class="btn ghost tiny" style="margin-top:12px" onclick="event.stopPropagation();showSection('Creators')">View Creator Profile →</button></div></div>`
 }
 function formatBattleCountdown(starts){
  let ms=Math.max(0,new Date(starts)-new Date()),s=Math.floor(ms/1000),d=Math.floor(s/86400);s%=86400;const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),sec=s%60;
@@ -497,7 +712,7 @@ function renderBattleCommandCentre(){
  const all=myCommandBattles(),now=new Date(),upcoming=all.filter(b=>new Date(b.starts_at)>now),live=all.find(b=>new Date(b.starts_at)<=now&&new Date(b.starts_at)>new Date(now-2*60*60*1000)&&!battleResults.find(r=>r.battle_id===b.id));
  const chosen=(commandBattleId&&all.find(b=>b.id===commandBattleId))||live||upcoming[0];
  commandBattleId=chosen?.id||null;
- const full=document.getElementById('battleCommandCentre'),dash=document.getElementById('dashboardBattleCommand');
+ const full=document.getElementById('battleCommandCentre'),dash=null;
  if(!chosen){if(full)full.innerHTML='';if(dash)dash.innerHTML='';return}
  const phase=battlePhaseInfo(chosen),poster=battlePosters.find(p=>p.battle_id===chosen.id&&p.status==='submitted'),creator=creatorDirectory.find(c=>c.id===chosen.claimed_by)||profile,host=chosen.host_team?.name||teamName(chosen.team_id||creator?.team_id)||'Legacy',opponent=chosen.opponent_handle||'TBC';
  const countdown=(new Date(chosen.starts_at)>now)?formatBattleCountdown(chosen.starts_at):'00 : 00 : 00';
