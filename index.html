@@ -328,7 +328,7 @@
 </div>
 <div class="matchGrid"><div><div class="eyebrow" style="margin-top:14px">OPEN OPPONENT REQUESTS</div><div id="matchRequestList"></div></div><div><div class="eyebrow" style="margin-top:14px">YOUR MATCHMAKING ALERTS</div><div id="matchAlertList"></div></div></div>
 </div></section>
-<section id="Progress" class="section"><div class="card"><div class="teamHead"><div><div class="eyebrow">LIVE TRACKER</div><h2>Monthly progress</h2></div><button class="btn" onclick="showLiveForm()">+ Add LIVE session</button></div><div id="liveForm" class="hidden"><div class="row"><input id="liveDate" class="field" type="date" style="flex:1"><input id="liveMinutes" class="field" type="number" min="1" placeholder="Minutes live" style="flex:1"></div><button class="btn" onclick="addLive()">Save session</button></div><div id="sessionList" style="margin-top:14px"></div></div></section>
+<section id="Progress" class="section"><div class="card"><div class="teamHead"><div><div class="eyebrow">LIVE TRACKER</div><h2>Monthly progress</h2></div><button class="btn" onclick="showLiveForm()">+ Add LIVE session</button></div><div id="liveForm" class="hidden"><div class="row"><div style="flex:1"><label class="muted" for="liveDate">LIVE date</label><input id="liveDate" class="field" type="date"></div><div style="flex:1"><label class="muted" for="liveMinutes">Minutes LIVE</label><input id="liveMinutes" class="field" type="number" min="1" placeholder="e.g. 61"></div></div><p class="muted" style="margin:4px 0 10px">🔥 A qualifying LIVE day is <b>61 minutes or more</b>. You can add previous days as well.</p><button class="btn" onclick="addLive()">Save session</button></div><div id="sessionList" style="margin-top:14px"></div></div></section>
 
 <section id="Leaderboard" class="section">
 <div class="leaderGrid">
@@ -1238,7 +1238,16 @@ function showBattleForm(){battleForm.classList.toggle('hidden');battleDate.value
 async function createBattle(){if(preview){flash('Battle published in preview mode.');return}const teamId=profile.team_id;const starts=new Date(`${battleDate.value}T${battleTime.value}:00`).toISOString();const {error}=await sb.from('battles').insert({network_id:profile.network_id,host_team_id:teamId,created_by:profile.id,starts_at:starts,opponent_handle:battleOpp.value,opponent_team:battleOppTeam.value||null,format:battleFormat.value,status:'available'});if(error){flash(error.message);return}flash('Battle published');await refreshAll()}
 async function claimBattle(id){if(preview){const b=battles.find(x=>x.id===id);if(b)b.status='claimed';renderBattles();flash('Battle claimed in preview mode');return}const {data,error}=await sb.rpc('claim_battle',{battle_id:id});if(error){flash(error.message);return}flash('Battle claimed');await refreshAll()}
 function showLiveForm(){liveForm.classList.toggle('hidden');liveDate.value=new Date().toISOString().slice(0,10)}
-async function addLive(){const mins=Number(liveMinutes.value);if(!mins)return;if(preview){sessions.unshift({session_date:liveDate.value,minutes:mins,qualifying_day:mins>=61});renderProgress();flash('LIVE session added in preview mode');return}const {error}=await sb.from('live_sessions').insert({member_id:profile.id,session_date:liveDate.value,minutes:mins,qualifying_day:mins>=61,approved:false});if(error){flash(error.message);return}flash('LIVE session saved');await refreshAll()}
+async function addLive(){
+ const mins=Number(liveMinutes.value),date=liveDate.value;
+ if(!date){flash('Choose the LIVE date first');return}
+ if(!Number.isFinite(mins)||mins<1){flash('Enter how many minutes you were LIVE');return}
+ if(preview){sessions.unshift({session_date:date,minutes:mins,qualifying_day:mins>=61});renderProgress();flash(mins>=61?'Qualifying LIVE day added 🔥':'LIVE session added');return}
+ const {error}=await sb.from('live_sessions').insert({member_id:profile.id,session_date:date,minutes:mins,approved:false});
+ if(error){flash(error.message);return}
+ flash(mins>=61?'Qualifying LIVE day saved 🔥':'LIVE session saved — 61+ minutes qualifies as a LIVE day');
+ liveMinutes.value='';await refreshAll()
+}
 function adminCanManage(m){if(!profile||m.id===profile.id)return false;if(profile.role==='network_admin')return true;if(profile.role==='team_manager')return m.team_id===profile.team_id&&!['network_admin','team_manager'].includes(m.role);return false}
 function adminTeamOptions(current){return (teams.length?teams:teamFallback).map(t=>`<option value="${t.id||t.name}" ${((t.id||t.name)===current)?'selected':''}>${t.name}</option>`).join('')}
 function adminRoleOptions(current){const allowed=profile.role==='network_admin'?['member','supporter','battle_manager','team_manager','network_admin']:['member','supporter'];return allowed.map(r=>`<option value="${r}" ${r===current?'selected':''}>${prettyRole(r)}</option>`).join('')}
