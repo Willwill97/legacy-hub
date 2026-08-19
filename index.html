@@ -245,6 +245,10 @@
   .commandGrid .quickCard{grid-column:auto}
   .missionLine{grid-template-columns:1fr}
 }
+
+/* V25.3 Battle Management */
+.deleteBattleBtn{background:#321118!important;border:1px solid #6e202b!important;color:#ff9da8!important}
+.deleteBattleBtn:hover{background:#4a151f!important;border-color:#a52b3a!important;box-shadow:0 0 16px rgba(229,43,62,.14)}
 </style></head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
@@ -571,7 +575,7 @@ async function saveMyProfile(){
 
 function renderBattles(){
  battleList.innerHTML=battles.length?battles.map(b=>{
-   const d=new Date(b.starts_at),res=battleResults.find(r=>r.battle_id===b.id),mine=b.claimed_by===profile?.id,canManage=['network_admin','team_manager'].includes(profile?.role);
+   const d=new Date(b.starts_at),res=battleResults.find(r=>r.battle_id===b.id),mine=b.claimed_by===profile?.id,canManage=['network_admin','team_manager'].includes(profile?.role),canDelete=profile?.role==='network_admin';
    let action='';
    if(b.status==='available') action=`<button class="btn red" onclick="claimBattle('${b.id}')">Claim</button>`;
    else if(res) action=`<span class="badge">${res.verification_status==='verified'?'RESULT VERIFIED':res.verification_status==='pending'?'RESULT PENDING':'RESULT REJECTED'}</span>`;
@@ -581,9 +585,26 @@ function renderBattles(){
    const poster=battlePosters.find(p=>p.battle_id===b.id&&p.status==='submitted');
    const posterAction=poster?`<button class="btn ghost tiny" onclick="event.stopPropagation();openBattlePoster('${poster.id}')">🖼️ Poster</button>`:'';
    const commandAction=b.claimed_by?`<button class="btn ghost tiny" onclick="openBattleCommand('${b.id}')">⚔️ Command Centre</button>`:'';
-   return `<div class="battle"><div><b>${d.toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</b><small>${b.host_team?.name||'Legacy'} vs ${b.opponent_handle||'TBC'} · ${b.format}</small>${resultLine}<div id="resultForm-${b.id}" class="hidden"></div></div><div class="row">${commandAction}${posterAction}${action}</div></div>`;
+   const deleteAction=canDelete?`<button class="btn ghost tiny deleteBattleBtn" onclick="event.stopPropagation();deleteBattleAdmin('${b.id}')">🗑️ Delete</button>`:'';
+   return `<div class="battle"><div><b>${d.toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</b><small>${b.host_team?.name||'Legacy'} vs ${b.opponent_handle||'TBC'} · ${b.format}</small>${resultLine}<div id="resultForm-${b.id}" class="hidden"></div></div><div class="row">${commandAction}${posterAction}${action}${deleteAction}</div></div>`;
  }).join(''):'<p class="muted">No battles yet.</p>'
 }
+async function deleteBattleAdmin(battleId){
+ if(profile?.role!=='network_admin')return flash('Only a Network Admin can delete battles');
+ const b=battles.find(x=>x.id===battleId);if(!b)return;
+ const res=battleResults.find(r=>r.battle_id===battleId),opp=b.opponent_handle||'TBC',when=new Date(b.starts_at).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+ const details=res?`\n\nThis will also remove the ${res.outcome.toUpperCase()} result and recalculate profile stats.`:'';
+ if(!confirm(`Permanently delete this battle?\n\n${when}\nvs ${opp}${details}\n\nThis cannot be undone.`))return;
+ if(preview){battles=battles.filter(x=>x.id!==battleId);battleResults=battleResults.filter(x=>x.battle_id!==battleId);renderBattles();renderDashboard();return flash('Test battle deleted in preview mode')}
+ try{
+   const {error}=await sb.rpc('admin_delete_battle',{p_battle_id:battleId});
+   if(error)throw error;
+   if(commandBattleId===battleId)commandBattleId=null;
+   flash('Battle deleted. Stats and related test data have been cleaned up ✓');
+   await refreshAll();
+ }catch(e){console.error('Delete battle',e);flash(e?.message||'Could not delete battle')}
+}
+
 function renderProgress(){const mins=sessions.reduce((a,s)=>a+(s.minutes||0),0),days=new Set(sessions.filter(s=>s.qualifying_day).map(s=>s.session_date)).size;hoursStat.textContent=`${Math.floor(mins/60)}h ${String(mins%60).padStart(2,'0')}m`;daysStat.textContent=`${days} / 8`;hoursBar.style.width=`${Math.min(100,mins/1200*100)}%`;daysBar.style.width=`${Math.min(100,days/8*100)}%`;sessionList.innerHTML=sessions.map(s=>`<div class="battle"><div><b>${s.session_date}</b><small>${s.minutes} minutes ${s.qualifying_day?'· Qualifying LIVE day':''}</small></div></div>`).join('')||'<p class="muted">No LIVE sessions logged yet.</p>'}
 function renderDashboard(){
  const now=new Date(),hour=now.getHours(),greeting=hour<12?'GOOD MORNING':hour<18?'GOOD AFTERNOON':'GOOD EVENING',first=(profile?.display_name||profile?.tiktok_handle||'CREATOR').replace('@','').split(' ')[0].toUpperCase();
