@@ -82,3 +82,4 @@ The Supabase project has already received the V10 invite RPC migration. The fron
 - Network Admin can finalise past-month awards.
 - Automatic awards currently include Top Battler, Team MVP for each team, and LIVE Champion.
 - Awards can only be finalised after the month has ended.
+
