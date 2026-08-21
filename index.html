@@ -476,13 +476,34 @@ function closeTeamManager(){teamManagerModal.classList.add('hidden');document.bo
 function syncTeamAccent(v){if(/^#[0-9a-fA-F]{6}$/.test(v))tmAccent.value=v}
 function previewTeamLogo(file){if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type))return flash('Please choose a JPG, PNG or WebP image');if(file.size>5*1024*1024)return flash('Team logo must be 5 MB or smaller');selectedTeamLogoFile=file;renderTeamLogoPreview(URL.createObjectURL(file))}
 function renderTeamLogoPreview(url){const wrap=document.getElementById('tmLogoPreviewWrap');if(!wrap)return;wrap.outerHTML=url?`<img id="tmLogoPreviewWrap" class="teamLogoPreview" src="${escapeHtml(url)}" alt="Team logo preview">`:'<div id="tmLogoPreviewWrap" class="teamLogoPreviewFallback">+</div>'}
-async function uploadTeamLogo(teamId){if(!selectedTeamLogoFile)return null;const safe=(selectedTeamLogoFile.name||'team-logo').replace(/[^a-zA-Z0-9._-]/g,'-'),path=`${profile.network_id}/${teamId}/${Date.now()}-${safe}`;const {error}=await sb.storage.from('team-logos').upload(path,selectedTeamLogoFile,{upsert:true,contentType:selectedTeamLogoFile.type});if(error)throw error;const {data}=sb.storage.from('team-logos').getPublicUrl(path);return data?.publicUrl||null}
-async function saveTeam(){const name=tmName.value.trim(),short=tmShort.value.trim().toUpperCase(),description=tmDescription.value.trim(),accent=tmAccentText.value.trim()||tmAccent.value,manager=tmManager.value||null,status=tmStatus.value;if(!name)return flash('Enter a team name');if(!short)return flash('Enter a team abbreviation');if(!/^#[0-9a-fA-F]{6}$/.test(accent))return flash('Use a valid hex accent colour, e.g. #a72cff');const wasEditing=!!editingTeamId;tmSaveBtn.disabled=true;tmSaveBtn.textContent='Saving…';try{let teamId=editingTeamId;if(preview){flash('Team saved in preview mode');closeTeamManager();return}if(teamId){const {error}=await sb.rpc('update_team',{p_team_id:teamId,p_name:name,p_short_name:short,p_description:description||null,p_accent_color:accent,p_manager_id:manager,p_status:status});if(error)throw error}else{const {data,error}=await sb.rpc('create_team',{p_name:name,p_short_name:short,p_description:description||null,p_accent_color:accent,p_manager_id:manager});if(error)throw error;teamId=data}const logoUrl=await uploadTeamLogo(teamId);if(logoUrl){const {error}=await sb.from('teams').update({logo_url:logoUrl}).eq('id',teamId);if(error)throw error}flash(wasEditing?'Team updated ✓':'Team created ✓');closeTeamManager();await refreshAll();showSection('Teams')}catch(e){console.error('Save team',e);flash(e?.message||'Could not save team')}finally{tmSaveBtn.disabled=false;tmSaveBtn.textContent=editingTeamId?'Save Changes':'Create Team'}}
-async function archiveCurrentTeam(){if(!editingTeamId)return;if(!confirm('Archive this team? Members and historical data will be kept.'))return;try{const {error}=await sb.rpc('archive_team',{p_team_id:editingTeamId});if(error)throw error;flash('Team archived');closeTeamManager();await refreshAll();showSection('Teams')}catch(e){flash(e?.message||'Could not archive team')}}
-
-function openTeamCreators(teamId){
- show('Creators', [...document.querySelectorAll('#nav button')].find(b=>b.textContent==='Creators'));
- if(creatorSearch){creatorSearch.value=teamName(teamId);renderCreatorDirectory()}
+async function uploadTeamLogo(teamId){if(!selectedTeamLogoFile)return null;const safe=(selectedTeamLogoFile.name||'team-logo').replace(/[^a-zA-Z0-9._-]/g,'-'),path=`${profile.network_id}/${teamId}/${Date.now()}-${safe}`;const {error}=await sb.storage.from('team-logos').upload(path,selectedTeamLogoFile,{upsert:false,contentType:selectedTeamLogoFile.type});if(error)throw error;const {data}=sb.storage.from('team-logos').getPublicUrl(path);return data?.publicUrl||null}
+async function saveTeam(){
+ const name=tmName.value.trim(),short=tmShort.value.trim().toUpperCase(),description=tmDescription.value.trim(),accent=tmAccentText.value.trim()||tmAccent.value,manager=tmManager.value||null,status=tmStatus.value;
+ if(!name)return flash('Enter a team name');if(!short)return flash('Enter a team abbreviation');if(!/^#[0-9a-fA-F]{6}$/.test(accent))return flash('Use a valid hex accent colour, e.g. #a72cff');
+ tmSaveBtn.disabled=true;tmSaveBtn.textContent='Saving…';
+ try{
+  let teamId=editingTeamId,wasNew=!editingTeamId;
+  if(preview){flash('Team saved in preview mode');closeTeamManager();return}
+  if(teamId){
+   const {error}=await sb.rpc('update_team',{p_team_id:teamId,p_name:name,p_short_name:short,p_description:description||null,p_accent_color:accent,p_manager_id:manager,p_status:status});if(error)throw error
+  }else{
+   const existing=teams.find(t=>(t.short_name||'').toUpperCase()===short||t.name.toLowerCase()===name.toLowerCase());
+   if(existing){teamId=existing.id;wasNew=false;editingTeamId=teamId;const {error}=await sb.rpc('update_team',{p_team_id:teamId,p_name:name,p_short_name:short,p_description:description||null,p_accent_color:accent,p_manager_id:manager,p_status:status});if(error)throw error}
+   else{const {data,error}=await sb.rpc('create_team',{p_name:name,p_short_name:short,p_description:description||null,p_accent_color:accent,p_manager_id:manager});if(error)throw error;teamId=data}
+  }
+  let logoWarning='';
+  if(selectedTeamLogoFile){
+   try{
+    const logoUrl=await uploadTeamLogo(teamId);
+    if(logoUrl){const {error}=await sb.from('teams').update({logo_url:logoUrl}).eq('id',teamId);if(error)throw error}
+   }catch(logoErr){console.error('Team logo upload',logoErr);logoWarning=logoErr?.message||'logo upload failed'}
+  }
+  await refreshAll();
+  closeTeamManager();showSection('Teams');
+  if(logoWarning)flash(`Team saved ✓ — logo needs retry: ${logoWarning}`);
+  else flash(wasNew?'Team created ✓':'Team updated ✓')
+ }catch(e){console.error('Save team',e);flash(e?.message||'Could not save team')}
+ finally{tmSaveBtn.disabled=false;tmSaveBtn.textContent=editingTeamId?'Save Changes':'Create Team'}
 }
 function openCreatorProfile(id){
  viewedCreator=creatorDirectory.find(c=>c.id===id)||profile;
