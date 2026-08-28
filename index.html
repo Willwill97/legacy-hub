@@ -278,7 +278,7 @@ document.addEventListener('visibilitychange',()=>{
 </style></head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B.1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B.2</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active">
 <div class="dash2">
   <div class="card dashHero">
@@ -639,6 +639,12 @@ function applyNetworkBranding(){
 }
 
 
+
+function syncNetworkSettingsNav(){
+ const el=document.getElementById('network-settings-nav-static');
+ if(el)el.style.display=profile?.role==='network_admin'?'':'none';
+}
+
 function installNetworkSettingsNavigation(){
  if(profile?.role!=='network_admin'||document.getElementById('network-settings-nav'))return;
  const sidebar=document.querySelector('.sidebar')||document.querySelector('aside')||document.querySelector('nav');
@@ -684,7 +690,7 @@ async function loadNetworkBranding(){
  const {data,error}=await sb.rpc('current_network_branding');
  if(error){console.error('Network branding load failed',error);return null}
  networkBranding=Array.isArray(data)?data[0]:data;
- applyNetworkBranding();renderNetworkSettings();installNetworkSettingsNavigation();
+ applyNetworkBranding();renderNetworkSettings();syncNetworkSettingsNav();
  if(networkBranding?.name)document.title=`${networkBranding.name} · Legacy Hub`;
  return networkBranding;
 }
@@ -878,7 +884,9 @@ function renderBattles(){
    const poster=battlePosters.find(p=>p.battle_id===b.id&&p.status==='submitted');
    const posterAction=poster?`<button class="btn ghost tiny" onclick="event.stopPropagation();openBattlePoster('${poster.id}')">🖼️ Poster</button>`:'';
    const commandAction=b.claimed_by?`<button class="btn ghost tiny" onclick="openBattleCommand('${b.id}')">⚔️ Command Centre</button>`:'';
-   const deleteAction=canDelete?`<button class="btn ghost tiny deleteBattleBtn" onclick="event.stopPropagation();deleteBattleAdmin('${b.id}')">🗑️ Delete</button>`:'';
+   const deleteAction=canDelete?`<button class="btn ghost tiny deleteBattleBtn" onclick="event.stopPropagation();deleteBattleAdmin('${b.id}')">🗑️ Delete</button>
+<button id="network-settings-nav-static" class="nav-item" style="display:none" onclick="showSection('networksettings');renderNetworkSettings()"><span>⚙️</span><span>Network Settings</span></button>
+`:'';
    return `<div class="battle"><div><b>${d.toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</b><small>${b.host_team?.name||'Legacy'} vs ${b.opponent_handle||'TBC'} · ${b.format}</small>${resultLine}<div id="resultForm-${b.id}" class="hidden"></div></div><div class="row">${commandAction}${posterAction}${action}${deleteAction}</div></div>`;
  }).join(''):'<p class="muted">No battles yet.</p>'
 }
