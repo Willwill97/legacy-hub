@@ -259,7 +259,7 @@
 </style></head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 2D</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active">
 <div class="dash2">
   <div class="card dashHero">
@@ -631,8 +631,28 @@ function profilePhotoObjectPath(url){
  if(!url||!url.includes(token))return null;
  try{return decodeURIComponent(url.split(token)[1].split('?')[0])}catch{return null}
 }
+async function signedProfilePhotoUrl(url){
+ const path=profilePhotoObjectPath(url);if(!path)return url||null;
+ try{
+   const {data,error}=await sb.storage.from('profile-photos').createSignedUrl(path,3600);
+   if(error)throw error;
+   return data?.signedUrl||null;
+ }catch(e){console.warn('Profile photo signing failed',e);return null}
+}
+async function hydratePrivateProfilePhotos(){
+ const targets=[];
+ if(profile?.avatar_url)targets.push(profile);
+ (creatorDirectory||[]).forEach(c=>{if(c?.avatar_url&&!targets.some(x=>x.id===c.id))targets.push(c)});
+ await Promise.all(targets.map(async c=>{
+   const stable=c.avatar_object_url||c.avatar_url;
+   c.avatar_object_url=stable;
+   c.avatar_url=await signedProfilePhotoUrl(stable);
+ }));
+}
+function stableProfileAvatar(c){return c?.avatar_object_url||c?.avatar_url||null}
+
 async function uploadSelectedProfilePhoto(){
- if(!selectedProfilePhoto)return profile.avatar_url||null;
+ if(!selectedProfilePhoto)return stableProfileAvatar(profile);
  if(preview)return selectedProfilePhotoPreview;
  const ext=(selectedProfilePhoto.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
  const path=`${profile.id}/avatar-${Date.now()}.${ext}`;
@@ -644,7 +664,7 @@ async function uploadSelectedProfilePhoto(){
 async function removeMyProfilePhoto(){
  if(!profile.avatar_url&&!selectedProfilePhoto)return;
  if(!confirm('Remove your profile photo?'))return;
- const old=profile.avatar_url;
+ const old=stableProfileAvatar(profile);
  if(preview){
    profile.avatar_url=null;selectedProfilePhoto=null;if(selectedProfilePhotoPreview)URL.revokeObjectURL(selectedProfilePhotoPreview);selectedProfilePhotoPreview=null;
    const c=creatorDirectory.find(x=>x.id===profile.id);if(c)c.avatar_url=null;viewedCreator=profile;showEditProfile();renderCreatorDirectory();renderCreatorProfile();return flash('Profile photo removed in preview mode');
@@ -656,7 +676,7 @@ async function removeMyProfilePhoto(){
 }
 async function saveMyProfile(){
  const btn=document.getElementById('saveProfileBtn');if(btn){btn.classList.add('uploading');btn.textContent=selectedProfilePhoto?'Uploading photo…':'Saving…'}
- const oldAvatar=profile.avatar_url||null;
+ const oldAvatar=stableProfileAvatar(profile);
  try{
    const avatarUrl=await uploadSelectedProfilePhoto();
    const payload={display_name:epName.value.trim(),tiktok_handle:epHandle.value.trim(),bio:epBio.value.trim(),creator_level:epLevel.value.trim(),favourite_battle_format:epFormat.value,avatar_url:avatarUrl||'',profile_visibility:epVisibility.value};
