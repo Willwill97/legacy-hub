@@ -273,10 +273,12 @@ document.addEventListener('visibilitychange',()=>{
 /* V25.4.5 LIVE persistence */
 .liveSyncState{font-size:9px;color:var(--muted);margin-top:8px}
 .liveSyncState.ok{color:#6ce0ad}.liveSyncState.warn{color:#f1c366}
-</style><style id="tenant-branding-v26">:root{--tenant-accent:#8b5cf6;--tenant-secondary:#ef4444}#network-settings-panel input{width:100%;box-sizing:border-box;margin-top:7px}#network-settings-panel label{display:block;font-size:13px;opacity:.9}</style></head><body>
+</style><style id="tenant-branding-v26">:root{--tenant-accent:#8b5cf6;--tenant-secondary:#ef4444}#network-settings-panel input{width:100%;box-sizing:border-box;margin-top:7px}#network-settings-panel label{display:block;font-size:13px;opacity:.9}</style><style id="network-settings-4b1">
+#networksettings{padding:22px}.network-settings-head{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.network-settings-head h2{margin:4px 0 6px;font-size:28px}.network-settings-head p{margin:0;opacity:.7}.eyebrow{font-size:11px;letter-spacing:.15em;font-weight:800;opacity:.6}.network-plan-pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px;text-transform:uppercase}.network-settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}.network-settings-grid label{display:block;font-size:13px;margin-bottom:16px}.network-settings-grid input{width:100%;box-sizing:border-box;margin-top:7px}.network-colours{display:grid;grid-template-columns:1fr 1fr;gap:12px}.network-colours input[type=color]{height:52px}.network-actions{display:flex;gap:10px;flex-wrap:wrap}.network-preview{padding:18px;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:#0b0b0f}.network-preview-bar{display:flex;align-items:center;gap:14px;padding:18px;border-radius:16px;margin-top:10px}.network-preview-logo{width:48px;height:48px;border-radius:14px;background:rgba(0,0,0,.3);display:grid;place-items:center;font-weight:900}.network-preview-bar strong,.network-preview-bar small{display:block}.network-preview-bar small{opacity:.7}.network-preview-links{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.network-preview-links span{padding:11px;background:rgba(255,255,255,.055);border-radius:10px;text-align:center;font-size:12px}@media(max-width:760px){.network-settings-grid,.network-colours{grid-template-columns:1fr}}
+</style></head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B.1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active">
 <div class="dash2">
   <div class="card dashHero">
@@ -636,6 +638,27 @@ function applyNetworkBranding(){
  });
 }
 
+
+function installNetworkSettingsNavigation(){
+ if(profile?.role!=='network_admin'||document.getElementById('network-settings-nav'))return;
+ const sidebar=document.querySelector('.sidebar')||document.querySelector('aside')||document.querySelector('nav');
+ if(!sidebar)return;
+ const btn=document.createElement('button');
+ btn.id='network-settings-nav';btn.className='nav-item';
+ btn.innerHTML='<span>⚙️</span><span>Network Settings</span>';
+ btn.onclick=()=>{if(typeof showSection==='function')showSection('networksettings');renderNetworkSettings()};
+ sidebar.appendChild(btn);
+}
+function previewNetworkBranding(){
+ const name=document.getElementById('network-settings-name')?.value?.trim()||networkBranding?.name||'Your Network';
+ const accent=document.getElementById('network-settings-accent')?.value||networkBranding?.accent_color||'#8b5cf6';
+ const secondary=document.getElementById('network-settings-secondary')?.value||networkBranding?.secondary_color||'#ef4444';
+ document.documentElement.style.setProperty('--tenant-accent',accent);document.documentElement.style.setProperty('--tenant-secondary',secondary);
+ const n=document.getElementById('network-brand-preview-name');if(n)n.textContent=name;
+ const b=document.getElementById('network-brand-preview-bar');if(b)b.style.background=`linear-gradient(135deg,${accent},${secondary})`;
+}
+function resetNetworkBrandingPreview(){applyNetworkBranding();renderNetworkSettings()}
+
 function validHexColour(v){return /^#[0-9A-Fa-f]{6}$/.test(String(v||''))}
 async function saveNetworkBranding(){
  if(preview||!profile?.id||profile.role!=='network_admin')return alert('Network Admin access required.');
@@ -652,7 +675,8 @@ function renderNetworkSettings(){
  const host=document.getElementById('network-settings-panel');if(!host)return;
  if(profile?.role!=='network_admin'){host.innerHTML='<div class="card"><h3>Network Settings</h3><p>Network Admin access is required.</p></div>';return}
  const n=networkBranding||{};
- host.innerHTML=`<div class="card"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><h2 style="margin:0 0 6px">Network Settings</h2><p style="margin:0;opacity:.7">Brand this Legacy Hub workspace for your network.</p></div><span style="padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px;text-transform:uppercase">${esc(n.plan||'legacy')} · ${esc(n.status||'active')}</span></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:22px"><label>Network name<input id="network-settings-name" value="${esc(n.name||'')}" maxlength="80"></label><label>Accent colour<input id="network-settings-accent" type="color" value="${esc(n.accent_color||'#8b5cf6')}" style="height:44px"></label><label>Secondary colour<input id="network-settings-secondary" type="color" value="${esc(n.secondary_color||'#ef4444')}" style="height:44px"></label></div><div style="margin-top:18px"><button onclick="saveNetworkBranding()">Save Network Branding</button></div></div>`;
+ host.innerHTML=`<div class="card"><div class="network-settings-head"><div><div class="eyebrow">NETWORK ADMIN</div><h2>Network Settings</h2><p>Change your network identity and preview it before saving.</p></div><span class="network-plan-pill">${esc(n.plan||'legacy')} · ${esc(n.status||'active')}</span></div><div class="network-settings-grid"><div><label>Network name<input id="network-settings-name" value="${esc(n.name||'')}" maxlength="80" oninput="previewNetworkBranding()"></label><div class="network-colours"><label>Primary colour<input id="network-settings-accent" type="color" value="${esc(n.accent_color||'#8b5cf6')}" oninput="previewNetworkBranding()"></label><label>Secondary colour<input id="network-settings-secondary" type="color" value="${esc(n.secondary_color||'#ef4444')}" oninput="previewNetworkBranding()"></label></div><div class="network-actions"><button onclick="saveNetworkBranding()">Save Network Branding</button><button class="secondary" onclick="resetNetworkBrandingPreview()">Reset Preview</button></div></div><div class="network-preview"><div class="eyebrow">LIVE PREVIEW</div><div id="network-brand-preview-bar" class="network-preview-bar"><div class="network-preview-logo">LH</div><div><strong id="network-brand-preview-name">${esc(n.name||'Your Network')}</strong><small>Legacy Hub workspace</small></div></div><div class="network-preview-links"><span>Dashboard</span><span>Creators</span><span>Battles</span></div></div></div></div>`;
+ previewNetworkBranding();
 }
 
 async function loadNetworkBranding(){
@@ -660,7 +684,7 @@ async function loadNetworkBranding(){
  const {data,error}=await sb.rpc('current_network_branding');
  if(error){console.error('Network branding load failed',error);return null}
  networkBranding=Array.isArray(data)?data[0]:data;
- applyNetworkBranding();renderNetworkSettings();
+ applyNetworkBranding();renderNetworkSettings();installNetworkSettingsNavigation();
  if(networkBranding?.name)document.title=`${networkBranding.name} · Legacy Hub`;
  return networkBranding;
 }
