@@ -295,68 +295,38 @@ document.addEventListener('visibilitychange',()=>{
 @media(max-width:760px){.network-settings-grid,.network-colours,.network-readonly-grid{grid-template-columns:1fr}}
 </style>
 
-<style id="network-settings-4b6">
-#Network\ Settings.section.active{
-  display:block;
-}
-#Network\ Settings{
-  padding-top:0!important;
-  margin-top:0!important;
-}
-#Network\ Settings .network-settings-shell{
-  max-width:1100px;
-  margin:18px auto 0!important;
-  position:relative;
-  top:0!important;
-  transform:none!important;
-}
-#Network\ Settings .network-settings-titlebar{
-  margin-bottom:14px;
-}
-#Network\ Settings .network-settings-grid{
-  align-items:start;
-}
-#Network\ Settings .card{
-  min-height:0!important;
-}
-@media(max-width:900px){
-  #Network\ Settings{padding:12px!important}
-  #Network\ Settings .network-settings-shell{margin-top:8px!important}
-}
-</style>
 
-<style id="network-settings-4b7">
-#Network\ Settings.section.active{
-  display:block!important;
-  min-height:0!important;
-  height:auto!important;
-}
+
+
+
+<style id="network-settings-4b8">
 #Network\ Settings{
-  padding:0!important;
   margin:0!important;
+  padding:0!important;
 }
 #Network\ Settings .network-settings-shell{
   max-width:1100px;
   margin:0 auto!important;
-  padding-top:0!important;
-  position:relative!important;
-  top:-120px!important;
+  position:static!important;
+  top:auto!important;
   transform:none!important;
 }
 #Network\ Settings .network-settings-titlebar{
   margin-bottom:14px!important;
 }
-@media(max-width:1100px){
-  #Network\ Settings .network-settings-shell{top:-80px!important}
+#Network\ Settings .network-settings-grid{
+  align-items:start;
 }
-@media(max-width:760px){
-  #Network\ Settings .network-settings-shell{top:-30px!important;margin-left:8px!important;margin-right:8px!important}
+@media(max-width:900px){
+  #Network\ Settings .network-settings-shell{
+    margin:0!important;
+  }
 }
 </style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B.7</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B.8</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active">
 <div class="dash2">
   <div class="card dashHero">
@@ -497,6 +467,19 @@ document.addEventListener('visibilitychange',()=>{
 
 <section id="Battle Media" class="section"><div class="card"><div class="teamHead"><div><div class="eyebrow">BATTLE MANAGER WORKSPACE</div><h2>Battle Posters</h2><p class="muted">Upload finished battle artwork directly to the creator assigned to that battle. Submitting a poster instantly creates a creator notification.</p></div><span class="badge">Manager tools</span></div><div id="battleMediaList"></div></div></section>
 <section id="Notifications" class="section"><div class="grid"><div class="card"><div class="teamHead"><div><div class="eyebrow">NOTIFICATION CENTRE</div><h2>Your updates</h2></div><button class="btn ghost tiny" onclick="markAllAppNotificationsRead()">Mark all read</button></div><div class="notifFilters"><button class="btn ghost tiny notifFilter active" data-filter="all" onclick="setNotificationFilter('all',this)">All</button><button class="btn ghost tiny notifFilter" data-filter="unread" onclick="setNotificationFilter('unread',this)">Unread</button><button class="btn ghost tiny notifFilter" data-filter="battle" onclick="setNotificationFilter('battle',this)">Battles</button><button class="btn ghost tiny notifFilter" data-filter="poster" onclick="setNotificationFilter('poster',this)">Posters</button><button class="btn ghost tiny notifFilter" data-filter="network" onclick="setNotificationFilter('network',this)">Network</button></div><div id="notificationCentreList"></div></div><div class="card"><div class="eyebrow">NOTIFICATION SETTINGS</div><h2>What you want to hear about</h2><p class="muted">Choose which Legacy Hub events can reach your registered devices outside the Hub.</p><div id="notificationPreferences" class="notifPrefs"></div><div class="card" style="margin-top:14px;padding:13px"><div class="eyebrow">AUTOMATED LIVE DELIVERY</div><h3 style="margin:4px 0">What Legacy Hub sends automatically</h3><div class="automationGrid"><div class="automationItem"><span class="autoLive">● LIVE</span><b>Battle poster ready</b><span class="muted">Sent when a Battle Manager submits artwork.</span></div><div class="automationItem"><span class="autoLive">● LIVE</span><b>1-hour reminder</b><span class="muted">Includes the room-build reminder before battle.</span></div><div class="automationItem"><span class="autoLive">● LIVE</span><b>24-hour reminder</b><span class="muted">Heads-up for claimed upcoming battles.</span></div><div class="automationItem"><span class="autoLive">● LIVE</span><b>Matchmaking</b><span class="muted">New offers and accepted battle offers.</span></div><div class="automationItem"><span class="autoLive">● LIVE</span><b>Announcements</b><span class="muted">Network or team announcements as configured.</span></div><div class="automationItem"><span class="autoLive">● LIVE</span><b>Awards & achievements</b><span class="muted">Celebrates new trophies and monthly awards.</span></div></div></div><div class="inviteBanner" style="margin-top:14px"><b>External notifications are live</b><br>Enabled categories are delivered automatically to your registered devices, even when Legacy Hub is closed.</div></div></div></section>
+<section id="Network Settings" class="section">
+  <div class="card network-settings-shell">
+    <div class="network-settings-titlebar">
+      <div>
+        <div class="eyebrow">NETWORK CONTROL CENTRE</div>
+        <h2 style="margin:4px 0 6px">Network Settings</h2>
+        <p class="muted" style="margin:0">Manage how your network appears across Legacy Hub.</p>
+      </div>
+      <span class="badge">Network Admin</span>
+    </div>
+    <div id="network-settings-panel"></div>
+  </div>
+</section>
 <section id="Admin" class="section">
 <div id="deliveryOverview" class="card deliveryOverview">
   <div class="teamHead"><div><div class="eyebrow">V22 · NETWORK DELIVERY OVERVIEW</div><h2>Notification health</h2><p class="muted">See whether important creator notifications are queued, sent and opened across the network.</p></div><button class="btn ghost tiny" onclick="loadNetworkDeliveryOverview()">Refresh</button></div>
@@ -567,7 +550,7 @@ function show(name,btn){
  if(name==='Profile'){viewedCreator=creatorDirectory.find(x=>x.id===profile?.id)||profile;renderCreatorProfile()}
  if((name==='Progress'||name==='Dashboard')&&!preview)loadMyLiveSessions({silent:true}).then(()=>{renderProgress();renderDashboard()})
  if(name==='Admin'){loadAdminMembers();loadInvites();setupAnnouncementAudience();loadAnnouncements();loadPushTestLog();loadNetworkDeliveryOverview()}
- if(name==='Battle Media')renderBattleMedia();if(name==='Notifications')renderNotificationCentre();if(name==='Network Settings'){renderNetworkSettings();window.scrollTo({top:0,behavior:'instant'})}
+ if(name==='Battle Media')renderBattleMedia();if(name==='Notifications')renderNotificationCentre();if(name==='Network Settings'){renderNetworkSettings();window.scrollTo({top:0,behavior:'auto'})}
 }
 function showSection(name){
  const aliases={'LiveProgress':'Progress','BattlePosters':'Battle Media','Battle Posters':'Battle Media','BattleHub':'Battles','Battle Hub':'Battles','My Profile':'Profile','networksettings':'Network Settings'};
@@ -1734,17 +1717,5 @@ let lastAuthUserId=null;
 sb.auth.onAuthStateChange((event,session)=>{const uid=session?.user?.id||null;if(event==='SIGNED_OUT'||(!uid&&lastAuthUserId)){lastAuthUserId=null;profile=null;teams=[];battles=[];sessions=[];creatorDirectory=[];appNotifications=[];clearInterval(battleCountdownTimer);battleCountdownTimer=null;if(window.dashboardBattleTicker){clearInterval(window.dashboardBattleTicker);window.dashboardBattleTicker=null}app.classList.add('hidden');pending.classList.add('hidden');auth.classList.remove('hidden')}else if(uid&&lastAuthUserId&&uid!==lastAuthUserId){location.reload()}if(uid)lastAuthUserId=uid});
 (async()=>{await initialiseInviteSignup();const {data:{session}}=await sb.auth.getSession();if(session){lastAuthUserId=session.user.id;await enterForUser(session.user)}})();
 </script>
-<section id="Network Settings" class="section">
-  <div class="card network-settings-shell">
-    <div class="network-settings-titlebar">
-      <div>
-        <div class="eyebrow">NETWORK CONTROL CENTRE</div>
-        <h2 style="margin:4px 0 6px">Network Settings</h2>
-        <p class="muted" style="margin:0">Manage how your network appears across Legacy Hub.</p>
-      </div>
-      <span class="badge">Network Admin</span>
-    </div>
-    <div id="network-settings-panel"></div>
-  </div>
-</section>
+
 </body></html>
