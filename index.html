@@ -323,10 +323,64 @@ document.addEventListener('visibilitychange',()=>{
   }
 }
 </style>
+
+<style id="mobile-ux-v26">
+.mobile-nav-toggle{display:none}
+@media(max-width:900px){
+  html,body{overflow-x:hidden}
+  body{font-size:16px}
+  .app{display:block;min-height:100vh}
+  .side{
+    position:sticky!important;top:0;z-index:1000;height:auto!important;
+    padding:12px 14px!important;border-right:0!important;border-bottom:1px solid var(--line);background:#0a0c0f
+  }
+  .brand{margin:0!important;font-size:21px!important;display:inline-block}
+  .mobile-nav-toggle{
+    display:block;position:absolute;top:12px;right:14px;min-height:44px;padding:10px 14px;
+    border:1px solid var(--line);border-radius:10px;background:#171a20;color:#fff;font-weight:800;font-size:14px;cursor:pointer
+  }
+  .side .nav{
+    display:none!important;flex-direction:column!important;overflow:visible!important;
+    max-height:calc(100vh - 90px);overflow-y:auto!important;padding:12px 0 4px;margin-top:10px;gap:4px
+  }
+  .side.mobile-open .nav{display:flex!important}
+  .nav button{
+    width:100%!important;min-height:48px;padding:13px 14px!important;margin:0!important;
+    border-radius:10px!important;font-size:15px!important;white-space:normal!important
+  }
+  .who{display:none!important}
+  .main{padding:14px!important;max-width:none!important;width:100%!important}
+  .top{align-items:flex-start!important;gap:8px!important;margin-bottom:14px!important}
+  .top h1,.top h2,#pageTitle{font-size:25px!important;line-height:1.15!important}
+  .grid,.leaderGrid,.matchGrid,.matchForms,.teamPerfGrid,.creatorGrid,.network-settings-grid{grid-template-columns:1fr!important}
+  .stats,.adminStats,.awardGrid,.achievementGrid{grid-template-columns:1fr 1fr!important}
+  .teamCard{grid-template-columns:1fr!important;padding:14px!important}
+  .logo{width:120px!important;height:120px!important}
+  .card{padding:16px!important;border-radius:14px!important}
+  .btn,button,input,select,textarea{font-size:16px}
+  .btn,button{min-height:44px}
+  .field,input,select,textarea{max-width:100%}
+  .memberWrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .memberTable{min-width:720px}
+  .inviteGrid,.annGrid{grid-template-columns:1fr!important}
+  .network-settings-shell{margin:0!important;max-width:none!important}
+  .network-settings-titlebar{display:block!important}
+  .network-plan-pill,.badge{display:inline-block;margin-top:8px}
+}
+@media(max-width:560px){
+  .stats,.adminStats,.awardGrid,.achievementGrid,.network-readonly-grid,.network-colours{grid-template-columns:1fr!important}
+  .main{padding:10px!important}
+  .card{padding:14px!important}
+  .top h1,.top h2,#pageTitle{font-size:22px!important}
+  .hero h1,.hero h2{font-size:28px!important}
+  .resultGrid{grid-template-columns:1fr 1fr!important}
+  .network-preview-links{grid-template-columns:1fr!important}
+}
+</style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4B.8</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4C</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active">
 <div class="dash2">
   <div class="card dashHero">
@@ -541,10 +595,20 @@ function updatePersonalGreeting(){
 async function enterApp(){auth.classList.add('hidden');pending.classList.add('hidden');app.classList.remove('hidden');updatePersonalGreeting();whoName.textContent=profile.display_name||'Creator';whoMeta.textContent=`${profile.tiktok_handle||''} · ${prettyRole(profile.role)}`;teamPill.textContent=profile.team?.name||'Network View';navItems=['Dashboard','Profile','Teams','Creators','Battles','Progress','Leaderboard','Achievements','Announcements'];if(['network_admin','battle_manager'].includes(profile.role))navItems.push('Battle Media');navItems.push('Notifications');if(profile.role==='network_admin')navItems.push('Network Settings');if(['network_admin','team_manager'].includes(profile.role))navItems.push('Admin');nav.innerHTML=navItems.map((n,i)=>`<button data-section="${n}" class="${i?'':'active'}" onclick="show('${n}',this)">${n==='Profile'?'My Profile':n}</button>`).join('');await refreshAll();await initPushSupport();await handleIncomingPushLink()}
 function prettyRole(r){return ({network_admin:'Network Admin',team_manager:'Team Manager',battle_manager:'Battle Manager',member:'Member',supporter:'Supporter'})[r]||r||'Member'}
 document.addEventListener('input',e=>{if(e.target?.id==='tmAccent')tmAccentText.value=tmAccent.value});
+
+function toggleMobileNav(force){
+ const side=document.querySelector('.side');const btn=document.getElementById('mobile-nav-toggle');
+ if(!side||!btn)return;
+ const open=typeof force==='boolean'?force:!side.classList.contains('mobile-open');
+ side.classList.toggle('mobile-open',open);
+ btn.setAttribute('aria-expanded',open?'true':'false');
+ btn.textContent=open?'✕ Close':'☰ Menu';
+}
+
 function show(name,btn){
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  const section=document.getElementById(name);if(!section)return flash(`Could not open ${name}`);
- section.classList.add('active');
+ section.classList.add('active');if(window.innerWidth<=900)toggleMobileNav(false);
  pageTitle.textContent=name==='Profile'?'My Profile':name;
  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
  if(name==='Profile'){viewedCreator=creatorDirectory.find(x=>x.id===profile?.id)||profile;renderCreatorProfile()}
