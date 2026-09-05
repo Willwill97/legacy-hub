@@ -400,15 +400,28 @@ document.addEventListener('visibilitychange',()=>{
 .role-access-card{margin:12px 0 18px;padding:14px;border:1px solid rgba(168,85,247,.2);border-radius:12px;background:rgba(168,85,247,.055)}.role-access-card h3{margin:4px 0}.role-access-card p{margin:5px 0 0;opacity:.68;line-height:1.45}
 [hidden]{display:none!important}
 @media(max-width:700px){body[data-legacy-role] .btn,body[data-legacy-role] button{min-height:42px}}
+</style><style id="white-label-branding-4h3">
+.tenant-brand-lockup{display:flex;align-items:center;gap:10px;line-height:1.05}
+.tenant-brand-lockup>div>span{display:block;font-size:16px;font-weight:1000;max-width:155px;overflow:hidden;text-overflow:ellipsis}
+.tenant-brand-lockup small{display:block;font-size:8px;color:#737985;letter-spacing:1.4px;margin-top:4px}
+.tenant-sidebar-logo{width:42px;height:42px;object-fit:contain;border-radius:11px;background:#111319;border:1px solid var(--line);padding:3px}
+.network-logo-uploader{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:center;margin:14px 0;padding:13px;border:1px dashed rgba(255,255,255,.14);border-radius:13px;background:rgba(255,255,255,.025)}
+.network-logo-current img,.network-logo-empty{width:78px;height:78px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0c0e12}
+.network-logo-current img{display:block;object-fit:contain;padding:5px}.network-logo-empty{display:grid;place-items:center;font-size:11px;font-weight:1000;color:#777d88}
+.network-logo-controls input[type=file]{margin:8px 0}.network-logo-controls .btn{margin-top:8px}
+.network-preview-logo{overflow:hidden}.network-preview-logo img{width:100%;height:100%;object-fit:contain;padding:4px}.network-preview-logo span{display:grid;place-items:center;width:100%;height:100%}
+.btn:not(.ghost):not(.red){background:linear-gradient(135deg,var(--tenant-accent,#8b5cf6),var(--tenant-secondary,#ef4444))}
+.eyebrow{color:var(--tenant-accent,#c96cff)}
+@media(max-width:560px){.network-logo-uploader{grid-template-columns:1fr}.network-logo-current img,.network-logo-empty{width:72px;height:72px}}
 </style></head><body>
-<div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
+<div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE V26 · PHASE 4H.3.1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.2</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
     <div class="dashHeroText">
-      <div class="eyebrow">REDBULL LEGACY NETWORK</div>
+      <div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div>
       <div id="dashGreeting" class="dashGreeting">WELCOME BACK 👋<br><span>LEGACY HUB</span></div>
       <p class="dashTagline">Together, we build a Legacy.</p>
       <div class="dashStats4">
@@ -446,7 +459,7 @@ document.addEventListener('visibilitychange',()=>{
 
   <div class="dashboardLower">
     <div class="commandCard lowerCard">
-      <div class="teamHead"><div><div class="eyebrow">🔥 LEGACY FEED</div></div><button class="btn ghost tiny" onclick="openNotificationCentre()">View all</button></div>
+      <div class="teamHead"><div><div class="eyebrow">🔥 NETWORK FEED</div></div><button class="btn ghost tiny" onclick="openNotificationCentre()">View all</button></div>
       <div id="legacyFeed" class="feedList"><p class="muted">No activity yet.</p></div>
     </div>
 
@@ -471,12 +484,12 @@ document.addEventListener('visibilitychange',()=>{
 </div>
 <section id="BattleReminders" class="sectionSub"><div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">BATTLE REMINDERS</div><h3 style="margin-bottom:4px">Your upcoming battle alerts</h3><p class="muted">Legacy Hub will surface reminders 24 hours and 1 hour before battles you have claimed.</p></div><span class="badge" id="battleReminderCount">0 alerts</span></div><div id="battleReminderList" class="reminderStack"><p class="muted">No battle reminders right now.</p></div></div></section></section>
 
-<section id="Teams" class="section"><div class="card"><div class="teamDirectoryHead"><div><div class="eyebrow">NETWORK DIRECTORY</div><h2 style="margin-bottom:4px">Legacy Teams</h2><p class="muted" style="margin:0">Create, brand and manage every team in your Legacy network.</p></div><button id="createTeamBtn" class="btn hidden" onclick="openTeamManager()">+ Create Team</button></div><div id="teamGrid" class="teamGrid"></div></div><div id="teamManagerModal" class="teamModalBackdrop hidden" onclick="if(event.target===this)closeTeamManager()"><div class="teamModal"><div class="teamHead"><div><div class="eyebrow">TEAM MANAGEMENT CENTRE</div><h2 id="teamModalTitle" style="margin:5px 0">Create a new team</h2></div><button class="btn ghost tiny" onclick="closeTeamManager()">✕ Close</button></div><div class="teamFormGrid"><div><label class="muted">Team name</label><input id="tmName" class="field" placeholder="e.g. Bulletproof Armour Unit"></div><div><label class="muted">Abbreviation</label><input id="tmShort" class="field" maxlength="10" placeholder="e.g. BAU"></div><div class="wide"><label class="muted">Description</label><textarea id="tmDescription" class="field" style="height:84px;padding-top:12px;resize:vertical" placeholder="Tell the network what this team is about..."></textarea></div><div><label class="muted">Team Manager</label><select id="tmManager" class="field"><option value="">No manager assigned</option></select></div><div><label class="muted">Status</label><select id="tmStatus" class="field"><option value="active">Active</option><option value="inactive">Inactive</option><option value="archived">Archived</option></select></div><div class="wide"><label class="muted">Accent colour</label><div class="teamColorRow"><input id="tmAccent" class="teamColorInput" type="color" value="#a72cff"><input id="tmAccentText" class="field" value="#a72cff" oninput="syncTeamAccent(this.value)" style="margin:0"></div></div></div><div class="teamLogoUpload"><div id="tmLogoPreviewWrap" class="teamLogoPreviewFallback">+</div><div><b>Team logo</b><p class="muted" style="margin:4px 0">Upload a JPG, PNG or WebP. Maximum 5 MB.</p><input id="tmLogoFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="previewTeamLogo(this.files?.[0])"></div></div><div class="row" style="justify-content:flex-end"><button class="btn ghost" onclick="closeTeamManager()">Cancel</button><button id="tmSaveBtn" class="btn" onclick="saveTeam()">Create Team</button></div><div id="tmDangerZone" class="teamDangerZone hidden"><b style="color:#ff9da8">Archive this team</b><p class="muted">Archived teams stay in your records but are clearly marked and can be restored later.</p><button class="btn ghost danger" onclick="archiveCurrentTeam()">Archive Team</button></div></div></div></section>
+<section id="Teams" class="section"><div class="card"><div class="teamDirectoryHead"><div><div class="eyebrow">NETWORK DIRECTORY</div><h2 style="margin-bottom:4px">Network Teams</h2><p class="muted" style="margin:0">Create, brand and manage every team in your network.</p></div><button id="createTeamBtn" class="btn hidden" onclick="openTeamManager()">+ Create Team</button></div><div id="teamGrid" class="teamGrid"></div></div><div id="teamManagerModal" class="teamModalBackdrop hidden" onclick="if(event.target===this)closeTeamManager()"><div class="teamModal"><div class="teamHead"><div><div class="eyebrow">TEAM MANAGEMENT CENTRE</div><h2 id="teamModalTitle" style="margin:5px 0">Create a new team</h2></div><button class="btn ghost tiny" onclick="closeTeamManager()">✕ Close</button></div><div class="teamFormGrid"><div><label class="muted">Team name</label><input id="tmName" class="field" placeholder="e.g. Bulletproof Armour Unit"></div><div><label class="muted">Abbreviation</label><input id="tmShort" class="field" maxlength="10" placeholder="e.g. BAU"></div><div class="wide"><label class="muted">Description</label><textarea id="tmDescription" class="field" style="height:84px;padding-top:12px;resize:vertical" placeholder="Tell the network what this team is about..."></textarea></div><div><label class="muted">Team Manager</label><select id="tmManager" class="field"><option value="">No manager assigned</option></select></div><div><label class="muted">Status</label><select id="tmStatus" class="field"><option value="active">Active</option><option value="inactive">Inactive</option><option value="archived">Archived</option></select></div><div class="wide"><label class="muted">Accent colour</label><div class="teamColorRow"><input id="tmAccent" class="teamColorInput" type="color" value="#a72cff"><input id="tmAccentText" class="field" value="#a72cff" oninput="syncTeamAccent(this.value)" style="margin:0"></div></div></div><div class="teamLogoUpload"><div id="tmLogoPreviewWrap" class="teamLogoPreviewFallback">+</div><div><b>Team logo</b><p class="muted" style="margin:4px 0">Upload a JPG, PNG or WebP. Maximum 5 MB.</p><input id="tmLogoFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="previewTeamLogo(this.files?.[0])"></div></div><div class="row" style="justify-content:flex-end"><button class="btn ghost" onclick="closeTeamManager()">Cancel</button><button id="tmSaveBtn" class="btn" onclick="saveTeam()">Create Team</button></div><div id="tmDangerZone" class="teamDangerZone hidden"><b style="color:#ff9da8">Archive this team</b><p class="muted">Archived teams stay in your records but are clearly marked and can be restored later.</p><button class="btn ghost danger" onclick="archiveCurrentTeam()">Archive Team</button></div></div></div></section>
 <section id="Battles" class="section">
 <div id="battleCommandCentre"></div>
 <div class="card"><div class="teamHead"><div><div class="eyebrow">BATTLE HUB</div><h2>Battle schedule</h2></div><button class="btn" onclick="showBattleForm()">+ Request battle</button></div><div id="battleForm" class="hidden" style="margin:12px 0"><div class="row"><input id="battleDate" class="field" type="date" style="flex:1"><input id="battleTime" class="field" type="time" style="flex:1"><select id="battleFormat" class="field" style="flex:1"><option>1 round</option><option>3 rounds</option><option>5 rounds</option><option>7 rounds</option></select></div><input id="battleOpp" class="field" placeholder="Opponent TikTok username"><input id="battleOppTeam" class="field" placeholder="Opponent team (optional)"><button class="btn" onclick="createBattle()">Publish battle</button></div><div id="battleList"></div></div>
 
-<div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">MATCHMAKING</div><h2>Find an opponent</h2></div><span id="matchUnreadBadge" class="notifBadge">0</span></div><p class="muted">Post when you want to battle, advertise your availability, and respond to creators across the Legacy network.</p>
+<div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">MATCHMAKING</div><h2>Find an opponent</h2></div><span id="matchUnreadBadge" class="notifBadge">0</span></div><p class="muted">Post when you want to battle, advertise your availability, and respond to creators across the network.</p>
 <div class="matchForms">
 <div class="matchBox"><h3>Find me an opponent</h3><input id="matchDate" class="field" type="date"><div class="row"><input id="matchStart" class="field" type="time" style="flex:1"><input id="matchEnd" class="field" type="time" style="flex:1"></div><div class="row"><input id="matchLevel" class="field" placeholder="Creator level e.g. B2" style="flex:1"><select id="matchFormat" class="field" style="flex:1"><option>1 round</option><option>3 rounds</option><option>5 rounds</option><option>7 rounds</option></select></div><input id="matchPreference" class="field" placeholder="Opponent preference (optional)"><textarea id="matchNotes" class="field" style="height:68px;padding-top:10px" placeholder="Notes"></textarea><button class="btn" onclick="postMatchRequest()">Post opponent request</button></div>
 <div class="matchBox"><h3>Post my availability</h3><input id="availDate" class="field" type="date"><div class="row"><input id="availStart" class="field" type="time" style="flex:1"><input id="availEnd" class="field" type="time" style="flex:1"></div><input id="availLevel" class="field" placeholder="Creator level e.g. B2"><div class="formatChecks"><label><input type="checkbox" name="availFormat" value="1 round"> 1 round</label><label><input type="checkbox" name="availFormat" value="3 rounds"> 3 rounds</label><label><input type="checkbox" name="availFormat" value="5 rounds"> 5 rounds</label><label><input type="checkbox" name="availFormat" value="7 rounds"> 7 rounds</label></div><textarea id="availNotes" class="field" style="height:68px;padding-top:10px" placeholder="Availability notes"></textarea><button class="btn ghost" onclick="postAvailability()">Post availability</button></div>
@@ -492,7 +505,7 @@ document.addEventListener('visibilitychange',()=>{
     <div style="overflow-x:auto"><table class="leaderTable"><thead><tr><th>#</th><th>CREATOR</th><th>TEAM</th><th>BATTLES</th><th>W-L-D</th><th>WIN %</th><th>POINTS</th><th>DIAMONDS</th></tr></thead><tbody id="creatorLeaderboard"></tbody></table></div>
   </div>
   <div class="card">
-    <div class="eyebrow">TEAM STANDINGS</div><h2>Legacy teams</h2>
+    <div class="eyebrow">TEAM STANDINGS</div><h2>Network teams</h2>
     <div id="teamPerformanceList" class="teamPerfGrid"></div>
   </div>
 </div>
@@ -507,7 +520,7 @@ document.addEventListener('visibilitychange',()=>{
 
 <section id="Creators" class="section">
 <div class="card">
- <div class="teamHead"><div><div class="eyebrow">CREATOR DIRECTORY</div><h2>Legacy creators</h2><p class="muted">Discover members across the network, their teams, battle records, LIVE progress and achievements.</p></div><input id="creatorSearch" class="field" style="max-width:250px" placeholder="Search creator or @handle" oninput="renderCreatorDirectory()"></div>
+ <div class="teamHead"><div><div class="eyebrow">CREATOR DIRECTORY</div><h2>Network creators</h2><p class="muted">Discover members across the network, their teams, battle records, LIVE progress and achievements.</p></div><input id="creatorSearch" class="field" style="max-width:250px" placeholder="Search creator or @handle" oninput="renderCreatorDirectory()"></div>
  <div id="creatorGrid" class="creatorGrid"></div>
 </div>
 </section>
@@ -518,7 +531,7 @@ document.addEventListener('visibilitychange',()=>{
 
 <section id="Achievements" class="section">
 <div class="card trophyHero">
-  <div class="teamHead"><div><div class="eyebrow">TROPHY ROOM</div><h2>Achievements & monthly awards</h2><p class="muted">Your milestones stay on your profile permanently, while monthly awards build a history of standout creators across Legacy.</p></div><div class="achievementIcon">🏆</div></div>
+  <div class="teamHead"><div><div class="eyebrow">TROPHY ROOM</div><h2>Achievements & monthly awards</h2><p class="muted">Your milestones stay on your profile permanently, while monthly awards build a history of standout creators across the network.</p></div><div class="achievementIcon">🏆</div></div>
   <div class="monthStrip"><label class="muted">Viewing month</label><input id="achievementMonth" class="field" type="month" style="width:170px" onchange="renderAchievements()"><button class="btn ghost tiny" onclick="refreshAchievements()">Refresh badges</button></div>
   <div class="milestoneRow"><div class="progressRing" id="achievementRing" style="--pct:0%"><span id="achievementRingText">0/0</span></div><div><h3 id="achievementSummary">Your monthly milestones</h3><p id="achievementSummaryText" class="muted">Complete LIVE and battle goals to unlock badges.</p></div></div>
 </div>
@@ -535,7 +548,7 @@ document.addEventListener('visibilitychange',()=>{
 </div>
 
 <div class="card" style="margin-top:14px">
- <div class="eyebrow">AWARD HISTORY</div><h2>Legacy honours archive</h2>
+ <div class="eyebrow">AWARD HISTORY</div><h2>Network honours archive</h2>
  <div style="overflow-x:auto"><table class="historyTable"><thead><tr><th>MONTH</th><th>AWARD</th><th>CREATOR</th><th>TEAM</th><th>WHY</th></tr></thead><tbody id="awardHistoryBody"></tbody></table></div>
 </div>
 </section>
@@ -636,7 +649,8 @@ function updatePersonalGreeting(){
  const now=new Date(),hour=now.getHours(),greeting=hour<12?'GOOD MORNING':hour<18?'GOOD AFTERNOON':'GOOD EVENING';
  const raw=(profile.display_name||profile.tiktok_display_name||profile.tiktok_handle||'CREATOR').replace(/^@/,'').trim();
  const first=(raw.split(/\s+/)[0]||'CREATOR').toUpperCase();
- dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK TO LEGACY HUB</span>`;
+ const networkName=networkBranding?.name||'YOUR NETWORK';
+ dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK TO ${escapeHtml(networkName.toUpperCase())}</span>`;
  const da=document.getElementById('dashAvatar');
  const avatar=profile.avatar_url||profile.tiktok_avatar_url||'';
  if(da&&avatar){da.src=avatar;da.classList.remove('hidden')}else da?.classList.add('hidden');
@@ -831,12 +845,18 @@ let networkBranding=null;
 function applyNetworkBranding(){
  if(!networkBranding)return;
  const root=document.documentElement;
- if(networkBranding.accent_color)root.style.setProperty('--tenant-accent',networkBranding.accent_color);
- if(networkBranding.secondary_color)root.style.setProperty('--tenant-secondary',networkBranding.secondary_color);
- document.querySelectorAll('[data-network-name]').forEach(el=>el.textContent=networkBranding.name||'Legacy Hub');
+ const accent=networkBranding.accent_color||'#8b5cf6';
+ const secondary=networkBranding.secondary_color||'#ef4444';
+ const name=networkBranding.name||'Your Network';
+ root.style.setProperty('--tenant-accent',accent);
+ root.style.setProperty('--tenant-secondary',secondary);
+ root.style.setProperty('--purple',accent);
+ root.style.setProperty('--red',secondary);
+ document.querySelectorAll('[data-network-name]').forEach(el=>el.textContent=name);
  document.querySelectorAll('[data-network-logo]').forEach(el=>{
-   if(networkBranding.logo_url){el.src=networkBranding.logo_url;el.hidden=false}else el.hidden=true;
+   if(networkBranding.logo_url){el.src=networkBranding.logo_url;el.hidden=false}else{el.removeAttribute('src');el.hidden=true}
  });
+ document.title=`${name} · Legacy Hub`;
 }
 
 
@@ -856,6 +876,46 @@ function installNetworkSettingsNavigation(){
  btn.onclick=()=>{if(typeof showSection==='function')showSection('networksettings');renderNetworkSettings()};
  sidebar.appendChild(btn);
 }
+let selectedNetworkLogoFile=null,selectedNetworkLogoPreview=null;
+function setNetworkLogoPreview(src){
+ const img=document.getElementById('network-brand-preview-logo-img');
+ const fallback=document.getElementById('network-brand-preview-logo-fallback');
+ if(img&&src){img.src=src;img.hidden=false;if(fallback)fallback.hidden=true}
+ else{if(img){img.removeAttribute('src');img.hidden=true}if(fallback)fallback.hidden=false}
+}
+function previewNetworkLogo(file){
+ if(!file)return;
+ const allowed=['image/png','image/jpeg','image/webp'];
+ if(!allowed.includes(file.type))return flash('Please choose a PNG, JPG or WebP logo.');
+ if(file.size>5*1024*1024)return flash('Network logo must be 5 MB or smaller.');
+ if(selectedNetworkLogoPreview)URL.revokeObjectURL(selectedNetworkLogoPreview);
+ selectedNetworkLogoFile=file;
+ selectedNetworkLogoPreview=URL.createObjectURL(file);
+ setNetworkLogoPreview(selectedNetworkLogoPreview);
+ const state=document.getElementById('network-logo-state');if(state)state.textContent=`Ready to upload: ${file.name}`;
+}
+async function uploadSelectedNetworkLogo(){
+ if(!selectedNetworkLogoFile)return networkBranding?.logo_url||null;
+ if(preview||!profile?.network_id||profile.role!=='network_admin')throw new Error('Network Admin access required.');
+ const ext=(selectedNetworkLogoFile.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';
+ const path=`${profile.network_id}/network-logo.${ext}`;
+ const {error}=await sb.storage.from('network-logos').upload(path,selectedNetworkLogoFile,{upsert:true,contentType:selectedNetworkLogoFile.type,cacheControl:'3600'});
+ if(error)throw error;
+ const {data}=sb.storage.from('network-logos').getPublicUrl(path);
+ return `${data.publicUrl}?v=${Date.now()}`;
+}
+async function removeNetworkLogo(){
+ if(preview||!profile?.network_id||profile.role!=='network_admin')return flash('Network Admin access required.');
+ if(!confirm('Remove the current network logo?'))return;
+ const possible=['png','jpg','jpeg','webp'].map(ext=>`${profile.network_id}/network-logo.${ext}`);
+ try{await sb.storage.from('network-logos').remove(possible)}catch(e){console.warn('Logo file cleanup skipped',e)}
+ const {data,error}=await sb.from('networks').update({logo_url:null,updated_at:new Date().toISOString()}).eq('id',profile.network_id).select('id,name,slug,logo_url,accent_color,secondary_color,status,plan').single();
+ if(error){console.error(error);return flash('Could not remove network logo.')}
+ selectedNetworkLogoFile=null;
+ if(selectedNetworkLogoPreview){URL.revokeObjectURL(selectedNetworkLogoPreview);selectedNetworkLogoPreview=null}
+ networkBranding=data;applyNetworkBranding();renderNetworkSettings();updatePersonalGreeting();flash('Network logo removed.');
+}
+
 function previewNetworkBranding(){
  const name=document.getElementById('network-settings-name')?.value?.trim()||networkBranding?.name||'Your Network';
  const accent=document.getElementById('network-settings-accent')?.value||networkBranding?.accent_color||'#8b5cf6';
@@ -863,97 +923,37 @@ function previewNetworkBranding(){
  document.documentElement.style.setProperty('--tenant-accent',accent);document.documentElement.style.setProperty('--tenant-secondary',secondary);
  const n=document.getElementById('network-brand-preview-name');if(n)n.textContent=name;
  const b=document.getElementById('network-brand-preview-bar');if(b)b.style.background=`linear-gradient(135deg,${accent},${secondary})`;
+ setNetworkLogoPreview(selectedNetworkLogoPreview||networkBranding?.logo_url||'');
 }
-let pendingNetworkLogoFile=null;
-
-function previewNetworkLogo(input){
- const file=input?.files?.[0]||null;
- pendingNetworkLogoFile=file;
-
- if(!file)return;
-
- if(file.size>5*1024*1024){
-   pendingNetworkLogoFile=null;
-   input.value='';
-   return alert('Logo must be 5 MB or smaller.');
- }
-
- const allowed=['image/png','image/jpeg','image/webp'];
- if(!allowed.includes(file.type)){
-   pendingNetworkLogoFile=null;
-   input.value='';
-   return alert('Please choose a PNG, JPG or WebP logo.');
- }
-
- const preview=document.querySelector('.network-preview-logo');
- if(preview){
-   const url=URL.createObjectURL(file);
-   preview.innerHTML=`<img src="${url}" alt="Network logo preview" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">`;
- }
+function resetNetworkBrandingPreview(){
+ selectedNetworkLogoFile=null;
+ if(selectedNetworkLogoPreview){URL.revokeObjectURL(selectedNetworkLogoPreview);selectedNetworkLogoPreview=null}
+ applyNetworkBranding();renderNetworkSettings()
 }
- function resetNetworkBrandingPreview(){applyNetworkBranding();renderNetworkSettings()}
 
 function validHexColour(v){return /^#[0-9A-Fa-f]{6}$/.test(String(v||''))}
 async function saveNetworkBranding(){
  if(preview||!profile?.id||profile.role!=='network_admin')return alert('Network Admin access required.');
-
  const name=document.getElementById('network-settings-name')?.value?.trim();
  const accent=document.getElementById('network-settings-accent')?.value;
  const secondary=document.getElementById('network-settings-secondary')?.value;
-
  if(!name)return alert('Please enter a network name.');
  if(!validHexColour(accent)||!validHexColour(secondary))return alert('Please choose valid branding colours.');
-
- let logoUrl=networkBranding?.logo_url||null;
-
- if(pendingNetworkLogoFile){
-   const file=pendingNetworkLogoFile;
-   const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';
-   const path=`${profile.network_id}/logo.${ext}`;
-
-   const {error:uploadError}=await sb.storage
-     .from('network-logos')
-     .upload(path,file,{
-       upsert:true,
-       contentType:file.type
-     });
-
-   if(uploadError){
-     console.error(uploadError);
-     return alert('Could not upload the network logo.');
-   }
-
-   const {data:publicData}=sb.storage
-     .from('network-logos')
-     .getPublicUrl(path);
-
-   logoUrl=`${publicData.publicUrl}?v=${Date.now()}`;
+ const saveBtn=document.getElementById('network-brand-save');
+ if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='Saving…'}
+ try{
+   const logo_url=await uploadSelectedNetworkLogo();
+   const {data,error}=await sb.from('networks').update({name,logo_url,accent_color:accent,secondary_color:secondary,updated_at:new Date().toISOString()}).eq('id',profile.network_id).select('id,name,slug,logo_url,accent_color,secondary_color,status,plan').single();
+   if(error)throw error;
+   selectedNetworkLogoFile=null;
+   if(selectedNetworkLogoPreview){URL.revokeObjectURL(selectedNetworkLogoPreview);selectedNetworkLogoPreview=null}
+   networkBranding=data;applyNetworkBranding();renderNetworkSettings();updatePersonalGreeting();flash('Network branding saved.');
+ }catch(error){
+   console.error('Network branding save failed',error);
+   alert(error.message||'Could not save Network Settings.');
+ }finally{
+   if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='Save Changes'}
  }
-
- const {data,error}=await sb
-   .from('networks')
-   .update({
-     name,
-     accent_color:accent,
-     secondary_color:secondary,
-     logo_url:logoUrl,
-     updated_at:new Date().toISOString()
-   })
-   .eq('id',profile.network_id)
-   .select('id,name,slug,logo_url,accent_color,secondary_color,status,plan')
-   .single();
-
- if(error){
-   console.error(error);
-   return alert('Could not save Network Settings.');
- }
-
- pendingNetworkLogoFile=null;
- networkBranding=data;
- applyNetworkBranding();
- document.title=`${data.name} · Legacy Hub`;
- renderNetworkSettings();
- alert('Network branding saved.');
 }
 
 let networkBilling=null;
@@ -1009,7 +1009,16 @@ function renderNetworkSettings(){
      <label>Network name
        <input id="network-settings-name" class="field" value="${escapeHtml(n.name||'')}" maxlength="80" oninput="previewNetworkBranding()">
      </label>
-     
+     <div class="network-logo-uploader">
+       <div class="network-logo-current">${n.logo_url?`<img src="${escapeHtml(n.logo_url)}" alt="Current network logo">`:'<div class="network-logo-empty">LOGO</div>'}</div>
+       <div class="network-logo-controls">
+         <b>Network logo</b>
+         <p class="muted">PNG, JPG or WebP · maximum 5 MB.</p>
+         <input id="network-settings-logo" type="file" accept="image/png,image/jpeg,image/webp" onchange="previewNetworkLogo(this.files?.[0])">
+         <div id="network-logo-state" class="muted">${n.logo_url?'Current logo is active.':'No network logo uploaded yet.'}</div>
+         ${n.logo_url?'<button class="btn ghost tiny" type="button" onclick="removeNetworkLogo()">Remove Logo</button>':''}
+       </div>
+     </div>
      <div class="network-colours">
        <label>Primary colour
          <input id="network-settings-accent" type="color" value="${escapeHtml(n.accent_color||'#8b5cf6')}" oninput="previewNetworkBranding()">
@@ -1023,7 +1032,7 @@ function renderNetworkSettings(){
        <div class="stat"><small>NETWORK STATUS</small><strong>${escapeHtml(n.status||'active')}</strong></div>
      </div>
      ${renderPlanUsage()}${renderBillingPanel()}<div class="network-actions">
-       <button class="btn" onclick="saveNetworkBranding()">Save Changes</button>
+       <button id="network-brand-save" class="btn" onclick="saveNetworkBranding()">Save Changes</button>
        <button class="btn ghost" onclick="resetNetworkBrandingPreview()">Reset Preview</button>
      </div>
    </div>
@@ -1031,7 +1040,7 @@ function renderNetworkSettings(){
      <div class="eyebrow">LIVE PREVIEW</div>
      <h3>How your Hub will look</h3>
      <div id="network-brand-preview-bar" class="network-preview-bar">
-<div class="network-preview-logo">${n.logo_url?`<img src="${escapeHtml(n.logo_url)}" alt="Network logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">`:'LH'}</div>
+       <div class="network-preview-logo"><img id="network-brand-preview-logo-img" hidden alt=""><span id="network-brand-preview-logo-fallback">LH</span></div>
        <div><strong id="network-brand-preview-name">${escapeHtml(n.name||'Your Network')}</strong><small>Legacy Hub workspace</small></div>
      </div>
      <div class="network-preview-links"><span>Dashboard</span><span>Creators</span><span>Battles</span></div>
@@ -1051,7 +1060,7 @@ async function loadNetworkBranding(){
  return networkBranding;
 }
 
-async function refreshAll(){if(!preview&&profile?.id){await sb.rpc('refresh_my_achievements',{p_month:new Date().toISOString().slice(0,10)});}if(preview){teams=teamFallback;battles=[{id:'1',starts_at:'2026-08-18T20:00:00Z',opponent_handle:'@KiraStreams',opponent_team:'Redbull Warriors',format:'3 rounds',status:'available',host_team:{name:'Bulletproof Armour Unit'}},{id:'2',starts_at:'2026-08-19T19:30:00Z',opponent_handle:'@NightQueen',opponent_team:'Once Upon a Nightmare',format:'1 round',status:'available',host_team:{name:'Redbull Warriors'}}];sessions=[{session_date:'2026-08-15',minutes:190,qualifying_day:true},{session_date:'2026-08-16',minutes:135,qualifying_day:true}];matchRequests=[{id:'mr1',network_id:'preview-network',member_id:'preview-admin',request_date:'2026-08-20',start_time:'20:00:00',end_time:'22:00:00',creator_level:'B2',format:'3 rounds',opponent_preference:'Any Legacy team',notes:'Looking for a fun battle',status:'open',member:{display_name:'Will',tiktok_handle:'@WillBAU',team_id:'bau-preview'}},{id:'mr2',network_id:'preview-network',member_id:'a3',request_date:'2026-08-21',start_time:'19:00:00',end_time:'21:00:00',creator_level:'B1',format:'1 round',opponent_preference:'',notes:'',status:'open',member:{display_name:'NightQueen',tiktok_handle:'@NightQueen',team_id:'oun-preview'}}];matchOffers=[{id:'mo1',request_id:'mr1',offered_by:'a3',message:'I can do 20:30!',status:'open',created_at:new Date().toISOString(),offerer:{display_name:'NightQueen',tiktok_handle:'@NightQueen',team_id:'oun-preview'}}];availabilities=[{id:'av1',member_id:'preview-admin',availability_date:'2026-08-19',start_time:'18:00:00',end_time:'22:00:00',creator_level:'B2',formats:['1 round','3 rounds'],status:'open'}];battleResults=[{id:'res1',battle_id:'preview-completed-1',network_id:'preview-network',team_id:'bau-preview',creator_id:'preview-admin',outcome:'win',rounds_for:3,rounds_against:1,points:420,diamonds:18500,verification_status:'verified',creator:{display_name:'Will',tiktok_handle:'@WillBAU'},team:{name:'Bulletproof Armour Unit'}},{id:'res2',battle_id:'preview-completed-2',network_id:'preview-network',team_id:'oun-preview',creator_id:'a3',outcome:'win',rounds_for:1,rounds_against:0,points:280,diamonds:9100,verification_status:'pending',creator:{display_name:'NightQueen',tiktok_handle:'@NightQueen'},team:{name:'Once Upon a Nightmare'}}];creatorPerformance=[{creator_id:'preview-admin',team_id:'bau-preview',display_name:'Will',tiktok_handle:'@WillBAU',battles:7,wins:5,losses:1,draws:1,points:1250,diamonds:42000,rounds_won:15,rounds_lost:6},{creator_id:'a3',team_id:'oun-preview',display_name:'NightQueen',tiktok_handle:'@NightQueen',battles:6,wins:4,losses:2,draws:0,points:1120,diamonds:36500,rounds_won:11,rounds_lost:7},{creator_id:'a1',team_id:'bau-preview',display_name:'Lexi',tiktok_handle:'@LexiBAU',battles:5,wins:4,losses:1,draws:0,points:980,diamonds:31000,rounds_won:10,rounds_lost:4}];teamPerformance=[{team_id:'bau-preview',name:'Bulletproof Armour Unit',short_name:'BAU',members:28,battles:12,wins:9,losses:2,draws:1,points:2500,diamonds:81000},{team_id:'oun-preview',name:'Once Upon a Nightmare',short_name:'OUN',members:24,battles:10,wins:7,losses:3,draws:0,points:2110,diamonds:69000},{team_id:'rw-preview',name:'Redbull Warriors',short_name:'RW',members:26,battles:9,wins:6,losses:3,draws:0,points:1860,diamonds:58000}];achievementDefinitions=[{code:'first_win',title:'First Blood',description:'Win your first verified battle.',icon:'⚔️',category:'battle',sort_order:10},{code:'battle_streak_3',title:'On a Roll',description:'Win 3 verified battles in the same month.',icon:'🔥',category:'battle',sort_order:20},{code:'battle_streak_5',title:'Untouchable',description:'Win 5 verified battles in the same month.',icon:'👑',category:'battle',sort_order:30},{code:'ten_battles',title:'Battle Tested',description:'Complete 10 verified battles in the same month.',icon:'🛡️',category:'battle',sort_order:40},{code:'live_20h',title:'LIVE Target Complete',description:'Reach 20 LIVE hours in the month.',icon:'⏱️',category:'live',sort_order:50},{code:'live_8_days',title:'Perfect 8/8',description:'Complete at least 8 qualifying LIVE days in the month.',icon:'📅',category:'live',sort_order:60},{code:'live_double',title:'Double Shift',description:'Reach 40 LIVE hours in the month.',icon:'🚀',category:'live',sort_order:70}];creatorAchievements=[{id:'ca1',member_id:'preview-admin',achievement_code:'first_win',month_start:'2026-08-01',awarded_at:new Date().toISOString()},{id:'ca2',member_id:'preview-admin',achievement_code:'battle_streak_3',month_start:'2026-08-01',awarded_at:new Date().toISOString()}];monthlyAwards=[{id:'aw1',network_id:'preview-network',team_id:null,member_id:'preview-admin',month_start:'2026-07-01',award_type:'top_battler',title:'Top Battler',reason:'Highest verified battle points across the Legacy network.',points_snapshot:1420,member:{display_name:'Will',tiktok_handle:'@WillBAU'},team:null},{id:'aw2',network_id:'preview-network',team_id:'oun-preview',member_id:'a3',month_start:'2026-07-01',award_type:'team_mvp',title:'Team MVP',reason:'Highest verified battle points for the team.',points_snapshot:1180,member:{display_name:'NightQueen',tiktok_handle:'@NightQueen'},team:{name:'Once Upon a Nightmare'}},{id:'aw3',network_id:'preview-network',team_id:null,member_id:'a1',month_start:'2026-07-01',award_type:'live_champion',title:'LIVE Champion',reason:'Most LIVE minutes across the Legacy network.',points_snapshot:2460,member:{display_name:'Lexi',tiktok_handle:'@LexiBAU'},team:null}];creatorDirectory=[{id:'preview-admin',display_name:'Will',tiktok_handle:'@WillBAU',avatar_url:null,bio:'Network admin, creator and battle addict. Here to build the Legacy community.',creator_level:'B2',favourite_battle_format:'3 rounds',profile_visibility:'network',role:'network_admin',membership_status:'active',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit',short_name:'BAU'}},{id:'a1',display_name:'Lexi',tiktok_handle:'@LexiBAU',avatar_url:null,bio:'BAU team manager. Big energy, good vibes, no drama.',creator_level:'B1',favourite_battle_format:'5 rounds',profile_visibility:'network',role:'team_manager',membership_status:'active',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit',short_name:'BAU'}},{id:'a3',display_name:'NightQueen',tiktok_handle:'@NightQueen',avatar_url:null,bio:'Nightmare crew. Battles, laughs and late-night LIVE sessions.',creator_level:'B1',favourite_battle_format:'1 round',profile_visibility:'network',role:'member',membership_status:'active',team_id:'oun-preview',team:{name:'Once Upon a Nightmare',short_name:'OUN'}},{id:'a4',display_name:'Rogue',tiktok_handle:'@RogueRW',avatar_url:null,bio:'Redbull Warriors creator.',creator_level:'B3',favourite_battle_format:'3 rounds',profile_visibility:'network',role:'supporter',membership_status:'active',team_id:'rw-preview',team:{name:'Redbull Warriors',short_name:'RW'}}];battlePosters=[{id:'bp1',battle_id:'1',creator_id:'preview-admin',uploaded_by:'a1',storage_path:'preview/poster1.jpg',file_name:'battle-night.png',status:'submitted',submitted_at:new Date().toISOString(),viewed_at:null,creator:{display_name:'Will',tiktok_handle:'@WillBAU'},uploader:{display_name:'Lexi'},battle:{starts_at:'2026-08-18T20:00:00Z',opponent_handle:'@KiraStreams',format:'3 rounds'}}];appNotifications=[{id:'n1',recipient_id:'preview-admin',notification_type:'battle_poster_ready',title:'Your battle poster is ready',body:'Your battle poster has been submitted by Lexi.',battle_id:'1',battle_poster_id:'bp1',read_at:null,created_at:new Date().toISOString()}];notificationPreferences={poster_ready:true,battle_reminders:true,matchmaking:true,announcements:true,awards:true,push_enabled:false};adminMembers=[{id:'a1',display_name:'Lexi',tiktok_handle:'@LexiBAU',role:'team_manager',membership_status:'active',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit'}},{id:'a2',display_name:'Jamie',tiktok_handle:'@JamieLive',role:'member',membership_status:'pending',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit'}},{id:'a3',display_name:'NightQueen',tiktok_handle:'@NightQueen',role:'member',membership_status:'active',team_id:'oun-preview',team:{name:'Once Upon a Nightmare'}},{id:'a4',display_name:'Rogue',tiktok_handle:'@RogueRW',role:'supporter',membership_status:'suspended',team_id:'rw-preview',team:{name:'Redbull Warriors'}}];renderAll();return}
+async function refreshAll(){if(!preview&&profile?.id){await sb.rpc('refresh_my_achievements',{p_month:new Date().toISOString().slice(0,10)});}if(preview){teams=teamFallback;battles=[{id:'1',starts_at:'2026-08-18T20:00:00Z',opponent_handle:'@KiraStreams',opponent_team:'Redbull Warriors',format:'3 rounds',status:'available',host_team:{name:'Bulletproof Armour Unit'}},{id:'2',starts_at:'2026-08-19T19:30:00Z',opponent_handle:'@NightQueen',opponent_team:'Once Upon a Nightmare',format:'1 round',status:'available',host_team:{name:'Redbull Warriors'}}];sessions=[{session_date:'2026-08-15',minutes:190,qualifying_day:true},{session_date:'2026-08-16',minutes:135,qualifying_day:true}];matchRequests=[{id:'mr1',network_id:'preview-network',member_id:'preview-admin',request_date:'2026-08-20',start_time:'20:00:00',end_time:'22:00:00',creator_level:'B2',format:'3 rounds',opponent_preference:'Any Legacy team',notes:'Looking for a fun battle',status:'open',member:{display_name:'Will',tiktok_handle:'@WillBAU',team_id:'bau-preview'}},{id:'mr2',network_id:'preview-network',member_id:'a3',request_date:'2026-08-21',start_time:'19:00:00',end_time:'21:00:00',creator_level:'B1',format:'1 round',opponent_preference:'',notes:'',status:'open',member:{display_name:'NightQueen',tiktok_handle:'@NightQueen',team_id:'oun-preview'}}];matchOffers=[{id:'mo1',request_id:'mr1',offered_by:'a3',message:'I can do 20:30!',status:'open',created_at:new Date().toISOString(),offerer:{display_name:'NightQueen',tiktok_handle:'@NightQueen',team_id:'oun-preview'}}];availabilities=[{id:'av1',member_id:'preview-admin',availability_date:'2026-08-19',start_time:'18:00:00',end_time:'22:00:00',creator_level:'B2',formats:['1 round','3 rounds'],status:'open'}];battleResults=[{id:'res1',battle_id:'preview-completed-1',network_id:'preview-network',team_id:'bau-preview',creator_id:'preview-admin',outcome:'win',rounds_for:3,rounds_against:1,points:420,diamonds:18500,verification_status:'verified',creator:{display_name:'Will',tiktok_handle:'@WillBAU'},team:{name:'Bulletproof Armour Unit'}},{id:'res2',battle_id:'preview-completed-2',network_id:'preview-network',team_id:'oun-preview',creator_id:'a3',outcome:'win',rounds_for:1,rounds_against:0,points:280,diamonds:9100,verification_status:'pending',creator:{display_name:'NightQueen',tiktok_handle:'@NightQueen'},team:{name:'Once Upon a Nightmare'}}];creatorPerformance=[{creator_id:'preview-admin',team_id:'bau-preview',display_name:'Will',tiktok_handle:'@WillBAU',battles:7,wins:5,losses:1,draws:1,points:1250,diamonds:42000,rounds_won:15,rounds_lost:6},{creator_id:'a3',team_id:'oun-preview',display_name:'NightQueen',tiktok_handle:'@NightQueen',battles:6,wins:4,losses:2,draws:0,points:1120,diamonds:36500,rounds_won:11,rounds_lost:7},{creator_id:'a1',team_id:'bau-preview',display_name:'Lexi',tiktok_handle:'@LexiBAU',battles:5,wins:4,losses:1,draws:0,points:980,diamonds:31000,rounds_won:10,rounds_lost:4}];teamPerformance=[{team_id:'bau-preview',name:'Bulletproof Armour Unit',short_name:'BAU',members:28,battles:12,wins:9,losses:2,draws:1,points:2500,diamonds:81000},{team_id:'oun-preview',name:'Once Upon a Nightmare',short_name:'OUN',members:24,battles:10,wins:7,losses:3,draws:0,points:2110,diamonds:69000},{team_id:'rw-preview',name:'Redbull Warriors',short_name:'RW',members:26,battles:9,wins:6,losses:3,draws:0,points:1860,diamonds:58000}];achievementDefinitions=[{code:'first_win',title:'First Blood',description:'Win your first verified battle.',icon:'⚔️',category:'battle',sort_order:10},{code:'battle_streak_3',title:'On a Roll',description:'Win 3 verified battles in the same month.',icon:'🔥',category:'battle',sort_order:20},{code:'battle_streak_5',title:'Untouchable',description:'Win 5 verified battles in the same month.',icon:'👑',category:'battle',sort_order:30},{code:'ten_battles',title:'Battle Tested',description:'Complete 10 verified battles in the same month.',icon:'🛡️',category:'battle',sort_order:40},{code:'live_20h',title:'LIVE Target Complete',description:'Reach 20 LIVE hours in the month.',icon:'⏱️',category:'live',sort_order:50},{code:'live_8_days',title:'Perfect 8/8',description:'Complete at least 8 qualifying LIVE days in the month.',icon:'📅',category:'live',sort_order:60},{code:'live_double',title:'Double Shift',description:'Reach 40 LIVE hours in the month.',icon:'🚀',category:'live',sort_order:70}];creatorAchievements=[{id:'ca1',member_id:'preview-admin',achievement_code:'first_win',month_start:'2026-08-01',awarded_at:new Date().toISOString()},{id:'ca2',member_id:'preview-admin',achievement_code:'battle_streak_3',month_start:'2026-08-01',awarded_at:new Date().toISOString()}];monthlyAwards=[{id:'aw1',network_id:'preview-network',team_id:null,member_id:'preview-admin',month_start:'2026-07-01',award_type:'top_battler',title:'Top Battler',reason:'Highest verified battle points across the network.',points_snapshot:1420,member:{display_name:'Will',tiktok_handle:'@WillBAU'},team:null},{id:'aw2',network_id:'preview-network',team_id:'oun-preview',member_id:'a3',month_start:'2026-07-01',award_type:'team_mvp',title:'Team MVP',reason:'Highest verified battle points for the team.',points_snapshot:1180,member:{display_name:'NightQueen',tiktok_handle:'@NightQueen'},team:{name:'Once Upon a Nightmare'}},{id:'aw3',network_id:'preview-network',team_id:null,member_id:'a1',month_start:'2026-07-01',award_type:'live_champion',title:'LIVE Champion',reason:'Most LIVE minutes across the network.',points_snapshot:2460,member:{display_name:'Lexi',tiktok_handle:'@LexiBAU'},team:null}];creatorDirectory=[{id:'preview-admin',display_name:'Will',tiktok_handle:'@WillBAU',avatar_url:null,bio:'Network admin, creator and battle addict. Here to build the Legacy community.',creator_level:'B2',favourite_battle_format:'3 rounds',profile_visibility:'network',role:'network_admin',membership_status:'active',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit',short_name:'BAU'}},{id:'a1',display_name:'Lexi',tiktok_handle:'@LexiBAU',avatar_url:null,bio:'BAU team manager. Big energy, good vibes, no drama.',creator_level:'B1',favourite_battle_format:'5 rounds',profile_visibility:'network',role:'team_manager',membership_status:'active',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit',short_name:'BAU'}},{id:'a3',display_name:'NightQueen',tiktok_handle:'@NightQueen',avatar_url:null,bio:'Nightmare crew. Battles, laughs and late-night LIVE sessions.',creator_level:'B1',favourite_battle_format:'1 round',profile_visibility:'network',role:'member',membership_status:'active',team_id:'oun-preview',team:{name:'Once Upon a Nightmare',short_name:'OUN'}},{id:'a4',display_name:'Rogue',tiktok_handle:'@RogueRW',avatar_url:null,bio:'Redbull Warriors creator.',creator_level:'B3',favourite_battle_format:'3 rounds',profile_visibility:'network',role:'supporter',membership_status:'active',team_id:'rw-preview',team:{name:'Redbull Warriors',short_name:'RW'}}];battlePosters=[{id:'bp1',battle_id:'1',creator_id:'preview-admin',uploaded_by:'a1',storage_path:'preview/poster1.jpg',file_name:'battle-night.png',status:'submitted',submitted_at:new Date().toISOString(),viewed_at:null,creator:{display_name:'Will',tiktok_handle:'@WillBAU'},uploader:{display_name:'Lexi'},battle:{starts_at:'2026-08-18T20:00:00Z',opponent_handle:'@KiraStreams',format:'3 rounds'}}];appNotifications=[{id:'n1',recipient_id:'preview-admin',notification_type:'battle_poster_ready',title:'Your battle poster is ready',body:'Your battle poster has been submitted by Lexi.',battle_id:'1',battle_poster_id:'bp1',read_at:null,created_at:new Date().toISOString()}];notificationPreferences={poster_ready:true,battle_reminders:true,matchmaking:true,announcements:true,awards:true,push_enabled:false};adminMembers=[{id:'a1',display_name:'Lexi',tiktok_handle:'@LexiBAU',role:'team_manager',membership_status:'active',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit'}},{id:'a2',display_name:'Jamie',tiktok_handle:'@JamieLive',role:'member',membership_status:'pending',team_id:'bau-preview',team:{name:'Bulletproof Armour Unit'}},{id:'a3',display_name:'NightQueen',tiktok_handle:'@NightQueen',role:'member',membership_status:'active',team_id:'oun-preview',team:{name:'Once Upon a Nightmare'}},{id:'a4',display_name:'Rogue',tiktok_handle:'@RogueRW',role:'supporter',membership_status:'suspended',team_id:'rw-preview',team:{name:'Redbull Warriors'}}];renderAll();return}
 const nowIso=new Date().toISOString(),historyStart=new Date(Date.now()-120*86400000).toISOString();
 const [t,b,l,a,cd,an,np]=await Promise.all([sb.from('teams').select('id,network_id,name,short_name,description,accent_color,logo_url,manager_id,status,manager:profiles!teams_manager_id_fkey(display_name,tiktok_handle)').order('name'),sb.from('battles').select('id,network_id,host_team_id,created_by,claimed_by,starts_at,opponent_handle,opponent_team,creator_level,format,duration_minutes,notes,status,series_id,series_index,created_at,host_team:teams(name),claimer:profiles!battles_claimed_by_fkey(display_name,tiktok_handle)').gte('starts_at',historyStart).order('starts_at').limit(250),sb.from('live_sessions').select('id,member_id,session_date,minutes,qualifying_day,approved,created_at').eq('member_id',profile.id).order('session_date',{ascending:false}).limit(120),sb.from('announcements').select('id,network_id,team_id,author_id,title,body,pinned,created_at,category,published_at,expires_at').or(`expires_at.is.null,expires_at.gt.${nowIso}`).order('created_at',{ascending:false}).limit(50),sb.from('profiles').select('id,display_name,tiktok_handle,avatar_url,bio,creator_level,favourite_battle_format,profile_visibility,role,membership_status,team_id,team:teams!profiles_team_id_fkey(name,short_name)').eq('membership_status','active').order('display_name').limit(500),sb.from('app_notifications').select('id,recipient_id,created_by,notification_type,title,body,battle_id,battle_poster_id,action_target,url,read_at,created_at,push_sent_at,push_attempted_at').eq('recipient_id',profile.id).order('created_at',{ascending:false}).limit(50),sb.from('notification_preferences').select('*').eq('member_id',profile.id).maybeSingle()]);teams=t.data||[];battles=b.data||[];if(!l.error)sessions=l.data||[];else console.error('Initial LIVE history load failed; preserving previous sessions',l.error);window.anns=a.data||[];matchRequests=[];matchOffers=[];availabilities=[];battleResults=[];creatorPerformance=[];teamPerformance=[];achievementDefinitions=[];creatorAchievements=[];monthlyAwards=[];creatorDirectory=(cd.data||[]).filter(c=>c.profile_visibility!=='private' && (c.profile_visibility!=='team'||c.team_id===profile.team_id));await hydratePrivateProfilePhotos();const hydratedSelf=(creatorDirectory||[]).find(c=>c.id===profile?.id);if(hydratedSelf&&profile){profile.avatar_object_url=hydratedSelf.avatar_object_url||hydratedSelf.avatar_url;profile.avatar_url=hydratedSelf.avatar_url||profile.avatar_url;}battlePosters=[];appNotifications=an.data||[];notificationPreferences=np.data||{poster_ready:true,battle_reminders:true,matchmaking:true,announcements:true,awards:true,push_enabled:false};notificationPreferencesDirty=false;if(!preview&&profile?.id){const [r,br,mnr]=await Promise.all([sb.from('announcement_reads').select('announcement_id').eq('member_id',profile.id),sb.from('battle_reminder_reads').select('battle_id,reminder_type').eq('member_id',profile.id),sb.from('match_notification_reads').select('notification_key').eq('member_id',profile.id)]);announcementReads=new Set((r.data||[]).map(x=>x.announcement_id));battleReminderReads=new Set((br.data||[]).map(x=>`${x.battle_id}:${x.reminder_type}`));matchNotificationReads=new Set((mnr.data||[]).map(x=>x.notification_key))}renderAll();if(!preview){startScopedRealtime();loadMyLiveSessions({silent:true}).then(()=>{renderProgress();renderDashboard()})}}
 
@@ -1524,7 +1533,7 @@ async function finaliseMonthlyAwards(){
    const m=monthKey(finaliseMonth.value);
    if(monthlyAwards.some(a=>String(a.month_start).slice(0,10)===m))return flash('That month already has awards in preview mode.');
    const top=[...creatorPerformance].sort((a,b)=>Number(b.points||0)-Number(a.points||0))[0];
-   if(top)monthlyAwards.unshift({id:'pa'+Date.now(),network_id:profile.network_id,team_id:null,member_id:top.creator_id,month_start:m,award_type:'top_battler',title:'Top Battler',reason:'Highest verified battle points across the Legacy network.',member:{display_name:top.display_name,tiktok_handle:top.tiktok_handle},team:null});
+   if(top)monthlyAwards.unshift({id:'pa'+Date.now(),network_id:profile.network_id,team_id:null,member_id:top.creator_id,month_start:m,award_type:'top_battler',title:'Top Battler',reason:'Highest verified battle points across the network.',member:{display_name:top.display_name,tiktok_handle:top.tiktok_handle},team:null});
    renderAchievements();return flash('Monthly awards finalised in preview mode');
  }
  const {data,error}=await sb.rpc('generate_monthly_awards',{p_month:monthKey(finaliseMonth.value)});if(error)return flash(error.message);flash(`${data||0} monthly awards created`);await refreshAll();
