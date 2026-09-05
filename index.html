@@ -428,10 +428,59 @@ document.addEventListener('visibilitychange',()=>{
 .dashAvatar{background:#0c0d12;object-fit:cover}
 .dashAvatar[src*="network-logos"]{object-fit:contain;padding:10px;background:rgba(7,8,12,.88)}
 </style>
+
+<style id="dashboard-hero-branding-4h35">
+.dashHero{
+  min-height:400px;
+  padding:28px 30px 24px;
+  background:
+    radial-gradient(circle at 12% 20%,color-mix(in srgb,var(--tenant-accent,#8b5cf6) 24%,transparent),transparent 36%),
+    linear-gradient(135deg,#0b0d12 0%,#0b0d12 48%,rgba(11,13,18,.88) 58%,rgba(11,13,18,.35) 100%);
+  border-color:color-mix(in srgb,var(--tenant-accent,#8b5cf6) 55%,#262a31);
+}
+.dashHero:before,.dashHero:after{display:none}
+.dashHeroText{position:relative;z-index:2;width:100%;padding-right:42%}
+.dashGreeting{max-width:760px}
+.dashHeroBanner{
+  position:absolute;
+  z-index:1;
+  top:0;right:0;bottom:0;
+  width:48%;
+  overflow:hidden;
+  border-radius:0 17px 17px 0;
+  pointer-events:none;
+}
+.dashHeroBanner:before{
+  content:'';
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(90deg,#0b0d12 0%,rgba(11,13,18,.88) 10%,rgba(11,13,18,.20) 32%,transparent 58%);
+}
+.dashHeroBanner img{
+  width:100%;height:100%;object-fit:cover;object-position:center;
+  display:block;filter:saturate(1.05) contrast(1.04);
+}
+.dashStats4{
+  position:relative;z-index:3;
+  width:calc(100% + 72%);
+  max-width:none;
+  margin-top:22px;
+}
+@media(max-width:1050px){
+  .dashHero{min-height:unset}
+  .dashHeroText{padding-right:0}
+  .dashHeroBanner{position:relative;width:100%;height:260px;margin:20px 0 0;border-radius:14px}
+  .dashHeroBanner:before{background:linear-gradient(180deg,#0b0d12 0%,rgba(11,13,18,.15) 20%,transparent 50%)}
+  .dashStats4{width:100%}
+}
+@media(max-width:700px){
+  .dashHero{padding:20px}
+  .dashHeroBanner{height:210px}
+}
+</style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.4</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.5</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
@@ -446,8 +495,9 @@ document.addEventListener('visibilitychange',()=>{
         <div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Profile')"><small>💎 BATTLE DIAMONDS</small><strong id="dashDiamonds">0</strong><small id="diamondMeta">Battle total</small><div id="diamondRing" class="statRing blue" style="--ring:100%"></div></div>
       </div>
     </div>
-    <img id="dashAvatar" class="dashAvatar hidden" alt="">
-    <div class="avatarArrow">↑</div><div class="avatarArrow down">↓</div>
+    <div class="dashHeroBanner" aria-hidden="true">
+      <img id="dashHeroBannerImg" src="./redbull-legacy-dashboard-banner.jpg" alt="">
+    </div>
   </div>
 
   <div class="commandGrid">
@@ -666,17 +716,8 @@ function updatePersonalGreeting(){
  const first=(raw.split(/\s+/)[0]||'CREATOR').toUpperCase();
  const networkName=networkBranding?.name||'YOUR NETWORK';
  dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK TO ${escapeHtml(networkName.toUpperCase())}</span>`;
- const da=document.getElementById('dashAvatar');
- const avatar=profile.avatar_object_url||profile.avatar_url||profile.tiktok_avatar_url||networkBranding?.logo_url||'';
- if(da&&avatar){
-   da.src=avatar;
-   da.classList.remove('hidden');
-   da.onerror=()=>{
-     const fallback=networkBranding?.logo_url||'';
-     if(fallback&&da.src!==fallback){da.src=fallback;da.classList.remove('hidden')}
-     else da.classList.add('hidden');
-   };
- }else da?.classList.add('hidden');
+ const heroBanner=document.getElementById('dashHeroBannerImg');
+ if(heroBanner&&!heroBanner.getAttribute('src'))heroBanner.src='./redbull-legacy-dashboard-banner.jpg';
 }
 async function enterApp(){auth.classList.add('hidden');pending.classList.add('hidden');app.classList.remove('hidden');await Promise.all([loadPlatformAccess(),loadNetworkBranding(),loadNetworkEntitlements(),loadNetworkBilling()]);updatePersonalGreeting();whoName.textContent=profile.display_name||'Creator';whoMeta.textContent=`${profile.tiktok_handle||''} · ${prettyRole(profile.role)}`;teamPill.textContent=profile.role==='network_admin'?(networkBranding?.name||'Network View'):(profile.team?.name||'Network View');navItems=['Dashboard','Profile','Teams','Creators','Battles','Progress','Leaderboard','Achievements','Announcements'];const caps=roleCapabilities();if(caps.canManageBattleMedia&&(networkEntitlements?.battle_media!==false))navItems.push('Battle Media');navItems.push('Notifications');if(platformAccess)navItems.push('Platform');if(caps.canManageNetwork)navItems.push('Network Settings');if(caps.canManageMembers)navItems.push('Admin');nav.innerHTML=navItems.map((n,i)=>`<button data-section="${n}" class="${i?'':'active'}" onclick="show('${n}',this)">${n==='Profile'?'My Profile':n}</button>`).join('');await refreshAll();updatePersonalGreeting();await initPushSupport();await handleIncomingPushLink()}
 function prettyRole(r){return ({network_admin:'Network Admin',team_manager:'Team Manager',battle_manager:'Battle Manager',member:'Member',supporter:'Supporter'})[r]||r||'Member'}
