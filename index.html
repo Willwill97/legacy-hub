@@ -403,7 +403,7 @@ document.addEventListener('visibilitychange',()=>{
 </style></head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">REDBULL LEGACY</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option>Bulletproof Armour Unit</option><option>Once Upon a Nightmare</option><option>Redbull Warriors</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.2</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand">LEGACY<br><span>HUB</span><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE V26 · PHASE 4H.3.1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow">REDBULL LEGACY NETWORK</div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
@@ -864,19 +864,96 @@ function previewNetworkBranding(){
  const n=document.getElementById('network-brand-preview-name');if(n)n.textContent=name;
  const b=document.getElementById('network-brand-preview-bar');if(b)b.style.background=`linear-gradient(135deg,${accent},${secondary})`;
 }
-function resetNetworkBrandingPreview(){applyNetworkBranding();renderNetworkSettings()}
+let pendingNetworkLogoFile=null;
+
+function previewNetworkLogo(input){
+ const file=input?.files?.[0]||null;
+ pendingNetworkLogoFile=file;
+
+ if(!file)return;
+
+ if(file.size>5*1024*1024){
+   pendingNetworkLogoFile=null;
+   input.value='';
+   return alert('Logo must be 5 MB or smaller.');
+ }
+
+ const allowed=['image/png','image/jpeg','image/webp'];
+ if(!allowed.includes(file.type)){
+   pendingNetworkLogoFile=null;
+   input.value='';
+   return alert('Please choose a PNG, JPG or WebP logo.');
+ }
+
+ const preview=document.querySelector('.network-preview-logo');
+ if(preview){
+   const url=URL.createObjectURL(file);
+   preview.innerHTML=`<img src="${url}" alt="Network logo preview" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">`;
+ }
+}
+ function resetNetworkBrandingPreview(){applyNetworkBranding();renderNetworkSettings()}
 
 function validHexColour(v){return /^#[0-9A-Fa-f]{6}$/.test(String(v||''))}
 async function saveNetworkBranding(){
  if(preview||!profile?.id||profile.role!=='network_admin')return alert('Network Admin access required.');
+
  const name=document.getElementById('network-settings-name')?.value?.trim();
  const accent=document.getElementById('network-settings-accent')?.value;
  const secondary=document.getElementById('network-settings-secondary')?.value;
+
  if(!name)return alert('Please enter a network name.');
  if(!validHexColour(accent)||!validHexColour(secondary))return alert('Please choose valid branding colours.');
- const {data,error}=await sb.from('networks').update({name,accent_color:accent,secondary_color:secondary,updated_at:new Date().toISOString()}).eq('id',profile.network_id).select('id,name,slug,logo_url,accent_color,secondary_color,status,plan').single();
- if(error){console.error(error);return alert('Could not save Network Settings.')}
- networkBranding=data;applyNetworkBranding();document.title=`${data.name} · Legacy Hub`;renderNetworkSettings();alert('Network branding saved.');
+
+ let logoUrl=networkBranding?.logo_url||null;
+
+ if(pendingNetworkLogoFile){
+   const file=pendingNetworkLogoFile;
+   const ext=(file.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'')||'png';
+   const path=`${profile.network_id}/logo.${ext}`;
+
+   const {error:uploadError}=await sb.storage
+     .from('network-logos')
+     .upload(path,file,{
+       upsert:true,
+       contentType:file.type
+     });
+
+   if(uploadError){
+     console.error(uploadError);
+     return alert('Could not upload the network logo.');
+   }
+
+   const {data:publicData}=sb.storage
+     .from('network-logos')
+     .getPublicUrl(path);
+
+   logoUrl=`${publicData.publicUrl}?v=${Date.now()}`;
+ }
+
+ const {data,error}=await sb
+   .from('networks')
+   .update({
+     name,
+     accent_color:accent,
+     secondary_color:secondary,
+     logo_url:logoUrl,
+     updated_at:new Date().toISOString()
+   })
+   .eq('id',profile.network_id)
+   .select('id,name,slug,logo_url,accent_color,secondary_color,status,plan')
+   .single();
+
+ if(error){
+   console.error(error);
+   return alert('Could not save Network Settings.');
+ }
+
+ pendingNetworkLogoFile=null;
+ networkBranding=data;
+ applyNetworkBranding();
+ document.title=`${data.name} · Legacy Hub`;
+ renderNetworkSettings();
+ alert('Network branding saved.');
 }
 
 let networkBilling=null;
@@ -932,6 +1009,7 @@ function renderNetworkSettings(){
      <label>Network name
        <input id="network-settings-name" class="field" value="${escapeHtml(n.name||'')}" maxlength="80" oninput="previewNetworkBranding()">
      </label>
+     
      <div class="network-colours">
        <label>Primary colour
          <input id="network-settings-accent" type="color" value="${escapeHtml(n.accent_color||'#8b5cf6')}" oninput="previewNetworkBranding()">
@@ -953,7 +1031,7 @@ function renderNetworkSettings(){
      <div class="eyebrow">LIVE PREVIEW</div>
      <h3>How your Hub will look</h3>
      <div id="network-brand-preview-bar" class="network-preview-bar">
-       <div class="network-preview-logo">LH</div>
+<div class="network-preview-logo">${n.logo_url?`<img src="${escapeHtml(n.logo_url)}" alt="Network logo" style="width:100%;height:100%;object-fit:contain;border-radius:inherit">`:'LH'}</div>
        <div><strong id="network-brand-preview-name">${escapeHtml(n.name||'Your Network')}</strong><small>Legacy Hub workspace</small></div>
      </div>
      <div class="network-preview-links"><span>Dashboard</span><span>Creators</span><span>Battles</span></div>
