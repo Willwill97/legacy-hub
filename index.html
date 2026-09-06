@@ -439,13 +439,13 @@ document.addEventListener('visibilitychange',()=>{
   border-color:color-mix(in srgb,var(--tenant-accent,#8b5cf6) 55%,#262a31);
 }
 .dashHero:before,.dashHero:after{display:none}
-.dashHeroText{position:relative;z-index:2;width:100%;padding-right:42%}
+.dashHeroText{position:relative;z-index:2;width:100%;padding-right:45%}
 .dashGreeting{max-width:760px}
 .dashHeroBanner{
   position:absolute;
   z-index:1;
   top:0;right:0;bottom:0;
-  width:48%;
+  width:52%;
   overflow:hidden;
   border-radius:0 17px 17px 0;
   pointer-events:none;
@@ -456,7 +456,7 @@ document.addEventListener('visibilitychange',()=>{
   background:linear-gradient(90deg,#0b0d12 0%,rgba(11,13,18,.88) 10%,rgba(11,13,18,.20) 32%,transparent 58%);
 }
 .dashHeroBanner img{
-  width:100%;height:100%;object-fit:cover;object-position:center;
+  width:100%;height:100%;object-fit:contain;object-position:right center;
   display:block;filter:saturate(1.05) contrast(1.04);
 }
 .dashStats4{
@@ -480,7 +480,7 @@ document.addEventListener('visibilitychange',()=>{
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.9</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.10</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
