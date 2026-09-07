@@ -611,10 +611,23 @@ document.addEventListener('visibilitychange',()=>{
 .ttInboxMeta{font-size:11px;color:var(--muted);margin-top:10px}
 @media(max-width:700px){.ttInboxFields{grid-template-columns:1fr}.ttInboxTop{flex-direction:column}.ttInboxScore{justify-content:flex-start}}
 </style>
+
+<style id="phase5-internal-battle-recognition">
+.ttInboxBadges{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.ttBattleKind{font-size:9px;font-weight:900;letter-spacing:.8px;border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+.ttBattleKind.external{color:#b5b8c2}
+.ttBattleKind.friendly{color:#d7b5ff;border-color:#6a438b;background:rgba(161,92,255,.08)}
+.ttBattleKind.interteam{color:#74d7ff;border-color:#286c85;background:rgba(57,181,230,.08)}
+.ttBattleKind.internal{color:#8fe1ba;border-color:#32775a;background:rgba(61,194,136,.08)}
+.ttRecognitionNote{margin-top:10px;border:1px dashed #333945;border-radius:9px;padding:8px 10px;font-size:11px;color:var(--muted)}
+.ttInboxItem.friendly{border-color:#5b3b78}
+.ttInboxItem.interteam{border-color:#285f73}
+@media(max-width:700px){.ttInboxBadges{justify-content:flex-start}}
+</style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V27 · PHASE 5.3</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V27 · PHASE 5.4</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
@@ -1554,7 +1567,7 @@ function handleTikTokDetectorEvent(raw){
 async function loadTikTokDetectionInbox(){
  const box=document.getElementById('ttDetectionInbox'); if(!box||preview)return;
  const {data,error}=await sb.from('tiktok_battle_detections')
-  .select('id,creator_id,scheduled_battle_id,external_match_id,external_session_id,opponent_handle,started_at,ended_at,creator_score,opponent_score,outcome,status,confidence,created_at')
+  .select('id,creator_id,scheduled_battle_id,external_match_id,external_session_id,opponent_handle,started_at,ended_at,creator_score,opponent_score,outcome,status,confidence,created_at,battle_classification,counterpart_creator_id,counterpart_detection_id,internal_match_key')
   .eq('status','pending_confirmation')
   .order('created_at',{ascending:false})
   .limit(50);
@@ -1576,6 +1589,25 @@ function ttCreatorLabel(id){
 function ttDetectionTime(v){
  try{return new Date(v).toLocaleString([], {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}catch{return ''}
 }
+
+function ttClassificationMeta(r){
+ const type=String(r?.battle_classification||'external');
+ const cp=r?.counterpart_creator_id?ttCreatorLabel(r.counterpart_creator_id):null;
+ if(type==='friendly_same_team')return {label:'FRIENDLY · SAME TEAM',cls:'friendly',detail:cp?`Legacy Hub recognised ${cp.name} on the other side.`:'Both creators belong to the same team.'};
+ if(type==='inter_team')return {label:'INTERNAL · INTER-TEAM',cls:'interteam',detail:cp?`Legacy Hub recognised ${cp.name} from another team.`:'Both creators belong to this network.'};
+ if(type==='internal_unknown')return {label:'INTERNAL CREATOR',cls:'internal',detail:cp?`Opponent recognised as ${cp.name}.`:'Opponent belongs to this network.'};
+ return {label:'EXTERNAL BATTLE',cls:'external',detail:'Opponent is currently treated as outside this network.'};
+}
+async function reclassifyTikTokDetection(id){
+ if(preview)return;
+ const field=document.getElementById(`ttOpp_${id}`);
+ const handle=String(field?.value||'').trim();
+ if(!handle)return;
+ const {error}=await sb.rpc('reclassify_my_tiktok_detection',{p_detection_id:id,p_opponent_handle:handle});
+ if(error){console.warn('TikTok reclassification failed',error);return}
+ await loadTikTokDetectionInbox();
+}
+
 function renderTikTokDetectionInbox(){
  const box=document.getElementById('ttDetectionInbox'),count=document.getElementById('ttInboxCount');if(!box)return;
  const rows=Array.isArray(tiktokDetectionInbox)?tiktokDetectionInbox:[];
@@ -1584,21 +1616,23 @@ function renderTikTokDetectionInbox(){
  box.innerHTML=rows.map(r=>{
   const c=ttCreatorLabel(r.creator_id),mine=Number(r.creator_score||0),opp=Number(r.opponent_score||0),outcome=String(r.outcome||'draw').toLowerCase();
   const handle=String(r.opponent_handle||'').replace(/^@/,'');
-  return `<div class="ttInboxItem" data-detection-id="${r.id}">
+  const kind=ttClassificationMeta(r);
+  return `<div class="ttInboxItem ${escapeHtml(kind.cls)}" data-detection-id="${r.id}">
     <div class="ttInboxTop">
       <div class="ttInboxIdentity"><strong>${escapeHtml(c.name)}</strong><span class="muted">${c.handle?escapeHtml(c.handle):'TikTok creator'}</span></div>
-      <span class="ttInboxResult ${escapeHtml(outcome)}">${escapeHtml(outcome.toUpperCase())}</span>
+      <div class="ttInboxBadges"><span class="ttBattleKind ${escapeHtml(kind.cls)}">${escapeHtml(kind.label)}</span><span class="ttInboxResult ${escapeHtml(outcome)}">${escapeHtml(outcome.toUpperCase())}</span></div>
     </div>
+    <div class="ttRecognitionNote">${escapeHtml(kind.detail)}</div>
     <div class="ttInboxScore"><span class="score">${mine.toLocaleString()}</span><span class="vs">VS</span><span class="score">${opp.toLocaleString()}</span></div>
     <div class="ttInboxFields">
-      <label>Opponent TikTok handle<input id="ttOpp_${r.id}" class="field" value="${escapeHtml(handle)}" placeholder="e.g. opponent123"></label>
+      <label>Opponent TikTok handle<input id="ttOpp_${r.id}" class="field" value="${escapeHtml(handle)}" placeholder="e.g. opponent123" onchange="reclassifyTikTokDetection('${r.id}')"><small class="muted">Enter/change the handle and Legacy Hub will check whether they are already a creator in this network.</small></label>
       <label>Diamonds earned<input id="ttDia_${r.id}" class="field" type="number" min="0" step="1" value="0"></label>
     </div>
     <div class="ttInboxActions">
       <button class="btn" onclick="confirmTikTokDetection('${r.id}')">✓ Confirm Result</button>
       <button class="btn ghost" onclick="ignoreTikTokDetection('${r.id}')">Ignore</button>
     </div>
-    <div class="ttInboxMeta">${escapeHtml(ttDetectionTime(r.ended_at||r.created_at))}${r.external_match_id?' · Match '+escapeHtml(String(r.external_match_id)):''}${r.scheduled_battle_id?' · Matched to scheduled battle':''}</div>
+    <div class="ttInboxMeta">${escapeHtml(ttDetectionTime(r.ended_at||r.created_at))}${r.external_match_id?' · Match '+escapeHtml(String(r.external_match_id)):''}${r.scheduled_battle_id?' · Matched to scheduled battle':''}${r.internal_match_key?' · Internal match linked':''}</div>
   </div>`
  }).join('');
 }

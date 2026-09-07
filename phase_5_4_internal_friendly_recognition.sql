@@ -1,0 +1,19 @@
+-- Legacy Hub V27 Phase 5.4
+-- Internal / Friendly Battle Recognition
+-- APPLIED TO PRODUCTION SUPABASE.
+--
+-- Adds:
+-- battle_classification: external | friendly_same_team | inter_team | internal_unknown
+-- counterpart_creator_id
+-- counterpart_detection_id
+-- internal_match_key
+--
+-- Automatic classifier:
+-- 1. Same TikTool external_match_id detected for two creators in the same network
+--    => pairs both detections automatically.
+-- 2. Same team => friendly_same_team.
+-- 3. Different teams => inter_team.
+-- 4. Opponent handle can also be checked against active network creators.
+--
+-- Also fixes the TikTok detection status constraint to accept the Phase 5
+-- 'pending_confirmation' status used by the detector/inbox workflow.
