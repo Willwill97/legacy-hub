@@ -1,0 +1,12 @@
+{
+  "name": "legacy-hub-tiktok-worker",
+  "version": "5.5.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node worker.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

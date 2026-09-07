@@ -630,10 +630,21 @@ document.addEventListener('visibilitychange',()=>{
 .ttUnattendedInfo b{color:#ff8fa7}.ttUnattendedInfo span{font-size:11px;color:var(--muted)}
 .notificationCard .notificationType{word-break:break-word}
 </style>
+
+<style id="phase55b-worker-ui">
+.ttWorkerCard{margin-bottom:14px;border-color:#315c47;background:radial-gradient(circle at 90% 0,rgba(85,216,166,.10),transparent 32%),linear-gradient(145deg,#101715,#101217)}
+.ttWorkerStats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.ttWorkerStats>div{border:1px solid var(--line);border-radius:11px;padding:12px;background:#101419}
+.ttWorkerStats small{display:block;font-size:8px;letter-spacing:1px;color:var(--muted)}
+.ttWorkerStats strong{display:block;margin-top:5px;font-size:14px}
+#ttWorkerBadge.online{background:#153427;color:#6ce0ad}
+#ttWorkerBadge.stale{background:#3a2b12;color:#f1c366}
+@media(max-width:700px){.ttWorkerStats{grid-template-columns:1fr}}
+</style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V27 · PHASE 5.5A.1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V27 · PHASE 5.5B</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
@@ -705,15 +716,32 @@ document.addEventListener('visibilitychange',()=>{
 <section id="Teams" class="section"><div class="card"><div class="teamDirectoryHead"><div><div class="eyebrow">NETWORK DIRECTORY</div><h2 style="margin-bottom:4px">Network Teams</h2><p class="muted" style="margin:0">Create, brand and manage every team in your network.</p></div><button id="createTeamBtn" class="btn hidden" onclick="openTeamManager()">+ Create Team</button></div><div id="teamGrid" class="teamGrid"></div></div><div id="teamManagerModal" class="teamModalBackdrop hidden" onclick="if(event.target===this)closeTeamManager()"><div class="teamModal"><div class="teamHead"><div><div class="eyebrow">TEAM MANAGEMENT CENTRE</div><h2 id="teamModalTitle" style="margin:5px 0">Create a new team</h2></div><button class="btn ghost tiny" onclick="closeTeamManager()">✕ Close</button></div><div class="teamFormGrid"><div><label class="muted">Team name</label><input id="tmName" class="field" placeholder="e.g. Main Creator Team"></div><div><label class="muted">Abbreviation</label><input id="tmShort" class="field" maxlength="10" placeholder="e.g. MCT"></div><div class="wide"><label class="muted">Description</label><textarea id="tmDescription" class="field" style="height:84px;padding-top:12px;resize:vertical" placeholder="Tell the network what this team is about..."></textarea></div><div><label class="muted">Team Manager</label><select id="tmManager" class="field"><option value="">No manager assigned</option></select></div><div><label class="muted">Status</label><select id="tmStatus" class="field"><option value="active">Active</option><option value="inactive">Inactive</option><option value="archived">Archived</option></select></div><div class="wide"><label class="muted">Accent colour</label><div class="teamColorRow"><input id="tmAccent" class="teamColorInput" type="color" value="#a72cff"><input id="tmAccentText" class="field" value="#a72cff" oninput="syncTeamAccent(this.value)" style="margin:0"></div></div></div><div class="teamLogoUpload"><div id="tmLogoPreviewWrap" class="teamLogoPreviewFallback">+</div><div><b>Team logo</b><p class="muted" style="margin:4px 0">Upload a JPG, PNG or WebP. Maximum 5 MB.</p><input id="tmLogoFile" type="file" accept="image/jpeg,image/png,image/webp" onchange="previewTeamLogo(this.files?.[0])"></div></div><div class="row" style="justify-content:flex-end"><button class="btn ghost" onclick="closeTeamManager()">Cancel</button><button id="tmSaveBtn" class="btn" onclick="saveTeam()">Create Team</button></div><div id="tmDangerZone" class="teamDangerZone hidden"><b style="color:#ff9da8">Archive this team</b><p class="muted">Archived teams stay in your records but are clearly marked and can be restored later.</p><button class="btn ghost danger" onclick="archiveCurrentTeam()">Archive Team</button></div></div></div></section>
 <section id="Battles" class="section">
 <div id="battleCommandCentre"></div>
+<div class="card ttWorkerCard">
+  <div class="teamHead">
+    <div>
+      <div class="eyebrow">PHASE 5.5B · ALWAYS-ON ENGINE</div>
+      <h2 style="margin-bottom:5px">TikTok Battle Worker</h2>
+      <p class="muted" style="margin:0">The server-side detector watches configured creators and sends finished PK results into the Result Inbox without the Hub needing to stay open.</p>
+    </div>
+    <span id="ttWorkerBadge" class="badge">NOT CONNECTED</span>
+  </div>
+  <div class="ttWorkerStats">
+    <div><small>MODE</small><strong id="ttWorkerMode">SANDBOX</strong></div>
+    <div><small>ACTIVE WATCHES</small><strong id="ttWorkerActive">0 / 3</strong></div>
+    <div><small>LAST HEARTBEAT</small><strong id="ttWorkerHeartbeat">—</strong></div>
+  </div>
+  <div id="ttWorkerMessage" class="ttUnattendedInfo"><b>🧪 Sandbox mode</b><span>The worker foundation is ready for the free TikTool Sandbox. The trial is limited to three simultaneous WebSocket watches. Once the worker host is connected, this card will turn green automatically.</span></div>
+</div>
+
 <div class="card tiktokDetectorCard">
-  <div class="teamHead"><div><div class="eyebrow">TIKTOK LIVE AUTOMATION · BETA</div><h2 style="margin-bottom:5px">Battle Detector Prototype</h2><p class="muted" style="margin:0">Watch your TikTok LIVE battle score in real time and save the finished PK as <b>pending confirmation</b>.</p></div><span id="ttDetectorBadge" class="badge">OFFLINE</span></div>
+  <div class="teamHead"><div><div class="eyebrow">TIKTOK LIVE AUTOMATION · FALLBACK</div><h2 style="margin-bottom:5px">Browser Battle Detector</h2><p class="muted" style="margin:0">Watch your TikTok LIVE battle score in real time and save the finished PK as <b>pending confirmation</b>.</p></div><span id="ttDetectorBadge" class="badge">OFFLINE</span></div>
   <div class="ttDetectorGrid">
     <label>TikTok username<input id="ttDetectorUser" class="field" placeholder="e.g. willwill1997"></label>
     <label>TikTool API key<input id="ttDetectorKey" class="field" type="password" autocomplete="off" placeholder="Free Sandbox key"><small class="muted">Prototype only: the key is used to mint a short-lived token and is not saved.</small></label>
   </div>
   <div class="row ttDetectorActions"><button id="ttDetectorStart" class="btn" onclick="startTikTokBattleDetector()">▶ Start Detector</button><button id="ttDetectorStop" class="btn ghost" onclick="stopTikTokBattleDetector()" disabled>■ Stop</button></div>
   <div id="ttDetectorStatus" class="ttDetectorStatus"><strong>Ready.</strong><span>Start while the creator is LIVE and keep this tab open during the battle.</span></div>
-  <div class="ttUnattendedInfo"><b>🔴 Unattended LIVE alerts are backend-powered.</b><span>Once TikTool's LIVE webhook is connected, teammates can be notified when you go LIVE even if nobody has Legacy Hub open. The battle-score detector above is still the Phase 5 browser prototype until the persistent multi-creator worker is switched on.</span></div>
+  <div class="ttUnattendedInfo"><b>🔴 Unattended LIVE alerts are backend-powered.</b><span>Once TikTool's LIVE webhook is connected, teammates can be notified when you go LIVE even if nobody has Legacy Hub open. The browser detector above remains available as a manual fallback while the new Phase 5.5B server worker is being connected.</span></div>
   <div id="ttSideChooser" class="ttSideChooser hidden"><div class="eyebrow">ONE-TIME SIDE CHECK</div><h3>Which score is yours?</h3><p class="muted">If TikTok does not identify your host side automatically, choose it once for this detector session.</p><div class="row"><button id="ttChooseSide0" class="btn ghost" onclick="chooseTikTokBattleSide(0)">I am Side A</button><button id="ttChooseSide1" class="btn ghost" onclick="chooseTikTokBattleSide(1)">I am Side B</button></div></div>
   <div id="ttLiveBattlePanel" class="ttLiveBattlePanel hidden"><div class="ttLiveHead"><span>LIVE PK DETECTED</span><span id="ttSecsRemaining">--</span></div><div class="ttScoreBoard"><div><small>YOUR SCORE</small><strong id="ttCreatorScore">0</strong></div><div class="ttVs">VS</div><div><small>OPPONENT</small><strong id="ttOpponentScore">0</strong></div></div><div id="ttMatchMeta" class="muted"></div></div>
   <div id="ttLastDetection" class="ttLastDetection hidden"></div>
@@ -1664,9 +1692,36 @@ async function ignoreTikTokDetection(id){
  tiktokDetectionInbox=tiktokDetectionInbox.filter(x=>x.id!==id);renderTikTokDetectionInbox();flash('TikTok detection ignored');
 }
 
+async function loadTikTokWorkerStatus(){
+ const badge=document.getElementById('ttWorkerBadge'),modeEl=document.getElementById('ttWorkerMode'),activeEl=document.getElementById('ttWorkerActive'),heartEl=document.getElementById('ttWorkerHeartbeat'),msg=document.getElementById('ttWorkerMessage');
+ if(!badge)return;
+ if(preview){badge.textContent='DEMO';return}
+ try{
+   const {data,error}=await sb.from('tiktok_battle_worker_heartbeats').select('worker_id,status,mode,active_connections,max_concurrent,last_heartbeat_at,metadata').order('last_heartbeat_at',{ascending:false}).limit(1);
+   if(error)throw error;
+   const row=data?.[0];
+   if(!row){
+     badge.textContent='NOT CONNECTED';badge.classList.remove('online','stale');
+     if(modeEl)modeEl.textContent='SANDBOX';if(activeEl)activeEl.textContent='0 / 3';if(heartEl)heartEl.textContent='—';
+     return;
+   }
+   const ageMs=Date.now()-new Date(row.last_heartbeat_at).getTime();
+   const online=ageMs<90000;
+   badge.textContent=online?'ONLINE':'STALE';
+   badge.classList.toggle('online',online);badge.classList.toggle('stale',!online);
+   if(modeEl)modeEl.textContent=String(row.mode||'sandbox').toUpperCase();
+   if(activeEl)activeEl.textContent=`${row.active_connections||0} / ${row.max_concurrent||3}`;
+   if(heartEl)heartEl.textContent=ageMs<60000?'Just now':`${Math.max(1,Math.round(ageMs/60000))} min ago`;
+   if(msg)msg.innerHTML=online
+     ?`<b>✅ Always-on worker connected</b><span>Legacy Hub can receive battle detections from the worker even while nobody has the Hub open. Sandbox capacity: ${row.max_concurrent||3} simultaneous creator watches.</span>`
+     :`<b>⚠ Worker heartbeat is stale</b><span>The worker has not checked in recently. The browser detector remains available as a fallback until the worker reconnects.</span>`;
+ }catch(e){console.warn('Worker status unavailable',e)}
+}
+
 function renderBattles(){
  renderTikTokDetector();
  loadTikTokDetectionInbox();
+ loadTikTokWorkerStatus();
  battleList.innerHTML=battles.length?battles.map(b=>{
    const d=new Date(b.starts_at),res=battleResults.find(r=>r.battle_id===b.id),mine=b.claimed_by===profile?.id,canManage=['network_admin','team_manager'].includes(profile?.role),canDelete=profile?.role==='network_admin';
    let action='';

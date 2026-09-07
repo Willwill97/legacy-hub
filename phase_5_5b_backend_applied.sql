@@ -1,0 +1,4 @@
+-- Phase 5.5B backend is ALREADY APPLIED to production Supabase.
+-- Migration: phase_5_5b_always_on_battle_worker_foundation
+-- Edge Function deployed: legacy-tiktok-worker-api
+-- Do not re-run this note as a migration.
