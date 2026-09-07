@@ -477,10 +477,119 @@ document.addEventListener('visibilitychange',()=>{
   .dashHeroBanner{height:210px}
 }
 </style>
+
+<style id="mobile-layout-fix-4h311">
+@media(max-width:900px){
+  body{overflow-x:hidden}
+  .side{
+    position:sticky!important;
+    top:0;
+    z-index:60;
+    padding:12px 14px!important;
+    background:rgba(10,12,15,.96)!important;
+    backdrop-filter:blur(14px);
+  }
+  .brand{margin-bottom:10px!important;display:flex;align-items:center;gap:10px}
+  .tenant-sidebar-logo{width:42px!important;height:42px!important}
+  .mobile-nav-toggle{display:block!important;width:100%;margin-top:8px}
+  .nav{
+    display:none!important;
+    flex-direction:column!important;
+    overflow:visible!important;
+    margin-top:8px;
+    max-height:62vh;
+    overflow-y:auto!important;
+  }
+  .side.mobile-open .nav{display:flex!important}
+  .nav button{width:100%!important;white-space:normal!important}
+  .main{padding:12px!important}
+  .top{
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:10px!important;
+  }
+  .top>.row{justify-content:space-between!important;width:100%}
+  .top h1{font-size:28px!important}
+  .dash2{min-width:0}
+  .dashHero{
+    padding:18px!important;
+    border-radius:16px!important;
+    overflow:hidden;
+  }
+  .dashHeroText{
+    width:100%!important;
+    max-width:none!important;
+    padding-right:0!important;
+  }
+  .dashGreeting{
+    max-width:none!important;
+    font-size:clamp(34px,9vw,54px)!important;
+    line-height:.94!important;
+    letter-spacing:-1.6px!important;
+  }
+  .dashTagline{font-size:13px!important;margin-bottom:14px!important}
+  .dashHeroBanner{
+    position:relative!important;
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:16/9;
+    margin:18px 0 0!important;
+    border-radius:12px!important;
+    overflow:hidden!important;
+  }
+  .dashHeroBanner:before{
+    background:linear-gradient(180deg,rgba(11,13,18,.08),transparent 28%)!important;
+  }
+  .dashHeroBanner img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:contain!important;
+    object-position:center!important;
+  }
+  .dashStats4{
+    width:100%!important;
+    grid-template-columns:1fr 1fr!important;
+    margin-top:16px!important;
+    border-radius:12px!important;
+  }
+  .dashStat{min-width:0!important;padding:12px!important}
+  .dashStat strong{font-size:20px!important}
+  .commandGrid{grid-template-columns:1fr!important;gap:12px!important}
+  .commandCard{min-width:0!important}
+  .quickGrid{grid-template-columns:1fr 1fr!important}
+  .battleFaces{gap:10px!important}
+  .battleFace{min-width:0!important}
+  .battleCountdown{font-size:24px!important;letter-spacing:1px!important}
+}
+@media(max-width:560px){
+  .main{padding:9px!important}
+  .dashHero{padding:14px!important}
+  .dashGreeting{
+    font-size:clamp(30px,10vw,44px)!important;
+    line-height:.92!important;
+  }
+  .dashHeroBanner{aspect-ratio:4/3}
+  .dashStats4{grid-template-columns:1fr!important}
+  .dashStat{
+    border-right:0!important;
+    border-bottom:1px solid #292a31!important;
+  }
+  .dashStat:last-child{border-bottom:0!important}
+  .quickGrid{grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .quickAction{padding:10px 6px!important}
+  .missionTop{align-items:flex-start!important}
+  .missionPct{font-size:38px!important}
+  .missionCircleWrap{grid-template-columns:72px 1fr!important;gap:10px!important}
+  .missionCircle{width:68px!important;height:68px!important}
+  .battleFaces{grid-template-columns:1fr 44px 1fr!important}
+  .nextBattleCard{padding:14px!important}
+  .battleTime{font-size:14px!important}
+}
+</style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.10</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V26 · PHASE 4H.3.11</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
