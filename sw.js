@@ -7,6 +7,16 @@ self.addEventListener('push',event=>{
   event.waitUntil(self.registration.showNotification(title,options));
 });
 self.addEventListener('notificationclick',event=>{
-  event.notification.close();const target=new URL(event.notification.data?.url||'./',self.location.origin).href;
-  event.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(clients=>{for(const c of clients){if('focus' in c){c.navigate?.(target);return c.focus()}}return self.clients.openWindow?self.clients.openWindow(target):undefined}));
+  event.notification.close();
+  const target=new URL(event.notification.data?.url||'./',self.location.origin);
+  event.waitUntil((async()=>{
+    if(target.origin!==self.location.origin){
+      return self.clients.openWindow?self.clients.openWindow(target.href):undefined;
+    }
+    const clients=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+    for(const c of clients){
+      if('focus' in c){if(c.navigate)await c.navigate(target.href);return c.focus()}
+    }
+    return self.clients.openWindow?self.clients.openWindow(target.href):undefined;
+  })());
 });

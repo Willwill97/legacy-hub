@@ -1,0 +1,20 @@
+-- Legacy Hub V27 Phase 5.5A
+-- Unattended TikTok LIVE team alerts foundation
+-- APPLIED TO PRODUCTION SUPABASE.
+--
+-- Added:
+-- notification_preferences.go_live_alerts
+-- tiktok_live_webhook_config (service-only config, bearer token stored as hash)
+-- tiktok_live_sessions_detected
+-- process_tiktool_live_event(...)
+-- legacy-tiktool-webhook Edge Function
+-- legacy-push-dispatch updated to respect go_live_alerts
+--
+-- Behaviour:
+-- TikTool live.start -> match creator by TikTok handle -> record LIVE session ->
+-- create one app notification for every other active creator in the same team.
+-- Notification URL is the TikTool supplied TikTok LIVE URL, with a safe
+-- https://www.tiktok.com/@username/live fallback.
+--
+-- TikTool Sandbox can register/test webhook configs but does not deliver real
+-- live.start/live.end events. Real unattended delivery requires Basic+.
