@@ -1,0 +1,4 @@
+-- Phase 5.2 TikTok detector RPCs
+-- Applied to production Supabase already.
+-- Kept in this ZIP for repository history / disaster recovery.
+-- Migration name: phase_5_2_tiktok_detector_rpc
