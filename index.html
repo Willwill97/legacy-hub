@@ -10,8 +10,8 @@ document.addEventListener('click',e=>{
 window.addEventListener('beforeunload',()=>stopScopedRealtime());
 document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='visible'&&!preview&&profile?.id){
-   const active=document.querySelector('.section.active')?.id||'';
-   if(['matchmaking','leaderboard','achievements','battlemedia'].includes(active)&&!routeDataFresh(active))loadRouteData(active,true);
+   const active=normalizeRouteKey(document.querySelector('.section.active')?.id||'');
+   if(['matchmaking','leaderboard','battlemedia'].includes(active)&&!routeDataFresh(active))loadRouteData(active,true);
  }
 });
 
@@ -320,7 +320,7 @@ document.addEventListener('visibilitychange',()=>{
 .pcDataNote{border:1px solid #293746;border-radius:9px;background:#0c141a;padding:10px;font-size:7px;line-height:1.55;color:#89949f}.pcDataNote b{color:#70ddb3}
 
 /* ==========================================================================
-   V29 · PHASE 6.8.1 — FULL HUB PREMIUM DESIGN SYSTEM
+   V29 · PHASE 7.0 — FULL HUB PREMIUM DESIGN SYSTEM
    Carries the Battle / Creator / Team / Leaderboard / Progress visual language
    across every remaining Legacy Hub workspace.
    ========================================================================== */
@@ -1453,6 +1453,7 @@ function battleCentreTab(name,btn){
  if(panel)panel.classList.add('active');
  if(btn)btn.classList.add('active');
  if(name==='schedule')setTimeout(()=>document.getElementById('battleList')?.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+ if(name==='matchmaking')loadRouteData('matchmaking').then(()=>{try{renderMatchmaking()}catch(e){console.error('Matchmaking refresh failed',e)}});
 }
 
 
@@ -1462,9 +1463,11 @@ function renderBattleCentreExtras(){
  const upcoming=all.filter(b=>new Date(b.starts_at)>now).sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at)).slice(0,4);
  const up=document.getElementById('bcUpcomingBattles');
  if(up)up.innerHTML=upcoming.length?upcoming.map(b=>{const creator=creatorDirectory.find(c=>c.id===b.claimed_by)||profile;const name=creator?.tiktok_handle||creator?.display_name||'Creator',opp=b.opponent_handle||'TBC',d=new Date(b.starts_at);return `<div class="bcUpcomingItem"><div class="bcUpcomingAvatar">${commandAvatar(creator,name)}</div><div class="bcUpcomingInfo"><b>${escapeHtml(name)} <span>vs</span> ${escapeHtml(opp)}</b><small>▣ ${d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})} &nbsp; ◷ ${d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</small></div><span class="bcUpcomingBadge">UPCOMING</span></div>`}).join(''):'<p class="muted">No upcoming battles booked.</p>';
- const perf=(creatorPerformance||[]).find(p=>p.creator_id===profile?.id)||creatorPerformance?.[0]||{};
- const stats=document.getElementById('bcBattleStats');if(stats)stats.innerHTML=`<div class="purple"><strong>${Number(perf.battles||0)}</strong><span>Battles</span></div><div class="green"><strong>${Number(perf.wins||0)}</strong><span>Wins</span></div><div class="red"><strong>${Number(perf.losses||0)}</strong><span>Losses</span></div><div class="blue"><strong>${bcFmt(perf.diamonds||0)}</strong><span>Diamonds</span></div>`;
- const results=document.getElementById('bcResultsList'),mine=(battleResults||[]).filter(r=>!profile?.id||r.creator_id===profile.id).slice(0,12);
+ const allMine=(battleResults||[]).filter(r=>!profile?.id||r.creator_id===profile.id);
+ const monthKey=now.toISOString().slice(0,7),monthResults=allMine.filter(r=>r.verification_status==='verified'&&String(r.verified_at||r.created_at||'').slice(0,7)===monthKey);
+ const monthWins=monthResults.filter(r=>r.outcome==='win').length,monthLosses=monthResults.filter(r=>r.outcome==='loss').length,monthDiamonds=monthResults.reduce((s,r)=>s+Number(r.diamonds||0),0);
+ const stats=document.getElementById('bcBattleStats');if(stats)stats.innerHTML=`<div class="purple"><strong>${monthResults.length}</strong><span>Battles</span></div><div class="green"><strong>${monthWins}</strong><span>Wins</span></div><div class="red"><strong>${monthLosses}</strong><span>Losses</span></div><div class="blue"><strong>${bcFmt(monthDiamonds)}</strong><span>Diamonds</span></div>`;
+ const results=document.getElementById('bcResultsList'),mine=allMine.slice(0,12);
  if(results)results.innerHTML=mine.length?mine.map(r=>`<div class="bcResultRow"><span class="bcResultOutcome ${escapeHtml(r.outcome||'')}">${escapeHtml((r.outcome||'result').toUpperCase())}</span><div><b>${Number(r.rounds_for||0)} — ${Number(r.rounds_against||0)}</b><small>${escapeHtml((r.result_source||'manual').toUpperCase())} · ${escapeHtml((r.verification_status||'pending').replaceAll('_',' '))}</small></div><div class="bcResultMetrics"><span>+${Number(r.points||0).toLocaleString()} pts</span><span>💎 ${Number(r.diamonds||0).toLocaleString()}</span></div></div>`).join(''):'<div class="empty">No battle results yet.</div>';
  const network=document.getElementById('networkAdminPill')?.textContent?.trim()||'Legacy Hub';document.getElementById('bcNetworkName')&&(document.getElementById('bcNetworkName').textContent=network);document.getElementById('bcQuoteNetwork')&&(document.getElementById('bcQuoteNetwork').textContent=network);
  const unread=(appNotifications||[]).filter(n=>!n.read_at).length,nc=document.getElementById('bcNotifCount');if(nc){nc.textContent=unread;nc.style.display=unread?'grid':'none'}
@@ -1482,10 +1485,10 @@ function ccPerfFor(id){return (creatorPerformance||[]).find(p=>p.creator_id===id
 function ccTeamName(c){const t=(teams||[]).find(x=>x.id===c?.team_id);return t?.name||c?.team_name||'No team'}
 function renderCreatorCentre(){
  const grid=document.getElementById('ccPremiumGrid');if(!grid)return;let arr=[...(creatorDirectory||[])];if(profile?.id&&!arr.some(c=>c.id===profile.id))arr.unshift(profile);const seen=new Set();arr=arr.filter(c=>c?.id&&!seen.has(c.id)&&seen.add(c.id));
- const ts=document.getElementById('ccTeamFilter');if(ts&&ts.options.length===1)(teams||[]).forEach(t=>ts.add(new Option(t.name,t.id)));
- const wins=arr.reduce((s,c)=>s+Number(ccPerfFor(c.id).wins||0),0),hours=arr.reduce((s,c)=>s+Number(c.live_hours||c.month_live_hours||ccPerfFor(c.id).live_hours||0),0),live=arr.filter(c=>Number(c.live_hours||c.month_live_hours||ccPerfFor(c.id).live_hours||0)>0).length;
+ const ts=document.getElementById('ccTeamFilter');if(ts){const selected=ts.value;ts.innerHTML='<option value="">All teams</option>';(teams||[]).forEach(t=>ts.add(new Option(t.name,t.id)));if([...ts.options].some(o=>o.value===selected))ts.value=selected}
+ const wins=arr.reduce((s,c)=>s+Number(ccPerfFor(c.id).wins||0),0),hours=arr.reduce((s,c)=>s+pcHours(c),0),live=arr.filter(c=>pcHours(c)>0).length;
  document.getElementById('ccTotalCreators').textContent=arr.length;document.getElementById('ccLiveCreators').textContent=live;document.getElementById('ccBattleWins').textContent=wins;document.getElementById('ccLiveHours').textContent=(Math.round(hours*10)/10)+'h';document.getElementById('ccCreatorHealth').textContent=`${arr.length} creator${arr.length===1?'':'s'} in this network`;
- grid.innerHTML=arr.map(c=>{const p=ccPerfFor(c.id),name=c.display_name||c.full_name||c.tiktok_handle||'Creator',handle=c.tiktok_handle?('@'+String(c.tiktok_handle).replace(/^@/,'')):'TikTok not linked',team=ccTeamName(c),status=(c.status||'active').toLowerCase(),h=Number(c.live_hours||c.month_live_hours||p.live_hours||0),days=Number(c.live_days||c.month_live_days||p.live_days||0),dia=Number(p.diamonds||0);return `<article class="ccCreatorCard" data-name="${escapeHtml((name+' '+handle).toLowerCase())}" data-team="${escapeHtml(c.team_id||'')}" data-status="${escapeHtml(status)}"><div class="ccCreatorTop"><div class="ccAvatar">${ccAvatar(c)}<i class="${status==='active'?'on':''}"></i></div><div class="ccCreatorIdentity"><h3>${escapeHtml(name)}</h3><b>${escapeHtml(handle)}</b><span>${escapeHtml(team)}</span></div><span class="ccStatus ${escapeHtml(status)}">${escapeHtml(status)}</span></div><div class="ccCreatorMetrics"><div><strong>${h.toFixed(h%1?1:0)}h</strong><span>Live Hours</span></div><div><strong>${days}</strong><span>Live Days</span></div><div><strong>${Number(p.wins||0)}</strong><span>Wins</span></div><div><strong>${dia>=1000?(dia/1000).toFixed(1).replace('.0','')+'K':dia}</strong><span>Diamonds</span></div></div><div class="ccCreatorProgress"><div><span>Monthly live target</span><b>${Math.min(100,Math.round(h/20*100))}%</b></div><div class="ccBar"><i style="width:${Math.min(100,h/20*100)}%"></i></div></div><div class="ccCreatorActions"><button onclick="openCreatorCentreTools('${escapeHtml(c.tiktok_handle||name)}')">View Creator</button><button onclick="showSection('Battles')">Battles</button><button class="more" onclick="document.querySelector('.ccLegacyTools')?.setAttribute('open','')">•••</button></div></article>`}).join('');
+ grid.innerHTML=arr.map(c=>{const p=ccPerfFor(c.id),name=c.display_name||c.full_name||c.tiktok_handle||'Creator',handle=c.tiktok_handle?('@'+String(c.tiktok_handle).replace(/^@/,'')):'TikTok not linked',team=ccTeamName(c),status=(c.status||c.membership_status||'active').toLowerCase(),h=pcHours(c),days=pcDays(c),dia=Number(p.diamonds||0);return `<article class="ccCreatorCard" data-name="${escapeHtml((name+' '+handle).toLowerCase())}" data-team="${escapeHtml(c.team_id||'')}" data-status="${escapeHtml(status)}"><div class="ccCreatorTop"><div class="ccAvatar">${ccAvatar(c)}<i class="${status==='active'?'on':''}"></i></div><div class="ccCreatorIdentity"><h3>${escapeHtml(name)}</h3><b>${escapeHtml(handle)}</b><span>${escapeHtml(team)}</span></div><span class="ccStatus ${escapeHtml(status)}">${escapeHtml(status)}</span></div><div class="ccCreatorMetrics"><div><strong>${h.toFixed(h%1?1:0)}h</strong><span>Live Hours</span></div><div><strong>${days}</strong><span>Live Days</span></div><div><strong>${Number(p.wins||0)}</strong><span>Wins</span></div><div><strong>${dia>=1000?(dia/1000).toFixed(1).replace('.0','')+'K':dia}</strong><span>Diamonds</span></div></div><div class="ccCreatorProgress"><div><span>Monthly live target</span><b>${Math.min(100,Math.round(h/20*100))}%</b></div><div class="ccBar"><i style="width:${Math.min(100,h/20*100)}%"></i></div></div><div class="ccCreatorActions"><button onclick="openCreatorProfile('${escapeHtml(c.id)}')">View Creator</button><button onclick="showSection('Battles')">Battles</button><button class="more" onclick="document.querySelector('.ccLegacyTools')?.setAttribute('open','')">•••</button></div></article>`}).join('');
  const ranked=[...arr].sort((a,b)=>Number(ccPerfFor(b.id).wins||0)-Number(ccPerfFor(a.id).wins||0)).slice(0,5);document.getElementById('ccTopPerformers').innerHTML=ranked.map((c,i)=>`<div class="ccPerformer"><span class="ccRank">${i+1}</span><div class="ccMiniAvatar">${ccAvatar(c)}</div><div><b>${escapeHtml(c.display_name||c.tiktok_handle||'Creator')}</b><small>${escapeHtml(ccTeamName(c))}</small></div><strong>${Number(ccPerfFor(c.id).wins||0)} W</strong></div>`).join('')||'<p class="muted">No performance data yet.</p>';
  const counts={};arr.forEach(c=>counts[ccTeamName(c)]=(counts[ccTeamName(c)]||0)+1);document.getElementById('ccTeamBreakdown').innerHTML=Object.entries(counts).map(([n,v])=>`<div><span><i></i>${escapeHtml(n)}</span><b>${v}</b></div>`).join('');
  document.getElementById('ccQuoteNetwork').textContent=document.getElementById('networkAdminPill')?.textContent?.trim()||'Legacy Hub';filterCreatorCentre();
@@ -1508,13 +1511,13 @@ let monthlyLiveProgress=[];
 let premiumLeaderboardMode='overall';
 function plCreatorData(){
  let creators=[...(creatorDirectory||[])];if(profile?.id&&!creators.some(c=>c.id===profile.id))creators.unshift(profile);const seen=new Set();creators=creators.filter(c=>c?.id&&!seen.has(c.id)&&seen.add(c.id));
- return creators.map(c=>{const p=(creatorPerformance||[]).find(x=>x.creator_id===c.id)||{},team=(teams||[]).find(t=>t.id===c.team_id);const wins=Number(p.wins||0),losses=Number(p.losses||0),hours=Number(c.live_hours||c.month_live_hours||p.live_hours||0),diamonds=Number(p.diamonds||0),battles=wins+losses,rate=battles?Math.round(wins/battles*100):0;return {c,p,team,wins,losses,hours,diamonds,rate,score:wins*100+diamonds/100+hours*2}})}
+ return creators.map(c=>{const p=(creatorPerformance||[]).find(x=>x.creator_id===c.id)||{},team=(teams||[]).find(t=>t.id===c.team_id);const wins=Number(p.wins||0),losses=Number(p.losses||0),hours=pcHours(c),diamonds=Number(p.diamonds||0),battles=wins+losses,rate=battles?Math.round(wins/battles*100):0;return {c,p,team,wins,losses,hours,diamonds,rate,score:wins*100+diamonds/100+hours*2}})}
 function plAvatar(x){const u=x.c.avatar_url||x.c.tiktok_avatar_url||'';const n=x.c.display_name||x.c.tiktok_handle||'?';return u?`<img src="${escapeHtml(u)}" alt="">`:`<span>${escapeHtml(String(n).trim().split(/\s+/).slice(0,2).map(v=>v[0]||'').join('').toUpperCase())}</span>`}
 function plFormat(n){n=Number(n||0);return n>=1000000?(n/1000000).toFixed(1).replace('.0','')+'M':n>=1000?(n/1000).toFixed(1).replace('.0','')+'K':String(Math.round(n))}
 function setPremiumLeaderboardMode(mode,btn){premiumLeaderboardMode=mode;document.querySelectorAll('.plFilterTabs button').forEach(b=>b.classList.remove('active'));btn?.classList.add('active');renderPremiumLeaderboard()}
 function renderPremiumLeaderboard(){
  const body=document.getElementById('plRankingBody');if(!body)return;let data=plCreatorData(),tf=document.getElementById('plTeamFilter');
- if(tf&&tf.options.length===1)(teams||[]).forEach(t=>tf.add(new Option(t.name,t.id)));const teamId=tf?.value||'';if(teamId)data=data.filter(x=>x.c.team_id===teamId);
+ if(tf){const selected=tf.value;tf.innerHTML='<option value="">All Teams</option>';(teams||[]).forEach(t=>tf.add(new Option(t.name,t.id)));if([...tf.options].some(o=>o.value===selected))tf.value=selected}const teamId=tf?.value||'';if(teamId)data=data.filter(x=>x.c.team_id===teamId);
  const key=premiumLeaderboardMode;data.sort((a,b)=>key==='wins'?b.wins-a.wins:key==='diamonds'?b.diamonds-a.diamonds:key==='hours'?b.hours-a.hours:b.score-a.score);
  const all=plCreatorData(),sum=k=>all.reduce((s,x)=>s+Number(x[k]||0),0);const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
  set('plRankedCount',all.length);set('plWinsTotal',sum('wins'));set('plDiamondTotal',plFormat(sum('diamonds')));set('plHoursTotal',(Math.round(sum('hours')*10)/10)+'h');set('plModeLabel',key==='wins'?'Battle Wins':key==='diamonds'?'Diamonds':key==='hours'?'Live Hours':'Overall');
@@ -1533,10 +1536,13 @@ function pcSessionRows(id){return (monthlyLiveProgress||[]).filter(x=>x.member_i
 function pcHours(c){return pcSessionRows(c.id).reduce((s,x)=>s+Number(x.minutes||0),0)/60}
 function pcDays(c){return new Set(pcSessionRows(c.id).filter(x=>x.qualifying_day).map(x=>x.session_date)).size}
 function pcStatus(c){
- const h=pcHours(c),d=pcDays(c),hp=h/20,dp=d/8,min=Math.min(hp,dp);
+ const h=pcHours(c),d=pcDays(c);
  if(h>=20&&d>=8)return 'complete';
- if(min>=.70)return 'track';
- if(min>=.35)return 'attention';
+ const now=new Date(),daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+ const pace=Math.max(1/daysInMonth,Math.min(1,now.getDate()/daysInMonth));
+ const hourPace=(h/20)/pace,dayPace=(d/8)/pace,minPace=Math.min(hourPace,dayPace),avgPace=(hourPace+dayPace)/2;
+ if(minPace>=.85)return 'track';
+ if(avgPace>=.60)return 'attention';
  return 'critical';
 }
 function pcStatusLabel(s){return s==='complete'?'Targets Complete':s==='track'?'On Track':s==='attention'?'Needs Attention':'Critical'}
@@ -1557,7 +1563,7 @@ async function refreshProgressCentre(){await loadMonthlyLiveProgress();renderPro
 function renderProgressCentre(){
  const grid=document.getElementById('pcCreatorGrid');if(!grid)return;
  let creators=[...(creatorDirectory||[])];if(profile?.id&&!creators.some(c=>c.id===profile.id))creators.unshift(profile);const seen=new Set();creators=creators.filter(c=>c?.id&&!seen.has(c.id)&&seen.add(c.id));
- const tf=document.getElementById('pcTeamFilter');if(tf&&tf.options.length===1)(teams||[]).forEach(t=>tf.add(new Option(t.name,t.id)));
+ const tf=document.getElementById('pcTeamFilter');if(tf){const selected=tf.value;tf.innerHTML='<option value="">All Teams</option>';(teams||[]).forEach(t=>tf.add(new Option(t.name,t.id)));if([...tf.options].some(o=>o.value===selected))tf.value=selected}
  const all=[...creators],q=(document.getElementById('pcSearchInput')?.value||'').toLowerCase(),teamId=document.getElementById('pcTeamFilter')?.value||'',statusFilter=document.getElementById('pcProgressFilter')?.value||'';
  creators=creators.filter(c=>{const name=(c.display_name||c.full_name||c.tiktok_handle||'').toLowerCase(),handle=(c.tiktok_handle||'').toLowerCase(),s=pcStatus(c);return(!q||(name+' '+handle).includes(q))&&(!teamId||c.team_id===teamId)&&(!statusFilter||s===statusFilter)});
  const totalHours=all.reduce((s,c)=>s+pcHours(c),0),onTrack=all.filter(c=>['complete','track'].includes(pcStatus(c))).length,attention=all.filter(c=>['attention','critical'].includes(pcStatus(c))).length;
@@ -1633,6 +1639,17 @@ function sectionAllowed(name){
  if(name==='Battle Media')return c.canManageBattleMedia&&(networkEntitlements?.battle_media!==false);
  return true;
 }
+async function ensurePremiumSectionData(name){
+ if(preview||!profile?.id)return;
+ if(['Teams','Creators','Progress','Leaderboard'].includes(name)){
+   await Promise.allSettled([loadRouteData('leaderboard'),loadMonthlyLiveProgress()]);
+   try{renderAll()}catch(e){console.error('Premium section refresh failed',name,e)}
+ }else if(name==='Achievements'||name==='Battles'){
+   await loadRouteData('leaderboard');
+ }else if(name==='Battle Media'){
+   await loadRouteData('battlemedia');
+ }
+}
 function show(name,btn){setTimeout(syncCleanNavigation,0);if(!sectionAllowed(name)){flash('You do not have access to that area.');name='Dashboard';btn=null;}
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  const section=document.getElementById(name);if(!section)return flash(`Could not open ${name}`);
@@ -1640,6 +1657,10 @@ function show(name,btn){setTimeout(syncCleanNavigation,0);if(!sectionAllowed(nam
  pageTitle.textContent=name==='Profile'?'My Profile':name;
  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
  if(name==='Profile'){viewedCreator=creatorDirectory.find(x=>x.id===profile?.id)||profile;renderCreatorProfile()}
+ if(['Teams','Creators','Progress','Leaderboard','Achievements','Battles','Battle Media'].includes(name))ensurePremiumSectionData(name)
+ if(name==='Creators')setTimeout(renderCreatorCentre,20)
+ if(name==='Progress')setTimeout(refreshProgressCentre,20)
+ if(name==='Leaderboard')setTimeout(renderPremiumLeaderboard,20)
  if((name==='Progress'||name==='Dashboard')&&!preview)loadMyLiveSessions({silent:true}).then(()=>{renderProgress();renderDashboard()})
  if(name==='Admin'){loadAdminMembers();loadInvites();setupAnnouncementAudience();loadAnnouncements();loadPushTestLog();loadNetworkDeliveryOverview()}if(name==='Platform')loadPlatformNetworks();
  if(name==='Battle Media')renderBattleMedia();if(name==='Notifications')renderNotificationCentre();if(name==='Network Settings'){Promise.all([loadNetworkEntitlements(),loadNetworkBilling()]).then(renderNetworkSettings);renderNetworkSettings();window.scrollTo({top:0,behavior:'auto'})}
@@ -1719,8 +1740,9 @@ function queueSmartRefresh(routes=[],core=false){
        if(!b.error)battles=b.data||[];
        if(!an.error)appNotifications=an.data||[];
      }
-     const active=document.querySelector('.section.active')?.id||'';
-     if(routes.includes(active))await loadRouteData(active,true);
+     const active=normalizeRouteKey(document.querySelector('.section.active')?.id||'');
+     const normalizedRoutes=(routes||[]).map(normalizeRouteKey);
+     if(normalizedRoutes.includes(active))await loadRouteData(active,true);
      else try{renderAll()}catch(e){console.error('Smart refresh render failed',e)}
    }catch(e){console.error('Smart refresh failed',e)}
  },350);
@@ -1741,7 +1763,15 @@ function stopScopedRealtime(){
  if(activeRealtimeChannel){try{sb.removeChannel(activeRealtimeChannel)}catch(_){}activeRealtimeChannel=null}
 }
 
+function normalizeRouteKey(route){
+ const r=String(route||'').trim().toLowerCase().replaceAll(' ','');
+ if(['leaderboard','achievements','battles','creators','teams','progress'].includes(r))return 'leaderboard';
+ if(['battlemedia','battleposters'].includes(r))return 'battlemedia';
+ if(['matchmaking','findopponent'].includes(r))return 'matchmaking';
+ return r;
+}
 async function loadRouteData(route,force=false){
+ route=normalizeRouteKey(route);
  if(preview||!profile?.id)return;
  if(!force&&routeDataFresh(route))return;
  if(routeDataLoading.has(route))return routeDataLoading.get(route);
@@ -2039,7 +2069,7 @@ function emptyState(title,text,action,label){return `<div class="empty-launch"><
 
 function renderAll(){
  updatePersonalGreeting();
- ['renderTeams','renderCreatorDirectory','renderBattles','renderProgress','renderLeaderboard','renderAchievements','renderAnnouncements','renderDashboard','renderBattleReminders','renderMatchmaking','renderNotificationCentre','renderBattleMedia','updateUnifiedNotificationCount'].forEach(name=>{try{const fn=globalThis[name];if(typeof fn==='function')fn();else console.error(`Legacy renderer missing: ${name}`)}catch(e){console.error(`Legacy ${name} failed`,e)}})
+ ['renderTeams','renderCreatorDirectory','renderBattles','renderProgress','renderLeaderboard','renderAchievements','renderAnnouncements','renderDashboard','renderBattleReminders','renderMatchmaking','renderNotificationCentre','renderBattleMedia','renderCreatorCentre','renderProgressCentre','renderPremiumLeaderboard','updateUnifiedNotificationCount'].forEach(name=>{try{const fn=globalThis[name];if(typeof fn==='function')fn();else console.error(`Legacy renderer missing: ${name}`)}catch(e){console.error(`Legacy ${name} failed`,e)}})
  applyRoleUX();
 }
 function teamName(teamId){
@@ -2064,7 +2094,7 @@ function renderTeams(){
  if(create)create.classList.toggle('hidden',!admin);
  const activeCreators=(creatorDirectory||[]).filter(c=>!c.membership_status||c.membership_status==='active');
  const totalWins=activeCreators.reduce((s,c)=>s+Number(((creatorPerformance||[]).find(p=>p.creator_id===c.id)||{}).wins||0),0);
- const totalHours=activeCreators.reduce((s,c)=>s+Number(c.live_hours||c.month_live_hours||((creatorPerformance||[]).find(p=>p.creator_id===c.id)||{}).live_hours||0),0);
+ const totalHours=activeCreators.reduce((s,c)=>s+pcHours(c),0);
  const stat=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
  stat('tcTotalTeams',list.length);stat('tcTotalCreators',activeCreators.length);stat('tcTotalWins',totalWins);stat('tcTotalHours',(Math.round(totalHours*10)/10)+'h');
  const health=document.getElementById('tcTeamHealth');if(health)health.textContent=`${list.filter(t=>(t.status||'active')==='active').length} active team${list.filter(t=>(t.status||'active')==='active').length===1?'':'s'}`;
@@ -2074,7 +2104,7 @@ function renderTeams(){
    const status=t.status||'active',accent=t.accent_color||'#a72cff',members=activeCreators.filter(c=>c.team_id===t.id),logo=logoFor(t),manager=t.manager?.display_name||t.manager?.tiktok_handle||'Not assigned';
    const wins=members.reduce((s,c)=>s+Number(((creatorPerformance||[]).find(p=>p.creator_id===c.id)||{}).wins||0),0);
    const losses=members.reduce((s,c)=>s+Number(((creatorPerformance||[]).find(p=>p.creator_id===c.id)||{}).losses||0),0);
-   const hours=members.reduce((s,c)=>s+Number(c.live_hours||c.month_live_hours||((creatorPerformance||[]).find(p=>p.creator_id===c.id)||{}).live_hours||0),0);
+   const hours=members.reduce((s,c)=>s+pcHours(c),0);
    const diamonds=members.reduce((s,c)=>s+Number(((creatorPerformance||[]).find(p=>p.creator_id===c.id)||{}).diamonds||0),0);
    const top=[...members].sort((a,b)=>Number(((creatorPerformance||[]).find(p=>p.creator_id===b.id)||{}).wins||0)-Number(((creatorPerformance||[]).find(p=>p.creator_id===a.id)||{}).wins||0))[0];
    const logoHtml=logo?`<img class="tcTeamLogo" src="${escapeHtml(logo)}" alt="${escapeHtml(t.name)} logo">`:`<div class="tcTeamLogo tcTeamLogoFallback">${escapeHtml((t.short_name||t.name||'?').slice(0,3).toUpperCase())}</div>`;
@@ -2097,6 +2127,18 @@ function renderTeams(){
 async function loadTeamManagerCandidates(){if(preview){teamManagerCandidates=creatorDirectory;return}const {data,error}=await sb.from('profiles').select('id,display_name,tiktok_handle,role,team_id,membership_status').eq('network_id',profile.network_id).eq('membership_status','active').order('display_name');if(error)throw error;teamManagerCandidates=data||[]}
 async function openTeamManager(teamId=null){if(profile?.role!=='network_admin')return flash('Only a Network Admin can manage teams');editingTeamId=teamId;selectedTeamLogoFile=null;try{await loadTeamManagerCandidates()}catch(e){return flash(e?.message||'Could not load network members')}const t=teamId?teams.find(x=>x.id===teamId):null;teamModalTitle.textContent=t?'Manage Team':'Create a new team';tmSaveBtn.textContent=t?'Save Changes':'Create Team';tmName.value=t?.name||'';tmShort.value=t?.short_name||'';tmDescription.value=t?.description||'';tmStatus.value=t?.status||'active';tmAccent.value=t?.accent_color||'#a72cff';tmAccentText.value=t?.accent_color||'#a72cff';tmManager.innerHTML='<option value="">No manager assigned</option>'+teamManagerCandidates.map(m=>`<option value="${m.id}">${escapeHtml(m.display_name||m.tiktok_handle||'Member')} ${m.tiktok_handle?`(${escapeHtml(m.tiktok_handle)})`:''}</option>`).join('');tmManager.value=t?.manager_id||'';tmDangerZone.classList.toggle('hidden',!t||t.status==='archived');renderTeamLogoPreview(t?.logo_url||logoFor(t||{}));teamManagerModal.classList.remove('hidden');document.body.style.overflow='hidden'}
 function closeTeamManager(){teamManagerModal.classList.add('hidden');document.body.style.overflow='';editingTeamId=null;selectedTeamLogoFile=null;tmLogoFile.value=''}
+async function archiveCurrentTeam(){
+ if(profile?.role!=='network_admin'||!editingTeamId)return flash('Only a Network Admin can archive teams');
+ const t=(teams||[]).find(x=>x.id===editingTeamId);if(!t)return flash('Team not found');
+ if(!confirm(`Archive ${t.name}? Existing records will be kept.`))return;
+ try{
+  if(preview){t.status='archived';closeTeamManager();renderTeams();return flash('Team archived in preview mode')}
+  const {error}=await sb.rpc('update_team',{p_team_id:t.id,p_name:t.name,p_short_name:t.short_name,p_description:t.description||null,p_accent_color:t.accent_color||'#a72cff',p_manager_id:t.manager_id||null,p_status:'archived'});
+  if(error)throw error;
+  await refreshAll();closeTeamManager();showSection('Teams');flash('Team archived ✓')
+ }catch(e){console.error('Archive team',e);flash(e?.message||'Could not archive team')}
+}
+
 function syncTeamAccent(v){if(/^#[0-9a-fA-F]{6}$/.test(v))tmAccent.value=v}
 function previewTeamLogo(file){if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type))return flash('Please choose a JPG, PNG or WebP image');if(file.size>5*1024*1024)return flash('Team logo must be 5 MB or smaller');selectedTeamLogoFile=file;renderTeamLogoPreview(URL.createObjectURL(file))}
 function renderTeamLogoPreview(url){const wrap=document.getElementById('tmLogoPreviewWrap');if(!wrap)return;wrap.outerHTML=url?`<img id="tmLogoPreviewWrap" class="teamLogoPreview" src="${escapeHtml(url)}" alt="Team logo preview">`:'<div id="tmLogoPreviewWrap" class="teamLogoPreviewFallback">+</div>'}
@@ -2129,12 +2171,17 @@ async function saveTeam(){
  }catch(e){console.error('Save team',e);flash(e?.message||'Could not save team')}
  finally{tmSaveBtn.disabled=false;tmSaveBtn.textContent=editingTeamId?'Save Changes':'Create Team'}
 }
-function openCreatorProfile(id){
+async function openCreatorProfile(id){
  viewedCreator=creatorDirectory.find(c=>c.id===id)||profile;
+ if(!preview)await loadMonthlyLiveProgress();
  show('Profile');
  renderCreatorProfile();
 }
 function creatorLiveStats(id){
+ if(!preview&&monthlyLiveProgress?.length){
+   const ms=monthlyLiveProgress.filter(s=>s.member_id===id);
+   return {minutes:ms.reduce((a,s)=>a+Number(s.minutes||0),0),days:new Set(ms.filter(s=>s.qualifying_day).map(s=>s.session_date)).size};
+ }
  if(id!==profile?.id)return {minutes:0,days:0};
  const month=new Date().toISOString().slice(0,7);
  const ms=sessions.filter(s=>String(s.session_date).slice(0,7)===month);
