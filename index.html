@@ -320,7 +320,7 @@ document.addEventListener('visibilitychange',()=>{
 .pcDataNote{border:1px solid #293746;border-radius:9px;background:#0c141a;padding:10px;font-size:7px;line-height:1.55;color:#89949f}.pcDataNote b{color:#70ddb3}
 
 /* ==========================================================================
-   V29 · PHASE 7.0.1 — FULL HUB PREMIUM DESIGN SYSTEM
+   V29 · PHASE 7.0.2 — FULL HUB PREMIUM DESIGN SYSTEM
    Carries the Battle / Creator / Team / Leaderboard / Progress visual language
    across every remaining Legacy Hub workspace.
    ========================================================================== */
@@ -1650,13 +1650,14 @@ async function ensurePremiumSectionData(name){
    await loadRouteData('battlemedia');
  }
 }
-function show(name,btn){setTimeout(syncCleanNavigation,0);if(!sectionAllowed(name)){flash('You do not have access to that area.');name='Dashboard';btn=null;}
+function show(name,btn,preserveViewedCreator=false){setTimeout(syncCleanNavigation,0);if(!sectionAllowed(name)){flash('You do not have access to that area.');name='Dashboard';btn=null;}
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  const section=document.getElementById(name);if(!section)return flash(`Could not open ${name}`);
  section.classList.add('active');if(window.innerWidth<=900)toggleMobileNav(false);
- pageTitle.textContent=name==='Profile'?'My Profile':name;
+ if(name==='Profile'&&!preserveViewedCreator)viewedCreator=creatorDirectory.find(x=>x.id===profile?.id)||profile;
+ pageTitle.textContent=name==='Profile'?(String(viewedCreator?.id)===String(profile?.id)?'My Profile':'Creator Profile'):name;
  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');
- if(name==='Profile'){viewedCreator=creatorDirectory.find(x=>x.id===profile?.id)||profile;renderCreatorProfile()}
+ if(name==='Profile')renderCreatorProfile()
  if(['Teams','Creators','Progress','Leaderboard','Achievements','Battles','Battle Media'].includes(name))ensurePremiumSectionData(name)
  if(name==='Creators')setTimeout(renderCreatorCentre,20)
  if(name==='Progress')setTimeout(refreshProgressCentre,20)
@@ -2174,10 +2175,13 @@ async function saveTeam(){
  finally{tmSaveBtn.disabled=false;tmSaveBtn.textContent=editingTeamId?'Save Changes':'Create Team'}
 }
 async function openCreatorProfile(id){
- viewedCreator=creatorDirectory.find(c=>c.id===id)||profile;
+ const target=creatorDirectory.find(c=>String(c.id)===String(id));
+ if(!target)return flash('Creator profile could not be found');
+ viewedCreator=target;
  if(!preview)await loadMonthlyLiveProgress();
- show('Profile');
+ show('Profile',null,true);
  renderCreatorProfile();
+ window.scrollTo({top:0,behavior:'smooth'});
 }
 function creatorLiveStats(id){
  if(!preview&&monthlyLiveProgress?.length){
