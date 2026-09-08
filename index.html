@@ -273,6 +273,18 @@ document.addEventListener('visibilitychange',()=>{
 /* V25.4.5 LIVE persistence */
 .liveSyncState{font-size:9px;color:var(--muted);margin-top:8px}
 .liveSyncState.ok{color:#6ce0ad}.liveSyncState.warn{color:#f1c366}
+
+/* Phase 6.1 — Cleaner grouped navigation */
+#nav{display:block;overflow:visible}.navPrimary{margin-bottom:10px}.navPrimary>button{font-weight:850;color:#f2f4f7}
+.navGroup{border-top:1px solid rgba(255,255,255,.055);padding-top:7px;margin-top:7px}
+.navGroupHead{display:flex!important;align-items:center;justify-content:space-between;width:100%!important;margin:0!important;padding:8px 9px!important;background:transparent!important;color:#747d89!important;font-size:9px!important;font-weight:900!important;letter-spacing:1.1px;text-transform:uppercase}
+.navGroupHead:hover{background:#11141a!important;color:#d2d6dc!important}.navGroupTitle{display:flex;align-items:center;gap:8px}.navGroupTitle i{font-style:normal;font-size:10px}.navChevron{font-size:14px;transition:transform .18s}.navGroup.open .navChevron{transform:rotate(180deg)}
+.navGroupItems{display:none;padding:2px 0 4px 7px}.navGroup.open .navGroupItems{display:block}.navGroupItems button{position:relative;padding:9px 10px!important;margin:1px 0!important;font-size:11px}.navGroupItems button.active:before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:4px;background:var(--tenant-accent,var(--purple))}
+@media(max-width:900px){
+ #nav{display:flex!important;gap:7px;overflow-x:auto!important;padding-bottom:5px;scrollbar-width:none}#nav::-webkit-scrollbar{display:none}.navPrimary{display:flex;margin:0;gap:5px;flex:0 0 auto}.navPrimary button{width:auto!important;white-space:nowrap}
+ .navGroup{border:0;padding:0;margin:0;flex:0 0 auto}.navGroupHead{height:38px!important;border:1px solid var(--line)!important;border-radius:10px!important;padding:0 11px!important;background:#111319!important;color:#b5bbc5!important;white-space:nowrap}.navGroupTitle i{display:none}
+ .navGroupItems{display:none!important;position:fixed;left:12px;right:12px;top:108px;z-index:1200;padding:8px;border:1px solid #333944;border-radius:13px;background:#0d1015;box-shadow:0 20px 60px rgba(0,0,0,.6)}.navGroup.open .navGroupItems{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.navGroupItems button{width:100%!important;margin:0!important;border:1px solid rgba(255,255,255,.05)!important;background:#12161c!important}
+}
 </style><style id="tenant-branding-v26">:root{--tenant-accent:#8b5cf6;--tenant-secondary:#ef4444}#network-settings-panel input{width:100%;box-sizing:border-box;margin-top:7px}#network-settings-panel label{display:block;font-size:13px;opacity:.9}</style><style id="network-settings-4b1">
 #networksettings{padding:22px}.network-settings-head{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.network-settings-head h2{margin:4px 0 6px;font-size:28px}.network-settings-head p{margin:0;opacity:.7}.eyebrow{font-size:11px;letter-spacing:.15em;font-weight:800;opacity:.6}.network-plan-pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px;text-transform:uppercase}.network-settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}.network-settings-grid label{display:block;font-size:13px;margin-bottom:16px}.network-settings-grid input{width:100%;box-sizing:border-box;margin-top:7px}.network-colours{display:grid;grid-template-columns:1fr 1fr;gap:12px}.network-colours input[type=color]{height:52px}.network-actions{display:flex;gap:10px;flex-wrap:wrap}.network-preview{padding:18px;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:#0b0b0f}.network-preview-bar{display:flex;align-items:center;gap:14px;padding:18px;border-radius:16px;margin-top:10px}.network-preview-logo{width:48px;height:48px;border-radius:14px;background:rgba(0,0,0,.3);display:grid;place-items:center;font-weight:900}.network-preview-bar strong,.network-preview-bar small{display:block}.network-preview-bar small{opacity:.7}.network-preview-links{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.network-preview-links span{padding:11px;background:rgba(255,255,255,.055);border-radius:10px;text-align:center;font-size:12px}@media(max-width:760px){.network-settings-grid,.network-colours{grid-template-columns:1fr}}
 </style>
@@ -644,7 +656,7 @@ document.addEventListener('visibilitychange',()=>{
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
-<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V27 · PHASE 5.5B</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
+<div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>LEGACY HUB</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V28 · PHASE 6.1</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active"><div id="launch-onboarding"></div>
 <div class="dash2">
   <div class="card dashHero">
@@ -927,7 +939,52 @@ function updatePersonalGreeting(){
  const heroBanner=document.getElementById('dashHeroBannerImg');
  if(heroBanner&&!heroBanner.getAttribute('src'))heroBanner.src='./redbull-legacy-dashboard-banner.jpg';
 }
-async function enterApp(){auth.classList.add('hidden');pending.classList.add('hidden');app.classList.remove('hidden');await Promise.all([loadPlatformAccess(),loadNetworkBranding(),loadNetworkEntitlements(),loadNetworkBilling()]);updatePersonalGreeting();whoName.textContent=profile.display_name||'Creator';whoMeta.textContent=`${profile.tiktok_handle||''} · ${prettyRole(profile.role)}`;teamPill.textContent=profile.role==='network_admin'?(networkBranding?.name||'Network View'):(profile.team?.name||'Network View');navItems=['Dashboard','Profile','Teams','Creators','Battles','Progress','Leaderboard','Achievements','Announcements'];const caps=roleCapabilities();if(caps.canManageBattleMedia&&(networkEntitlements?.battle_media!==false))navItems.push('Battle Media');navItems.push('Notifications');if(platformAccess)navItems.push('Platform');if(caps.canManageNetwork)navItems.push('Network Settings');if(caps.canManageMembers)navItems.push('Admin');nav.innerHTML=navItems.map((n,i)=>`<button data-section="${n}" class="${i?'':'active'}" onclick="show('${n}',this)">${n==='Profile'?'My Profile':n}</button>`).join('');await refreshAll();updatePersonalGreeting();await initPushSupport();await handleIncomingPushLink()}
+
+function cleanNavButton(n){
+ const label=n==='Profile'?'My Profile':n;
+ return `<button data-section="${n}" class="${n==='Dashboard'?'active':''}" onclick="show('${n}',this)">${label}</button>`;
+}
+function buildCleanNav(items){
+ const has=n=>items.includes(n);
+ const take=names=>names.filter(has).map(cleanNavButton).join('');
+ const primary=take(['Dashboard','Profile']);
+ const groups=[
+   ['creators','CREATORS','◉',['Teams','Creators','Progress','Leaderboard','Achievements']],
+   ['battles','BATTLES','⚔',['Battles','Battle Media']],
+   ['community','COMMUNITY','✦',['Announcements','Notifications']],
+   ['network','NETWORK','⚙',['Platform','Network Settings','Admin']]
+ ];
+ return `<div class="navPrimary">${primary}</div>`+groups.map(([key,label,icon,names])=>{
+   const content=take(names);if(!content)return '';
+   return `<div class="navGroup" data-nav-group="${key}"><button type="button" class="navGroupHead" onclick="toggleNavGroup('${key}',event)"><span class="navGroupTitle"><i>${icon}</i>${label}</span><span class="navChevron">⌄</span></button><div class="navGroupItems">${content}</div></div>`;
+ }).join('');
+}
+function toggleNavGroup(key,event){
+ if(event){event.preventDefault();event.stopPropagation()}
+ const g=document.querySelector(`.navGroup[data-nav-group="${key}"]`);if(!g)return;
+ const open=!g.classList.contains('open');
+ if(innerWidth<=900)document.querySelectorAll('.navGroup').forEach(x=>x!==g&&x.classList.remove('open'));
+ g.classList.toggle('open',open);
+ try{localStorage.setItem(`legacy.nav.${key}`,open?'1':'0')}catch(e){}
+}
+function initCleanNavigation(){
+ document.querySelectorAll('.navGroup').forEach(g=>{
+   const key=g.dataset.navGroup;
+   let saved=null;try{saved=localStorage.getItem(`legacy.nav.${key}`)}catch(e){}
+   if(saved!==null)g.classList.toggle('open',saved==='1');
+   else if(key==='creators'||key==='battles')g.classList.add('open');
+ });
+ syncCleanNavigation();
+}
+function syncCleanNavigation(){
+ const active=document.querySelector('#nav button.active')?.dataset.section||document.querySelector('.section.active')?.id||'';
+ document.querySelectorAll('.navGroup').forEach(g=>{
+   const owns=!!g.querySelector(`.navGroupItems button[data-section="${CSS.escape(active)}"]`);
+   if(owns)g.classList.add('open');
+ });
+}
+
+async function enterApp(){auth.classList.add('hidden');pending.classList.add('hidden');app.classList.remove('hidden');await Promise.all([loadPlatformAccess(),loadNetworkBranding(),loadNetworkEntitlements(),loadNetworkBilling()]);updatePersonalGreeting();whoName.textContent=profile.display_name||'Creator';whoMeta.textContent=`${profile.tiktok_handle||''} · ${prettyRole(profile.role)}`;teamPill.textContent=profile.role==='network_admin'?(networkBranding?.name||'Network View'):(profile.team?.name||'Network View');navItems=['Dashboard','Profile','Teams','Creators','Battles','Progress','Leaderboard','Achievements','Announcements'];const caps=roleCapabilities();if(caps.canManageBattleMedia&&(networkEntitlements?.battle_media!==false))navItems.push('Battle Media');navItems.push('Notifications');if(platformAccess)navItems.push('Platform');if(caps.canManageNetwork)navItems.push('Network Settings');if(caps.canManageMembers)navItems.push('Admin');nav.innerHTML=buildCleanNav(navItems);initCleanNavigation();await refreshAll();updatePersonalGreeting();await initPushSupport();await handleIncomingPushLink()}
 function prettyRole(r){return ({network_admin:'Network Admin',team_manager:'Team Manager',battle_manager:'Battle Manager',member:'Member',supporter:'Supporter'})[r]||r||'Member'}
 document.addEventListener('input',e=>{if(e.target?.id==='tmAccent')tmAccentText.value=tmAccent.value});
 
@@ -967,7 +1024,7 @@ function sectionAllowed(name){
  if(name==='Battle Media')return c.canManageBattleMedia&&(networkEntitlements?.battle_media!==false);
  return true;
 }
-function show(name,btn){if(!sectionAllowed(name)){flash('You do not have access to that area.');name='Dashboard';btn=null;}
+function show(name,btn){setTimeout(syncCleanNavigation,0);if(!sectionAllowed(name)){flash('You do not have access to that area.');name='Dashboard';btn=null;}
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  const section=document.getElementById(name);if(!section)return flash(`Could not open ${name}`);
  section.classList.add('active');if(window.innerWidth<=900)toggleMobileNav(false);
