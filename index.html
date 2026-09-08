@@ -320,7 +320,7 @@ document.addEventListener('visibilitychange',()=>{
 .pcDataNote{border:1px solid #293746;border-radius:9px;background:#0c141a;padding:10px;font-size:7px;line-height:1.55;color:#89949f}.pcDataNote b{color:#70ddb3}
 
 /* ==========================================================================
-   V29 · PHASE 6.8 — FULL HUB PREMIUM DESIGN SYSTEM
+   V29 · PHASE 6.8.1 — FULL HUB PREMIUM DESIGN SYSTEM
    Carries the Battle / Creator / Team / Leaderboard / Progress visual language
    across every remaining Legacy Hub workspace.
    ========================================================================== */
@@ -750,6 +750,171 @@ document.addEventListener('visibilitychange',()=>{
 #ttWorkerBadge.online{background:#153427;color:#6ce0ad}
 #ttWorkerBadge.stale{background:#3a2b12;color:#f1c366}
 @media(max-width:700px){.ttWorkerStats{grid-template-columns:1fr}}
+</style>
+
+<style id="mobile-premium-repair-v29-681">
+/* V29 · 6.8.1 — mobile-only repair. Desktop intentionally untouched. */
+@media(max-width:900px){
+  html,body{max-width:100%;overflow-x:hidden!important}
+  body.mobile-menu-open{overflow:hidden!important}
+
+  /* Compact app header */
+  .app{display:block!important;min-width:0!important}
+  .side{
+    position:sticky!important;top:0!important;z-index:2000!important;
+    height:auto!important;min-height:0!important;width:100%!important;
+    padding:max(10px,env(safe-area-inset-top)) 12px 10px!important;
+    border-right:0!important;border-bottom:1px solid #252c36!important;
+    background:rgba(8,10,13,.97)!important;backdrop-filter:blur(18px)!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;gap:10px!important;
+  }
+  .side .brand{
+    margin:0!important;min-width:0!important;display:flex!important;
+    align-items:center!important;gap:9px!important;
+  }
+  .tenant-sidebar-logo{width:36px!important;height:36px!important;flex:0 0 36px!important}
+  .tenant-brand-lockup>div{min-width:0!important}
+  .tenant-brand-lockup>div>span{font-size:14px!important;max-width:190px!important;white-space:nowrap!important}
+  .tenant-brand-lockup small{font-size:7px!important;margin-top:2px!important}
+  .tenant-brand-lockup>div>div{display:none!important}
+
+  #mobile-nav-toggle{
+    display:inline-flex!important;align-items:center!important;justify-content:center!important;
+    width:auto!important;min-width:92px!important;height:42px!important;margin:0!important;
+    padding:0 14px!important;border:1px solid #343b47!important;border-radius:11px!important;
+    background:#121720!important;color:#f3f4f6!important;font-size:13px!important;font-weight:900!important;
+    box-shadow:none!important;
+  }
+
+  /* IMPORTANT: override the older #nav display:flex!important rule */
+  .side #nav{
+    display:none!important;position:fixed!important;
+    top:calc(env(safe-area-inset-top) + 63px)!important;left:10px!important;right:10px!important;
+    width:auto!important;max-height:calc(100dvh - env(safe-area-inset-top) - 76px)!important;
+    overflow-y:auto!important;overflow-x:hidden!important;
+    margin:0!important;padding:10px!important;gap:7px!important;
+    flex-direction:column!important;
+    border:1px solid #313946!important;border-radius:15px!important;
+    background:rgba(10,13,17,.99)!important;box-shadow:0 24px 80px rgba(0,0,0,.72)!important;
+    overscroll-behavior:contain!important;
+  }
+  .side.mobile-open #nav{display:flex!important}
+
+  .navPrimary{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;margin:0 0 3px!important;width:100%!important}
+  .navPrimary>button{
+    width:100%!important;height:46px!important;margin:0!important;padding:0 13px!important;
+    border:1px solid #2b333f!important;border-radius:10px!important;background:#11161d!important;
+    white-space:normal!important;font-size:12px!important;
+  }
+
+  .navGroup{width:100%!important;margin:0!important;padding:0!important;border:0!important}
+  .navGroupHead{
+    width:100%!important;height:45px!important;margin:0!important;padding:0 13px!important;
+    border:1px solid #2b333f!important;border-radius:10px!important;background:#10151c!important;
+    color:#b9c0ca!important;font-size:9px!important;
+  }
+  .navGroupTitle i{display:inline!important}
+  .navGroupItems,.navGroup.open .navGroupItems{
+    position:static!important;inset:auto!important;width:100%!important;
+    margin:6px 0 2px!important;padding:6px!important;
+    border:1px solid #29313c!important;border-radius:11px!important;
+    background:#0b1016!important;box-shadow:none!important;
+  }
+  .navGroupItems{display:none!important}
+  .navGroup.open .navGroupItems{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}
+  .navGroupItems button{
+    min-height:44px!important;width:100%!important;margin:0!important;padding:9px 11px!important;
+    border:1px solid #262e39!important;border-radius:9px!important;background:#111720!important;
+    font-size:11px!important;white-space:normal!important;
+  }
+  .navGroupItems button.active{background:#251032!important}
+  .who{display:none!important}
+
+  /* Main content */
+  .main{width:100%!important;max-width:100%!important;padding:12px!important;margin:0!important;min-width:0!important}
+  .top{
+    display:flex!important;flex-direction:row!important;align-items:center!important;
+    justify-content:space-between!important;gap:8px!important;margin-bottom:13px!important;
+  }
+  .top>div:first-child{min-width:0!important}
+  .top .eyebrow{font-size:8px!important}
+  .top h1{font-size:23px!important;line-height:1.05!important;margin:2px 0 0!important}
+  .top>.row{width:auto!important;justify-content:flex-end!important;flex-wrap:nowrap!important}
+  #teamPill{max-width:145px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  #notifBtn{min-width:50px!important}
+
+  /* Premium page headers should stack cleanly */
+  .premiumPageTop,.bcTop,.ccTop,.tcTop,.pcTop,.plTop{
+    flex-direction:column!important;align-items:stretch!important;gap:12px!important;
+    padding-bottom:14px!important;margin-bottom:12px!important;
+  }
+  .premiumPageTop h1,.bcTitle h1,.ccTop h1,.tcTop h1,.pcTop h1,.plTop h1{font-size:26px!important;line-height:1.05!important}
+  .premiumPageTop h3,.bcTitle h3,.ccTop h3,.tcTop h3,.pcTop h3,.plTop h3{font-size:13px!important}
+  .premiumPageTop p,.bcTitle p,.ccTop p,.tcTop p,.pcTop p,.plTop p{font-size:9px!important;line-height:1.5!important}
+  .premiumTopActions,.bcTopTools,.ccTopActions,.tcTopActions,.pcTopActions,.plTopActions{
+    width:100%!important;justify-content:flex-start!important;align-items:stretch!important;
+  }
+  .premiumStatus,.bcDetection,.ccNetworkHealth,.tcNetworkPulse,.pcHealth,.plLiveBadge{
+    flex:1 1 190px!important;min-width:0!important;
+  }
+
+  /* Responsive stat/filter rows */
+  .ccStatStrip,.tcStatStrip,.pcStatStrip,.plSummary{grid-template-columns:1fr 1fr!important}
+  .ccToolbar,.tcToolbar,.pcControls{grid-template-columns:1fr!important}
+  .ccSearchWrap,.tcSearch,.pcSearch{grid-column:auto!important}
+  .ccToolbar select,.tcToolbar select,.pcControls select,.plFilters select{height:42px!important;width:100%!important}
+  .plFilters{flex-direction:column!important;align-items:stretch!important}
+  .plFilterTabs{width:100%!important;overflow-x:auto!important}
+  .plFilterTabs button{flex:0 0 auto!important}
+
+  /* Main two-column premium layouts */
+  .bcOverviewGrid,.ccLayout,.tcLayout,.pcMainGrid,.plMainGrid,.plHeroGrid{grid-template-columns:1fr!important}
+  .ccPremiumGrid,.tcPremiumGrid,.pcCreatorGrid{grid-template-columns:1fr!important}
+  .ccRail,.tcRail,.pcRail,.plRail{grid-template-columns:1fr!important}
+  .ccQuote,.tcQuote,.pcQuote,.plQuote{grid-column:auto!important}
+
+  /* Dashboard: readable, not giant */
+  .dashHero{padding:15px!important;min-height:0!important}
+  .dashGreeting{
+    font-size:clamp(30px,9.5vw,42px)!important;line-height:.94!important;
+    letter-spacing:-1.3px!important;word-break:normal!important;overflow-wrap:normal!important;
+  }
+  .dashTagline{font-size:12px!important}
+  .dashStats4{grid-template-columns:1fr 1fr!important}
+  .dashHeroBanner{aspect-ratio:16/10!important;height:auto!important}
+  .commandGrid,.dashboardLower{grid-template-columns:1fr!important}
+  .quickGrid{grid-template-columns:1fr 1fr!important}
+
+  /* Tables/cards: allow internal scrolling rather than page overflow */
+  .memberWrap,.plTableWrap{max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+  .card,.battle,.matchBox,.annComposer,.inviteBox,.teamModal,.platform-shell{max-width:100%!important}
+  img,video,canvas{max-width:100%}
+
+  /* Battle Centre */
+  .bcToolbar{flex-direction:column!important;align-items:stretch!important}
+  .battleCentreTabs{width:100%!important}
+  .battleCentreTabs button{flex:0 0 auto!important}
+  .bcPrimaryActions{width:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important}
+  .bcPrimaryActions .btn{width:100%!important}
+
+  /* Modals */
+  .teamModalBackdrop{padding:10px!important}
+  .teamModal{width:100%!important;max-height:88dvh!important}
+}
+@media(max-width:520px){
+  .side{padding-left:10px!important;padding-right:10px!important}
+  .tenant-brand-lockup>div>span{max-width:150px!important;font-size:13px!important}
+  #mobile-nav-toggle{min-width:84px!important;padding:0 11px!important}
+  .main{padding:10px!important}
+  .top h1{font-size:21px!important}
+  #teamPill{max-width:112px!important;font-size:8px!important}
+  .ccStatStrip,.tcStatStrip,.pcStatStrip,.plSummary{grid-template-columns:1fr 1fr!important}
+  .dashStats4{grid-template-columns:1fr!important}
+  .quickGrid{grid-template-columns:1fr 1fr!important}
+  .navGroup.open .navGroupItems{grid-template-columns:1fr 1fr!important}
+  .bcPrimaryActions{grid-template-columns:1fr!important}
+}
 </style>
 </head><body>
 <div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Legacy Hub</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username" required><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
@@ -1421,9 +1586,25 @@ function toggleMobileNav(force){
  if(!side||!btn)return;
  const open=typeof force==='boolean'?force:!side.classList.contains('mobile-open');
  side.classList.toggle('mobile-open',open);
+ document.body.classList.toggle('mobile-menu-open',open&&window.innerWidth<=900);
  btn.setAttribute('aria-expanded',open?'true':'false');
  btn.textContent=open?'✕ Close':'☰ Menu';
+ if(!open)document.querySelectorAll('.navGroup').forEach(g=>g.classList.remove('open'));
 }
+document.addEventListener('click',e=>{
+ if(window.innerWidth>900)return;
+ const side=document.querySelector('.side');
+ if(!side?.classList.contains('mobile-open'))return;
+ if(e.target.closest('#mobile-nav-toggle,.nav'))return;
+ toggleMobileNav(false);
+});
+window.addEventListener('resize',()=>{
+ if(window.innerWidth>900){
+   document.body.classList.remove('mobile-menu-open');
+   document.querySelector('.side')?.classList.remove('mobile-open');
+   const b=document.getElementById('mobile-nav-toggle');if(b){b.setAttribute('aria-expanded','false');b.textContent='☰ Menu'}
+ }
+});
 
 
 let platformAccess=false,platformNetworks=[];
