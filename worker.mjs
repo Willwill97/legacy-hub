@@ -108,22 +108,17 @@ class CreatorWatcher {
 
     let live=false, roomId=null;
     try {
-      // Use TikTool's POST bulk preflight even for a single creator.
-      // Sandbox permits one username per bulk request, and using a JSON body
-      // avoids the query-parameter parsing issue that caused Missing "unique_id".
       const j=await tik('/webcast/bulk_live_check',{
         method:'POST',
         body:{unique_ids:[this.creator.tiktok_username]}
       });
       const rows=Array.isArray(j.data)?j.data:[];
       const row=rows.find(r=>normal(r?.unique_id)===normal(this.creator.tiktok_username)) || rows[0] || null;
-
       if (row?.alive_status === 'unknown' || row?.live_status === 'unknown' || row?.check_failed === true) {
         await hub('connection',{profile_id:this.creator.profile_id,status:'ready',error:null}).catch(()=>{});
         this.reconnectAt=Date.now()+30000;
         return;
       }
-
       live=!!(row?.is_live ?? row?.alive);
       roomId=row?.room_id || null;
     } catch(e) {
@@ -274,7 +269,7 @@ async function heartbeat(){
   await hub('heartbeat',{
     worker_id:WORKER_ID,status:'online',mode:config.sandbox_mode?'sandbox':'paid',
     active_connections:active,max_concurrent:Number(config.max_concurrent||3),
-    metadata:{watchers:watchers.size,node:process.version,version:'5.5B.2'}
+    metadata:{watchers:watchers.size,node:process.version,version:'5.5B.3'}
   }).catch(e=>console.warn('heartbeat:',e.message));
 }
 
@@ -288,5 +283,5 @@ for(const w of watchers.values())w.checkAndConnect().catch(()=>{});
 
 http.createServer((req,res)=>{
   res.setHeader('content-type','application/json');
-  res.end(JSON.stringify({ok:true,worker:'Legacy Hub TikTok Battle Worker',version:'5.5B.2',watchers:watchers.size,last_config_at:lastConfigAt}));
-}).listen(PORT,()=>console.log(`Legacy Hub battle worker 5.5B.2 listening on :${PORT}`));
+  res.end(JSON.stringify({ok:true,worker:'Legacy Hub TikTok Battle Worker',version:'5.5B.3',watchers:watchers.size,last_config_at:lastConfigAt}));
+}).listen(PORT,()=>console.log(`Legacy Hub battle worker 5.5B.3 listening on :${PORT}`));
