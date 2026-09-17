@@ -42,7 +42,7 @@ async function tik(path, opts={}) {
   for (const [k,v] of Object.entries(opts.query || {})) if (v != null) url.searchParams.set(k, String(v));
   const res = await fetch(url, {
     method: opts.method || 'GET',
-    headers: { 'content-type':'application/json' },
+    headers: { 'content-type':'application/json', 'x-api-key': API_KEY },
     body: opts.body ? JSON.stringify(opts.body) : undefined
   });
   const json = await res.json().catch(()=>({}));
@@ -108,24 +108,30 @@ class CreatorWatcher {
 
     let live=false, roomId=null;
     try {
-      const j=await tik('/webcast/live_status',{query:{uniqueId:this.creator.tiktok_username}});
-      live=!!j.data?.is_live; roomId=j.data?.room_id || null;
-      if (!live) {
-        // Definitive fallback, but serially and only for one creator at a time.
-        await sleep(350);
-        const c=await tik('/webcast/check_alive',{query:{unique_id:this.creator.tiktok_username}});
-        const row=Array.isArray(c.data)?c.data[0]:c.data;
-        live=!!row?.alive; roomId=row?.room_id || roomId;
+      const j=await tik('/webcast/bulk_live_check',{
+        method:'POST',
+        body:{unique_ids:[this.creator.tiktok_username]}
+      });
+      const rows=Array.isArray(j.data)?j.data:[];
+      const row=rows.find(r=>normal(r?.unique_id)===normal(this.creator.tiktok_username)) || rows[0] || null;
+
+      if (row?.alive_status === 'unknown' || row?.live_status === 'unknown' || row?.check_failed === true) {
+        await hub('connection',{profile_id:this.creator.profile_id,status:'ready',error:null}).catch(()=>{});
+        this.reconnectAt=Date.now()+30000;
+        return;
       }
+
+      live=!!(row?.is_live ?? row?.alive);
+      roomId=row?.room_id || null;
     } catch(e) {
-      console.warn(`@${this.creator.tiktok_username} live check:`,e.message);
+      console.warn(`@${this.creator.tiktok_username} live preflight:`,e.message);
       await hub('connection',{profile_id:this.creator.profile_id,status:'error',error:e.message}).catch(()=>{});
       this.reconnectAt=Date.now()+60000;
       return;
     }
 
     if (!live) {
-      await hub('connection',{profile_id:this.creator.profile_id,status:'offline'}).catch(()=>{});
+      await hub('connection',{profile_id:this.creator.profile_id,status:'offline',error:null}).catch(()=>{});
       return;
     }
     this.roomId=roomId;
@@ -139,11 +145,10 @@ class CreatorWatcher {
       if(!token)throw new Error('TikTool did not return a JWT');
       const u=`wss://api.tik.tools?uniqueId=${encodeURIComponent(this.creator.tiktok_username)}&jwtKey=${encodeURIComponent(token)}`;
       this.ws=new WebSocket(u);
-      this.ws.on('open',()=>hub('connection',{profile_id:this.creator.profile_id,status:'watching',room_id:this.roomId}).catch(()=>{}));
+      this.ws.on('open',()=>hub('connection',{profile_id:this.creator.profile_id,status:'watching',room_id:this.roomId,error:null}).catch(()=>{}));
       this.ws.on('message',(raw)=>this.onMessage(raw).catch(e=>console.warn('message:',e.message)));
       this.ws.on('error',(e)=>console.warn(`@${this.creator.tiktok_username} websocket:`,e.message));
       this.ws.on('close',()=>this.onClose());
-      // Refresh before short-lived JWT session becomes stale.
       this.jwtTimer=setTimeout(()=>{ try{this.ws?.close(1000,'refresh')}catch{} }, 8*60*1000);
     } catch(e) {
       console.warn(`@${this.creator.tiktok_username} connect:`,e.message);
@@ -163,7 +168,7 @@ class CreatorWatcher {
     const event=msg.event, d=msg.data || msg;
     if(event==='roomInfo') {
       this.roomId=d.roomId || msg.roomId || this.roomId;
-      await hub('connection',{profile_id:this.creator.profile_id,status:'watching',room_id:this.roomId}).catch(()=>{});
+      await hub('connection',{profile_id:this.creator.profile_id,status:'watching',room_id:this.roomId,error:null}).catch(()=>{});
       return;
     }
     if(event!=='battleArmies')return;
@@ -199,7 +204,7 @@ class CreatorWatcher {
     m.opponentHostId=sides.opponentHostId||m.opponentHostId;
     m.opponentHandle=sides.opponentHandle||m.opponentHandle;
     m.lastFrame={status:d.status,secsRemaining:d.secsRemaining,serverTsMs:d.serverTsMs,transactionId:d.transactionId||null,protoVersion:d.protoVersion||null};
-    await hub('connection',{profile_id:this.creator.profile_id,status:'battle',room_id:this.roomId,provider_user_id:m.creatorHostId}).catch(()=>{});
+    await hub('connection',{profile_id:this.creator.profile_id,status:'battle',room_id:this.roomId,provider_user_id:m.creatorHostId,error:null}).catch(()=>{});
     if(Number(d.secsRemaining)===0 || Number(d.status)===2) await this.finalize(m,'terminal_frame');
   }
 
@@ -265,7 +270,7 @@ async function heartbeat(){
   await hub('heartbeat',{
     worker_id:WORKER_ID,status:'online',mode:config.sandbox_mode?'sandbox':'paid',
     active_connections:active,max_concurrent:Number(config.max_concurrent||3),
-    metadata:{watchers:watchers.size,node:process.version,version:'5.5B'}
+    metadata:{watchers:watchers.size,node:process.version,version:'5.5B.4'}
   }).catch(e=>console.warn('heartbeat:',e.message));
 }
 
@@ -279,5 +284,5 @@ for(const w of watchers.values())w.checkAndConnect().catch(()=>{});
 
 http.createServer((req,res)=>{
   res.setHeader('content-type','application/json');
-  res.end(JSON.stringify({ok:true,worker:'Legacy Hub TikTok Battle Worker',version:'5.5B',watchers:watchers.size,last_config_at:lastConfigAt}));
-}).listen(PORT,()=>console.log(`Legacy Hub battle worker 5.5B listening on :${PORT}`));
+  res.end(JSON.stringify({ok:true,worker:'Legacy Hub TikTok Battle Worker',version:'5.5B.4',watchers:watchers.size,last_config_at:lastConfigAt}));
+}).listen(PORT,()=>console.log(`Legacy Hub battle worker 5.5B.4 listening on :${PORT}`));
