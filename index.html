@@ -320,7 +320,7 @@ document.addEventListener('visibilitychange',()=>{
 .pcDataNote{border:1px solid #293746;border-radius:9px;background:#0c141a;padding:10px;font-size:7px;line-height:1.55;color:#89949f}.pcDataNote b{color:#70ddb3}
 
 /* ==========================================================================
-   V29 · PHASE 7.0.6 — CREATOR PROFILE MANAGEMENT VISIBILITY
+   V29 · PHASE 7.0.7 — TEAM POSITION MANAGEMENT
    Carries the Battle / Creator / Team / Leaderboard / Progress visual language
    across every remaining Legacy Hub workspace.
    ========================================================================== */
@@ -1361,15 +1361,15 @@ function roleCapabilities(){
  const r=profile?.role||'member';
  return {
   networkAdmin:r==='network_admin',
-  teamManager:r==='team_manager',
+  teamManager:['team_manager','general_manager'].includes(r),
   battleManager:r==='battle_manager',
-  canCreateBattle:['network_admin','team_manager','battle_manager'].includes(r),
+  canCreateBattle:['network_admin','team_manager','general_manager','battle_manager'].includes(r),
   canManageTeams:r==='network_admin',
   canManageNetwork:r==='network_admin',
   canManageBattleMedia:['network_admin','battle_manager'].includes(r),
-  canPostAnnouncement:['network_admin','team_manager'].includes(r),
-  canManageMembers:['network_admin','team_manager'].includes(r),
-  canVerifyResults:['network_admin','team_manager'].includes(r)
+  canPostAnnouncement:['network_admin','team_manager','general_manager'].includes(r),
+  canManageMembers:['network_admin','team_manager','general_manager'].includes(r),
+  canVerifyResults:['network_admin','team_manager','general_manager'].includes(r)
  }
 }
 function applyRoleUX(){
@@ -1584,7 +1584,7 @@ function renderProgressCentre(){
 document.addEventListener('click',e=>{const b=e.target.closest('button[data-section="Progress"]');if(b)setTimeout(refreshProgressCentre,120)});
 
 async function enterApp(){auth.classList.add('hidden');pending.classList.add('hidden');app.classList.remove('hidden');await Promise.all([loadPlatformAccess(),loadNetworkBranding(),loadNetworkEntitlements(),loadNetworkBilling()]);updatePersonalGreeting();whoName.textContent=profile.display_name||'Creator';whoMeta.textContent=`${profile.tiktok_handle||''} · ${prettyRole(profile.role)}`;teamPill.textContent=profile.role==='network_admin'?(networkBranding?.name||'Network View'):(profile.team?.name||'Network View');navItems=['Dashboard','Profile','Teams','Creators','Battles','Progress','Leaderboard','Achievements','Announcements'];const caps=roleCapabilities();if(caps.canManageBattleMedia&&(networkEntitlements?.battle_media!==false))navItems.push('Battle Media');navItems.push('Notifications');if(platformAccess)navItems.push('Platform');if(caps.canManageNetwork)navItems.push('Network Settings');if(caps.canManageMembers)navItems.push('Admin');nav.innerHTML=buildCleanNav(navItems);initCleanNavigation();await refreshAll();updatePersonalGreeting();await initPushSupport();await handleIncomingPushLink()}
-function prettyRole(r){return ({network_admin:'Network Admin',team_manager:'Team Manager',battle_manager:'Battle Manager',member:'Member',supporter:'Supporter'})[r]||r||'Member'}
+function prettyRole(r){return ({network_admin:'Network Admin',general_manager:'General Manager',team_manager:'General Manager',team_leader:'Team Leader',battle_manager:'Battle Manager',creator:'Creator',member:'Creator',supporter:'Supporter'})[r]||r||'Creator'}
 document.addEventListener('input',e=>{if(e.target?.id==='tmAccent')tmAccentText.value=tmAccent.value});
 
 function toggleMobileNav(force){
@@ -2214,11 +2214,46 @@ function renderCreatorProfile(){
  const upcoming=battles.filter(b=>b.claimed_by===c.id&&new Date(b.starts_at)>new Date()).slice(0,3);
  profileView.innerHTML=`<div class="card profileHero">${creatorAvatar(c,true)}<div><div class="eyebrow">${escapeHtml(c.team?.name||teamName(c.team_id)||'LEGACY CREATOR')}</div><h2 style="font-size:30px;margin:5px 0">${escapeHtml(c.display_name||'Creator')}</h2><div class="memberHandle">${escapeHtml(c.tiktok_handle||'')}</div><p class="muted">${escapeHtml(c.bio||'No bio added yet.')}</p><div class="profileActions">${c.creator_level?`<span class="badge">Level ${escapeHtml(c.creator_level)}</span>`:''}${c.favourite_battle_format?`<span class="badge">Favourite: ${escapeHtml(c.favourite_battle_format)}</span>`:''}<span class="badge">${escapeHtml(prettyRole(c.role||'member'))}</span>${isMe?`<button class="btn tiny" onclick="showEditProfile()">Edit my profile</button>`:(profile?.role==='network_admin'?`<button class="btn tiny" onclick="showEditProfile()">Edit creator profile</button>`:'')}</div><div class="profileStats"><div class="stat"><small>BATTLES</small><strong>${Number(perf.battles||0)}</strong></div><div class="stat"><small>WINS</small><strong>${Number(perf.wins||0)}</strong></div><div class="stat"><small>POINTS</small><strong>${Number(perf.points||0).toLocaleString()}</strong></div><div class="stat"><small>DIAMONDS</small><strong>${Number(perf.diamonds||0).toLocaleString()}</strong></div></div></div></div>
  <div id="editProfileBox"></div>
+ ${canManageCreatorPosition(c)?renderCreatorPositionControl(c):''}
  ${profile?.role==='network_admin'?`<div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">NETWORK ADMIN · GOD MODE</div><h3>💎 Diamond control</h3><p class="muted" style="margin:5px 0 0">Manually correct this creator's recorded diamond total. Every change is saved as an audited adjustment without rewriting battle results.</p></div><span class="badge">Current: 💎 ${Number(perf.diamonds||0).toLocaleString()}</span></div><div class="row" style="align-items:center;margin-top:12px;flex-wrap:wrap"><input id="adminDiamondTotal" class="field" type="number" min="0" step="1" value="${Number(perf.diamonds||0)}" style="max-width:220px" aria-label="New diamond total"><input id="adminDiamondReason" class="field" placeholder="Reason for adjustment (optional)" style="flex:1;min-width:240px"><button id="adminDiamondSaveBtn" class="btn" onclick="saveAdminDiamondTotal('${escapeHtml(c.id)}')">Save diamond total</button></div></div>`:''}
  <div id="profilePosterArea" class="card" style="margin-top:14px"><div class="eyebrow">BATTLE ARTWORK</div><h3>Battle Posters</h3><div id="profilePosterGrid" class="posterGrid"><p class="muted">Loading posters…</p></div></div>
  <div class="profileColumns"><div class="card"><div class="eyebrow">LIVE & AVAILABILITY</div><h3>Creator activity</h3>${canViewLive?`<div class="stats"><div class="stat"><small>LIVE THIS MONTH</small><strong>${Math.floor(live.minutes/60)}h ${live.minutes%60}m</strong></div><div class="stat"><small>QUALIFYING DAYS</small><strong>${live.days} / 8</strong></div></div>${!isMe&&isNetworkAdmin?'<p class="muted" style="margin-top:10px">Visible with Network Admin management access.</p>':''}`:'<p class="muted">LIVE totals are private to the creator and management team.</p>'}<div class="teamCreatorList">${upcoming.length?upcoming.map(b=>`<div class="activityItem"><b>Upcoming battle</b><div class="annMeta">${new Date(b.starts_at).toLocaleString('en-GB')} · ${escapeHtml(b.opponent_handle||'TBC')} · ${escapeHtml(b.format||'')}</div></div>`).join(''):'<p class="muted">No upcoming claimed battles.</p>'}</div></div>
  <div class="card"><div class="eyebrow">HONOURS</div><h3>Achievements & awards</h3><div class="row">${ach.length?ach.slice(0,6).map(a=>{const d=achievementDefinitions.find(x=>x.code===a.achievement_code);return `<span class="badge">${d?.icon||'🏆'} ${escapeHtml(d?.title||a.achievement_code)}</span>`}).join(''):'<span class="muted">No badges yet.</span>'}</div>${award.map(a=>`<div class="activityItem"><b>${escapeHtml(a.title)}</b><div class="annMeta">${prettyMonth(String(a.month_start).slice(0,10))}</div></div>`).join('')}</div></div>`;
  renderProfilePosters(c.id);
+}
+
+function canManageCreatorPosition(c){
+ if(!c||!profile||String(c.id)===String(profile.id)||c.role==='network_admin')return false;
+ if(profile.role==='network_admin')return true;
+ const t=(teams||[]).find(x=>String(x.id)===String(c.team_id));
+ return !!t&&String(t.manager_id||'')===String(profile.id);
+}
+function normaliseTeamPosition(r){
+ return ({member:'creator',team_manager:'general_manager'})[r]||r||'creator';
+}
+function renderCreatorPositionControl(c){
+ const pos=normaliseTeamPosition(c.role);
+ const owner=profile?.role!=='network_admin';
+ return `<div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">${owner?'TEAM OWNER CONTROL':'NETWORK ADMIN · GOD MODE'}</div><h3>👥 Team position</h3><p class="muted" style="margin:5px 0 0">Change this creator's position within ${escapeHtml(c.team?.name||teamName(c.team_id)||'their team')}.</p></div><span class="badge">Current: ${escapeHtml(prettyRole(c.role))}</span></div><div class="row" style="align-items:center;margin-top:12px;flex-wrap:wrap"><select id="creatorPositionSelect" class="field" style="max-width:280px"><option value="creator" ${pos==='creator'?'selected':''}>Creator</option><option value="team_leader" ${pos==='team_leader'?'selected':''}>Team Leader</option><option value="battle_manager" ${pos==='battle_manager'?'selected':''}>Battle Manager</option><option value="general_manager" ${pos==='general_manager'?'selected':''}>General Manager</option></select><button id="creatorPositionSaveBtn" class="btn" onclick="saveCreatorTeamPosition('${escapeHtml(c.id)}')">Save position</button></div><p class="muted" style="margin:9px 0 0">${owner?'As Team Owner, you can manage positions for creators in this team only.':'Network Admins can manage positions across the whole network.'}</p></div>`;
+}
+async function saveCreatorTeamPosition(creatorId){
+ const target=(creatorDirectory||[]).find(x=>String(x.id)===String(creatorId))||viewedCreator;
+ if(!target||!canManageCreatorPosition(target))return flash('You do not have permission to change this position');
+ const select=document.getElementById('creatorPositionSelect'),btn=document.getElementById('creatorPositionSaveBtn');
+ const next=String(select?.value||'creator'),current=normaliseTeamPosition(target.role);
+ if(next===current)return flash('This creator already has that position');
+ if(!confirm(`Change ${target.display_name||'this creator'} from ${prettyRole(target.role)} to ${prettyRole(next)}?`))return;
+ if(btn){btn.disabled=true;btn.textContent='Saving…'}
+ try{
+  if(preview){target.role=next;renderCreatorProfile();return flash('Position updated in preview mode')}
+  const {error}=await sb.rpc('set_creator_team_position',{p_creator_id:creatorId,p_position:next});
+  if(error)throw error;
+  flash(`${target.display_name||'Creator'} is now ${prettyRole(next)} ✓`);
+  await refreshAll();
+  viewedCreator=(creatorDirectory||[]).find(x=>String(x.id)===String(creatorId))||target;
+  renderCreatorProfile();
+ }catch(e){console.error('Creator position update failed',e);flash(e?.message||'Could not update creator position')}
+ finally{if(btn){btn.disabled=false;btn.textContent='Save position'}}
 }
 
 function showEditProfile(){
