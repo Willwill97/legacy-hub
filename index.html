@@ -1098,8 +1098,8 @@ document.addEventListener('visibilitychange',()=>{
 <div id="battleCentreSchedule" class="battleCentrePanel"><div class="card"><div class="teamHead"><div><div class="eyebrow">BATTLE HUB</div><h2>Battle schedule</h2></div><button class="btn" onclick="showBattleForm()">+ Request battle</button></div><div id="battleForm" class="hidden" style="margin:12px 0"><div id="battleHostCreatorWrap" class="hidden"><label class="muted" style="display:block;margin-bottom:4px">Creator / Host</label><select id="battleHostCreator" class="field"></select></div><div class="row"><input id="battleDate" class="field" type="date" style="flex:1"><input id="battleTime" class="field" type="time" style="flex:1"><select id="battleFormat" class="field" style="flex:1"><option>1 round</option><option>3 rounds</option><option>5 rounds</option><option>7 rounds</option></select></div><input id="battleOpp" class="field" placeholder="Opponent TikTok username"><input id="battleOppTeam" class="field" placeholder="Opponent team (optional)"><button class="btn" onclick="createBattle()">Publish battle</button></div><div id="battleList"></div></div></div>
 <div id="battleCentreMatchmaking" class="battleCentrePanel"><div class="card" style="margin-top:14px"><div class="teamHead"><div><div class="eyebrow">MATCHMAKING</div><h2>Find an opponent</h2></div><span id="matchUnreadBadge" class="notifBadge">0</span></div><p class="muted">Post when you want to battle, advertise your availability, and respond to creators across the network.</p>
 <div class="matchForms">
-<div class="matchBox"><h3>Find me an opponent</h3><input id="matchDate" class="field" type="date"><div class="row"><input id="matchStart" class="field" type="time" style="flex:1"><input id="matchEnd" class="field" type="time" style="flex:1"></div><div class="row"><input id="matchLevel" class="field" placeholder="Creator level e.g. B2" style="flex:1"><select id="matchFormat" class="field" style="flex:1"><option>1 round</option><option>3 rounds</option><option>5 rounds</option><option>7 rounds</option></select></div><input id="matchPreference" class="field" placeholder="Opponent preference (optional)"><textarea id="matchNotes" class="field" style="height:68px;padding-top:10px" placeholder="Notes"></textarea><button class="btn" onclick="postMatchRequest()">Post opponent request</button></div>
-<div class="matchBox"><h3>Post my availability</h3><input id="availDate" class="field" type="date"><div class="row"><input id="availStart" class="field" type="time" style="flex:1"><input id="availEnd" class="field" type="time" style="flex:1"></div><input id="availLevel" class="field" placeholder="Creator level e.g. B2"><div class="formatChecks"><label><input type="checkbox" name="availFormat" value="1 round"> 1 round</label><label><input type="checkbox" name="availFormat" value="3 rounds"> 3 rounds</label><label><input type="checkbox" name="availFormat" value="5 rounds"> 5 rounds</label><label><input type="checkbox" name="availFormat" value="7 rounds"> 7 rounds</label></div><textarea id="availNotes" class="field" style="height:68px;padding-top:10px" placeholder="Availability notes"></textarea><button class="btn ghost" onclick="postAvailability()">Post availability</button></div>
+<div class="matchBox"><h3>Find me an opponent</h3><div id="matchCreatorWrap" class="hidden"><label class="muted" for="matchCreator">CREATOR / HOST</label><select id="matchCreator" class="field"></select></div><input id="matchDate" class="field" type="date"><div class="row"><input id="matchStart" class="field" type="time" style="flex:1"><input id="matchEnd" class="field" type="time" style="flex:1"></div><div class="row"><input id="matchLevel" class="field" placeholder="Creator level e.g. B2" style="flex:1"><select id="matchFormat" class="field" style="flex:1"><option>1 round</option><option>3 rounds</option><option>5 rounds</option><option>7 rounds</option></select></div><input id="matchPreference" class="field" placeholder="Opponent preference (optional)"><textarea id="matchNotes" class="field" style="height:68px;padding-top:10px" placeholder="Notes"></textarea><button class="btn" onclick="postMatchRequest()">Post opponent request</button></div>
+<div class="matchBox"><h3>Post my availability</h3><div id="availCreatorWrap" class="hidden"><label class="muted" for="availCreator">CREATOR / HOST</label><select id="availCreator" class="field"></select></div><input id="availDate" class="field" type="date"><div class="row"><input id="availStart" class="field" type="time" style="flex:1"><input id="availEnd" class="field" type="time" style="flex:1"></div><input id="availLevel" class="field" placeholder="Creator level e.g. B2"><div class="formatChecks"><label><input type="checkbox" name="availFormat" value="1 round"> 1 round</label><label><input type="checkbox" name="availFormat" value="3 rounds"> 3 rounds</label><label><input type="checkbox" name="availFormat" value="5 rounds"> 5 rounds</label><label><input type="checkbox" name="availFormat" value="7 rounds"> 7 rounds</label></div><textarea id="availNotes" class="field" style="height:68px;padding-top:10px" placeholder="Availability notes"></textarea><button class="btn ghost" onclick="postAvailability()">Post availability</button></div>
 </div>
 <div class="matchGrid"><div><div class="eyebrow" style="margin-top:14px">OPEN OPPONENT REQUESTS</div><div id="matchRequestList"></div></div><div><div class="eyebrow" style="margin-top:14px">YOUR MATCHMAKING ALERTS</div><div id="matchAlertList"></div></div></div>
 </div></div>
@@ -2916,14 +2916,41 @@ async function markBattleReminderRead(battleId,type){
 }
 
 
+function isNetworkBattleManager(){return ['network_admin','battle_manager'].includes(profile?.role)}
+function managedMatchCreatorIds(){
+ if(!isNetworkBattleManager())return new Set([profile?.id].filter(Boolean));
+ return new Set((creatorDirectory||[]).filter(c=>c.membership_status==='active'&&c.role!=='network_admin').map(c=>String(c.id)));
+}
+function setupBattleManagerMatchmakingSelectors(){
+ const manager=isNetworkBattleManager();
+ const eligible=(creatorDirectory||[]).filter(c=>c.membership_status==='active'&&c.role!=='network_admin');
+ const options='<option value="">Select creator…</option>'+eligible.map(c=>`<option value="${c.id}">${escapeHtml(c.display_name||c.tiktok_handle||'Creator')} · ${escapeHtml(teamName(c.team_id)||'No team')}</option>`).join('');
+ [['matchCreatorWrap','matchCreator'],['availCreatorWrap','availCreator']].forEach(([wrapId,selectId])=>{
+   const wrap=document.getElementById(wrapId),sel=document.getElementById(selectId);
+   if(wrap)wrap.classList.toggle('hidden',!manager);
+   if(sel&&manager){
+     const previous=sel.value;
+     sel.innerHTML=options;
+     if(previous&&eligible.some(c=>String(c.id)===String(previous)))sel.value=previous;
+   }
+ });
+}
+function selectedManagedCreator(selectId){
+ if(!isNetworkBattleManager())return profile;
+ const id=document.getElementById(selectId)?.value;
+ if(!id)return null;
+ return (creatorDirectory||[]).find(c=>String(c.id)===String(id))||null;
+}
 function getMatchNotifications(){
  const items=[];
- const ownReqs=matchRequests.filter(r=>r.member_id===profile?.id);
+ const managedIds=managedMatchCreatorIds();
+ const ownReqs=matchRequests.filter(r=>managedIds.has(String(r.member_id)));
  ownReqs.forEach(r=>{
+   const creatorLabel=r.member?.display_name||r.member?.tiktok_handle||'Creator';
    matchOffers.filter(o=>o.request_id===r.id&&['open','pending'].includes(o.status)).forEach(o=>{
-     items.push({key:`offer:${o.id}`,type:'offer',title:'Someone has offered to battle you',body:`${o.offerer?.tiktok_handle||o.offerer?.display_name||'A creator'} has offered to take your ${r.format} battle on ${r.request_date}.`,offer:o,request:r});
+     items.push({key:`offer:${o.id}`,type:'offer',title:isNetworkBattleManager()?`Battle offer for ${creatorLabel}`:'Someone has offered to battle you',body:`${o.offerer?.tiktok_handle||o.offerer?.display_name||'A creator'} has offered to take ${isNetworkBattleManager()?creatorLabel+"'s":'your'} ${r.format} battle on ${r.request_date}.`,offer:o,request:r});
    });
-   if(r.status==='matched'&&r.matched_battle_id)items.push({key:`confirmed:${r.id}`,type:'confirmed',title:'Your battle has been confirmed',body:`Your ${r.format} match for ${r.request_date} is confirmed and has been added to the Battle Hub.`,request:r});
+   if(r.status==='matched'&&r.matched_battle_id)items.push({key:`confirmed:${r.id}`,type:'confirmed',title:isNetworkBattleManager()?`${creatorLabel}'s battle has been confirmed`:'Your battle has been confirmed',body:`${isNetworkBattleManager()?creatorLabel+"'s":'Your'} ${r.format} match for ${r.request_date} is confirmed and has been added to the Battle Hub.`,request:r});
  });
  const ownOffers=matchOffers.filter(o=>o.offered_by===profile?.id&&o.status==='accepted');
  ownOffers.forEach(o=>{
@@ -2931,27 +2958,29 @@ function getMatchNotifications(){
    items.push({key:`offeraccepted:${o.id}`,type:'confirmed',title:'Your battle offer was accepted',body:`Your offer${r?` for ${r.request_date} · ${r.format}`:''} has been accepted. Check the Battle Hub for the confirmed battle.`});
  });
  availabilities.forEach(av=>{
+   if(isNetworkBattleManager()&&!managedIds.has(String(av.member_id)))return;
    battles.filter(b=>b.status==='available').forEach(b=>{
      const d=new Date(b.starts_at);
      const date=d.toLocaleDateString('en-CA',{timeZone:'Europe/London'});
      const time=d.toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour12:false,hour:'2-digit',minute:'2-digit'});
      const st=(av.start_time||'00:00').slice(0,5), en=(av.end_time||'23:59').slice(0,5);
      const formatOk=!av.formats?.length||av.formats.includes(b.format);
-     if(date===av.availability_date&&time>=st&&time<=en&&formatOk)items.push({key:`availability:${av.id}:${b.id}`,type:'availability',title:'A battle matches your availability',body:`${b.opponent_handle||'An open battle'} · ${b.format} · ${d.toLocaleString('en-GB',{timeZone:'Europe/London',weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`,battle:b});
+     if(date===av.availability_date&&time>=st&&time<=en&&formatOk)items.push({key:`availability:${av.id}:${b.id}`,type:'availability',title:'A battle matches creator availability',body:`${b.opponent_handle||'An open battle'} · ${b.format} · ${d.toLocaleString('en-GB',{timeZone:'Europe/London',weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`,battle:b});
    });
  });
  return items;
 }
 function renderMatchmaking(){
  if(!matchRequestList||!matchAlertList)return;
+ setupBattleManagerMatchmakingSelectors();
+ const managedIds=managedMatchCreatorIds();
  const open=matchRequests.filter(r=>r.status==='open');
- matchRequestList.innerHTML=open.length?open.map(r=>{const mine=r.member_id===profile?.id;return `<div class="matchAlert"><div class="matchType">FIND ME AN OPPONENT</div><b>${escapeHtml(r.member?.tiktok_handle||r.member?.display_name||'Creator')} · ${escapeHtml(r.creator_level||'Level not set')}</b><div class="annMeta">${r.request_date} · ${(r.start_time||'').slice(0,5)}–${(r.end_time||'').slice(0,5)} · ${escapeHtml(r.format||'Battle')}</div>${r.notes?`<p class="muted">${escapeHtml(r.notes)}</p>`:''}<div class="actions">${mine?'<span class="badge">Your request</span>':`<button class="btn tiny red" onclick="offerBattle('${r.id}')">Offer to Battle</button>`}</div></div>`}).join(''):'<p class="muted">No open opponent requests.</p>';
+ matchRequestList.innerHTML=open.length?open.map(r=>{const mine=r.member_id===profile?.id,managed=isNetworkBattleManager()&&managedIds.has(String(r.member_id));return `<div class="matchAlert"><div class="matchType">FIND ME AN OPPONENT</div><b>${escapeHtml(r.member?.tiktok_handle||r.member?.display_name||'Creator')} · ${escapeHtml(r.creator_level||'Level not set')}</b><div class="annMeta">${r.request_date} · ${(r.start_time||'').slice(0,5)}–${(r.end_time||'').slice(0,5)} · ${escapeHtml(r.format||'Battle')}</div>${r.notes?`<p class="muted">${escapeHtml(r.notes)}</p>`:''}<div class="actions">${mine?'<span class="badge">Your request</span>':managed?'<span class="badge">Managed request</span>':`<button class="btn tiny red" onclick="offerBattle('${r.id}')">Offer to Battle</button>`}</div></div>`}).join(''):'<p class="muted">No open opponent requests.</p>';
  const alerts=getMatchNotifications(), unread=alerts.filter(x=>!matchNotificationReads.has(x.key)).length;
  matchUnreadBadge.textContent=unread;dashMatchCount.textContent=`${unread} unread`;
  const renderAlert=x=>{const read=matchNotificationReads.has(x.key);return `<div class="matchAlert ${x.type==='offer'?'hot':''}"><div class="matchType ${x.type==='offer'?'hot':''}"><span class="matchNotifDot ${read?'read':''}"></span>${x.type==='offer'?'BATTLE OFFER':x.type==='confirmed'?'CONFIRMED':'MATCH FOUND'}</div><b>${escapeHtml(x.title)}</b><p class="muted">${escapeHtml(x.body)}</p><div class="actions">${x.type==='offer'?`<button class="btn tiny red" onclick="acceptMatchOffer('${x.offer.id}')">Accept Offer</button>`:''}${x.type==='availability'&&x.battle?`<button class="btn tiny" onclick="claimBattle('${x.battle.id}')">Claim Battle</button>`:''}${read?'<span class="badge">Read</span>':`<button class="btn ghost tiny" onclick="markMatchNotificationRead('${x.key}')">Mark read</button>`}</div></div>`};
  matchAlertList.innerHTML=alerts.length?alerts.map(renderAlert).join(''):'<p class="muted">No matchmaking alerts right now.</p>';
  dashMatchAlerts.innerHTML=alerts.length?alerts.slice(0,4).map(renderAlert).join(''):'<p class="muted">No matchmaking alerts right now.</p>';
- // fold match alerts into the main notification number
  const annUnread=(window.anns||[]).filter(a=>!announcementReads.has(a.id)).length;
  const reminderUnread=getBattleReminders().filter(x=>!battleReminderReads.has(x.key)).length;
  if(unreadCount)unreadCount.textContent=annUnread+reminderUnread+unread;
@@ -2962,18 +2991,40 @@ async function markMatchNotificationRead(key){
  renderMatchmaking();
 }
 async function postMatchRequest(){
- const payload={network_id:profile.network_id,member_id:profile.id,request_date:matchDate.value,start_time:matchStart.value,end_time:matchEnd.value,creator_level:matchLevel.value.trim()||null,format:matchFormat.value,opponent_preference:matchPreference.value.trim()||null,notes:matchNotes.value.trim()||null,status:'open'};
+ const creator=selectedManagedCreator('matchCreator');
+ if(isNetworkBattleManager()&&!creator)return flash('Choose the creator this opponent request is for.');
+ const owner=creator||profile;
+ const payload={network_id:profile.network_id,member_id:owner.id,request_date:matchDate.value,start_time:matchStart.value,end_time:matchEnd.value,creator_level:matchLevel.value.trim()||null,format:matchFormat.value,opponent_preference:matchPreference.value.trim()||null,notes:matchNotes.value.trim()||null,status:'open'};
  if(!payload.request_date||!payload.start_time||!payload.end_time)return flash('Add a date and time window.');
- if(preview){payload.id='mr'+Date.now();payload.member={display_name:profile.display_name,tiktok_handle:profile.tiktok_handle,team_id:profile.team_id};matchRequests.unshift(payload);renderMatchmaking();return flash('Opponent request posted in preview mode');}
- const {error}=await sb.from('match_requests').insert(payload);if(error)return flash(error.message);flash('Opponent request posted');await refreshAll();
+ if(preview){payload.id='mr'+Date.now();payload.member={display_name:owner.display_name,tiktok_handle:owner.tiktok_handle,team_id:owner.team_id};matchRequests.unshift(payload);renderMatchmaking();return flash(`Opponent request posted for ${owner.display_name||owner.tiktok_handle||'creator'} in preview mode`);}
+ let error;
+ if(isNetworkBattleManager()){
+   ({error}=await sb.rpc('post_match_request_for_creator',{p_member_id:owner.id,p_request_date:payload.request_date,p_start_time:payload.start_time,p_end_time:payload.end_time,p_creator_level:payload.creator_level,p_format:payload.format,p_opponent_preference:payload.opponent_preference,p_notes:payload.notes}));
+ }else{
+   ({error}=await sb.from('match_requests').insert(payload));
+ }
+ if(error)return flash(error.message);
+ flash(isNetworkBattleManager()?`Opponent request posted for ${owner.display_name||owner.tiktok_handle||'creator'}`:'Opponent request posted');
+ await refreshAll();
 }
 async function postAvailability(){
  const formats=[...document.querySelectorAll('input[name="availFormat"]:checked')].map(x=>x.value);
+ const creator=selectedManagedCreator('availCreator');
+ if(isNetworkBattleManager()&&!creator)return flash('Choose the creator this availability is for.');
+ const owner=creator||profile;
  if(!availDate.value||!availStart.value||!availEnd.value)return flash('Add your availability date and times.');
  if(!formats.length)return flash('Choose at least one battle format.');
- const payload={network_id:profile.network_id,member_id:profile.id,availability_date:availDate.value,start_time:availStart.value,end_time:availEnd.value,creator_level:availLevel.value.trim()||null,formats,notes:availNotes.value.trim()||null,status:'open'};
- if(preview){payload.id='av'+Date.now();availabilities.unshift(payload);renderMatchmaking();return flash('Availability posted in preview mode');}
- const {error}=await sb.from('creator_availability').insert(payload);if(error)return flash(error.message);flash('Availability posted');await refreshAll();
+ const payload={network_id:profile.network_id,member_id:owner.id,availability_date:availDate.value,start_time:availStart.value,end_time:availEnd.value,creator_level:availLevel.value.trim()||null,formats,notes:availNotes.value.trim()||null,status:'open'};
+ if(preview){payload.id='av'+Date.now();availabilities.unshift(payload);renderMatchmaking();return flash(`Availability posted for ${owner.display_name||owner.tiktok_handle||'creator'} in preview mode`);}
+ let error;
+ if(isNetworkBattleManager()){
+   ({error}=await sb.rpc('post_creator_availability_for_creator',{p_member_id:owner.id,p_availability_date:payload.availability_date,p_start_time:payload.start_time,p_end_time:payload.end_time,p_creator_level:payload.creator_level,p_formats:payload.formats,p_notes:payload.notes}));
+ }else{
+   ({error}=await sb.from('creator_availability').insert(payload));
+ }
+ if(error)return flash(error.message);
+ flash(isNetworkBattleManager()?`Availability posted for ${owner.display_name||owner.tiktok_handle||'creator'}`:'Availability posted');
+ await refreshAll();
 }
 async function offerBattle(requestId){
  if(preview){const r=matchRequests.find(x=>x.id===requestId);matchOffers.unshift({id:'mo'+Date.now(),request_id:requestId,offered_by:profile.id,message:'I can take this battle!',status:'open',offerer:{display_name:profile.display_name,tiktok_handle:profile.tiktok_handle}});renderMatchmaking();return flash(`Offer sent to ${r?.member?.tiktok_handle||'creator'}`);}
@@ -2984,7 +3035,6 @@ async function acceptMatchOffer(offerId){
  if(preview){const o=matchOffers.find(x=>x.id===offerId),r=matchRequests.find(x=>x.id===o?.request_id);if(o)o.status='accepted';if(r){r.status='matched';r.matched_battle_id='preview-match-'+Date.now()}renderMatchmaking();return flash('Battle confirmed in preview mode');}
  const {data,error}=await sb.rpc('accept_match_offer',{p_offer_id:offerId});if(error)return flash(error.message);flash('Battle confirmed and added to the Battle Hub');await refreshAll();
 }
-
 
 function canManageBattleMedia(){return ['network_admin','battle_manager'].includes(profile?.role)}
 async function signedPosterUrl(poster){
