@@ -320,7 +320,7 @@ document.addEventListener('visibilitychange',()=>{
 .pcDataNote{border:1px solid #293746;border-radius:9px;background:#0c141a;padding:10px;font-size:7px;line-height:1.55;color:#89949f}.pcDataNote b{color:#70ddb3}
 
 /* ==========================================================================
-   V29 · PHASE 7.0.9 — ADMIN & MEMBER APPROVAL ACCESS
+   V29 · PHASE 7.0.10 — LIVE TEAM PERMISSION REFRESH
    Carries the Battle / Creator / Team / Leaderboard / Progress visual language
    across every remaining Legacy Hub workspace.
    ========================================================================== */
@@ -2178,7 +2178,25 @@ async function openCreatorProfile(id){
  const target=creatorDirectory.find(c=>String(c.id)===String(id));
  if(!target)return flash('Creator profile could not be found');
  viewedCreator=target;
- if(!preview)await loadMonthlyLiveProgress();
+ if(!preview){
+   // Refresh the target team's current owner before deciding management controls.
+   // This prevents a previous Team Owner assignment remaining in the UI after
+   // Network Admin transfers ownership to somebody else.
+   if(target.team_id){
+     const {data:liveTeam,error:teamError}=await sb
+       .from('teams')
+       .select('id,network_id,name,short_name,description,accent_color,logo_url,manager_id,status')
+       .eq('id',target.team_id)
+       .maybeSingle();
+     if(teamError)console.error('Team permission refresh failed',teamError);
+     else if(liveTeam){
+       const ix=(teams||[]).findIndex(t=>String(t.id)===String(liveTeam.id));
+       if(ix>=0)teams[ix]={...teams[ix],...liveTeam};
+       else teams.push(liveTeam);
+     }
+   }
+   await loadMonthlyLiveProgress();
+ }
  show('Profile',null,true);
  renderCreatorProfile();
  window.scrollTo({top:0,behavior:'smooth'});
