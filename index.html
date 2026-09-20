@@ -1780,11 +1780,20 @@ async function loadRouteData(route,force=false){
    try{
      if(route==='matchmaking'){
        const cutoff=new Date(Date.now()-14*86400000).toISOString().slice(0,10);
+       const managerMatchmaking=['network_admin','battle_manager'].includes(profile?.role);
+       let requestQuery=sb.from('match_requests').select('id,network_id,member_id,request_date,start_time,end_time,creator_level,format,opponent_preference,notes,status,matched_battle_id,created_at,member:profiles!match_requests_member_id_fkey(display_name,tiktok_handle,team_id)').gte('request_date',cutoff).order('request_date').limit(100);
+       let availabilityQuery=sb.from('creator_availability').select('id,network_id,member_id,availability_date,start_time,end_time,creator_level,formats,notes,status,created_at').eq('status','open').gte('availability_date',new Date().toISOString().slice(0,10)).order('availability_date').limit(100);
+       if(!managerMatchmaking){
+         availabilityQuery=availabilityQuery.eq('member_id',profile.id);
+       }
        const [mr,mo,av]=await Promise.all([
-         sb.from('match_requests').select('id,network_id,member_id,request_date,start_time,end_time,creator_level,format,opponent_preference,notes,status,matched_battle_id,created_at,member:profiles!match_requests_member_id_fkey(display_name,tiktok_handle,team_id)').gte('request_date',cutoff).order('request_date').limit(100),
+         requestQuery,
          sb.from('match_offers').select('id,request_id,offered_by,message,status,created_at,offerer:profiles!match_offers_offered_by_fkey(display_name,tiktok_handle,team_id)').order('created_at',{ascending:false}).limit(100),
-         sb.from('creator_availability').select('id,network_id,member_id,availability_date,start_time,end_time,creator_level,formats,notes,status,created_at').eq('member_id',profile.id).eq('status','open').gte('availability_date',new Date().toISOString().slice(0,10)).order('availability_date').limit(60)
+         availabilityQuery
        ]);
+       if(mr.error)throw mr.error;
+       if(mo.error)throw mo.error;
+       if(av.error)throw av.error;
        matchRequests=mr.data||[];matchOffers=mo.data||[];availabilities=av.data||[];
      }else if(route==='leaderboard'||route==='achievements'){
        const [br,cp,tp,ad,ca,ma]=await Promise.all([
@@ -3005,7 +3014,8 @@ async function postMatchRequest(){
  }
  if(error)return flash(error.message);
  flash(isNetworkBattleManager()?`Opponent request posted for ${owner.display_name||owner.tiktok_handle||'creator'}`:'Opponent request posted');
- await refreshAll();
+ routeDataLoaded.delete('matchmaking');routeDataLoadedAt.delete('matchmaking');
+ await loadRouteData('matchmaking',true);
 }
 async function postAvailability(){
  const formats=[...document.querySelectorAll('input[name="availFormat"]:checked')].map(x=>x.value);
@@ -3024,7 +3034,8 @@ async function postAvailability(){
  }
  if(error)return flash(error.message);
  flash(isNetworkBattleManager()?`Availability posted for ${owner.display_name||owner.tiktok_handle||'creator'}`:'Availability posted');
- await refreshAll();
+ routeDataLoaded.delete('matchmaking');routeDataLoadedAt.delete('matchmaking');
+ await loadRouteData('matchmaking',true);
 }
 async function offerBattle(requestId){
  if(preview){const r=matchRequests.find(x=>x.id===requestId);matchOffers.unshift({id:'mo'+Date.now(),request_id:requestId,offered_by:profile.id,message:'I can take this battle!',status:'open',offerer:{display_name:profile.display_name,tiktok_handle:profile.tiktok_handle}});renderMatchmaking();return flash(`Offer sent to ${r?.member?.tiktok_handle||'creator'}`);}
