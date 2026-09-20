@@ -320,7 +320,7 @@ document.addEventListener('visibilitychange',()=>{
 .pcDataNote{border:1px solid #293746;border-radius:9px;background:#0c141a;padding:10px;font-size:7px;line-height:1.55;color:#89949f}.pcDataNote b{color:#70ddb3}
 
 /* ==========================================================================
-   V29 · PHASE 7.0.8 — TEAM MANAGEMENT PERMISSION HIERARCHY
+   V29 · PHASE 7.0.9 — ADMIN & MEMBER APPROVAL ACCESS
    Carries the Battle / Creator / Team / Leaderboard / Progress visual language
    across every remaining Legacy Hub workspace.
    ========================================================================== */
@@ -1368,7 +1368,7 @@ function roleCapabilities(){
   canManageNetwork:r==='network_admin',
   canManageBattleMedia:['network_admin','battle_manager'].includes(r),
   canPostAnnouncement:['network_admin','team_manager','general_manager'].includes(r),
-  canManageMembers:['network_admin','team_manager','general_manager'].includes(r),
+  canManageMembers:r==='network_admin',
   canVerifyResults:['network_admin','team_manager','general_manager'].includes(r)
  }
 }
@@ -1412,7 +1412,7 @@ function buildCleanNav(items){
    ['creators','CREATORS','◉',['Teams','Creators','Progress','Leaderboard','Achievements']],
    ['battles','BATTLES','⚔',['Battles','Battle Media']],
    ['community','COMMUNITY','✦',['Announcements','Notifications']],
-   ['network','NETWORK','⚙',['Platform','Network Settings','Admin']]
+   ['network','NETWORK','⚙',['Admin','Network Settings','Platform']]
  ];
  return `<div class="navPrimary">${primary}</div>`+groups.map(([key,label,icon,names])=>{
    const content=take(names);if(!content)return '';
@@ -3304,7 +3304,7 @@ async function addLive(){
 function adminCanManage(m){if(!profile||m.id===profile.id)return false;if(profile.role==='network_admin')return true;if(profile.role==='team_manager')return m.team_id===profile.team_id&&!['network_admin','team_manager'].includes(m.role);return false}
 function adminTeamOptions(current){return (teams.length?teams:teamFallback).map(t=>`<option value="${t.id||t.name}" ${((t.id||t.name)===current)?'selected':''}>${t.name}</option>`).join('')}
 function adminRoleOptions(current){const allowed=profile.role==='network_admin'?['member','supporter','battle_manager','team_manager','network_admin']:['member','supporter'];return allowed.map(r=>`<option value="${r}" ${r===current?'selected':''}>${prettyRole(r)}</option>`).join('')}
-async function loadAdminMembers(){if(!['network_admin','team_manager'].includes(profile?.role)){flash('You do not have admin access.');return}adminScope.textContent=profile.role==='network_admin'?'Whole Network':(profile.team?.name||'My Team');teamFilter.innerHTML='<option value="all">All teams</option>'+adminTeamOptions('');inviteTeam.innerHTML=adminInviteTeamOptions();if(preview){renderAdminMembers();return}let q=sb.from('profiles').select('*,team:teams!profiles_team_id_fkey(id,name,short_name)').order('created_at',{ascending:false});if(profile.role==='team_manager')q=q.eq('team_id',profile.team_id);const {data,error}=await q;if(error){flash(error.message);return}adminMembers=data||[];renderAdminMembers()}
+async function loadAdminMembers(){if(profile?.role!=='network_admin'){flash('Network Admin access required.');return}adminScope.textContent=profile.role==='network_admin'?'Whole Network':(profile.team?.name||'My Team');teamFilter.innerHTML='<option value="all">All teams</option>'+adminTeamOptions('');inviteTeam.innerHTML=adminInviteTeamOptions();if(preview){renderAdminMembers();return}let q=sb.from('profiles').select('*,team:teams!profiles_team_id_fkey(id,name,short_name)').order('created_at',{ascending:false});if(profile.role==='team_manager')q=q.eq('team_id',profile.team_id);const {data,error}=await q;if(error){flash(error.message);return}adminMembers=data||[];renderAdminMembers()}
 function renderAdminMembers(){const search=(memberSearch?.value||'').toLowerCase().trim(),sf=statusFilter?.value||'all',tf=teamFilter?.value||'all';let rows=adminMembers.filter(m=>{const text=`${m.display_name||''} ${m.tiktok_handle||''}`.toLowerCase();const teamKey=m.team_id||m.team?.name||'';return(!search||text.includes(search))&&(sf==='all'||m.membership_status===sf)&&(tf==='all'||String(teamKey)===tf)});pendingCount.textContent=adminMembers.filter(m=>m.membership_status==='pending').length;activeCount.textContent=adminMembers.filter(m=>m.membership_status==='active').length;suspendedCount.textContent=adminMembers.filter(m=>m.membership_status==='suspended').length;memberCount.textContent=adminMembers.length;memberRows.innerHTML=rows.map(m=>{const can=adminCanManage(m),teamKey=m.team_id||m.team?.name||'';return `<tr><td><div class="memberName">${m.display_name||'Unnamed creator'}</div><div class="memberHandle">${m.tiktok_handle||'No TikTok handle'}</div></td><td>${can&&profile.role==='network_admin'?`<select class="field" style="margin:0;height:36px" id="team_${m.id}">${adminTeamOptions(teamKey)}</select>`:(m.team?.name||'Unassigned')}</td><td>${can?`<select class="field" style="margin:0;height:36px" id="role_${m.id}">${adminRoleOptions(m.role)}</select>`:prettyRole(m.role)}</td><td><span class="status ${m.membership_status}">${m.membership_status}</span></td><td><div class="row">${can?`${m.membership_status!=='active'?`<button class="btn tiny" onclick="setMemberStatus('${m.id}','active')">Approve / Activate</button>`:''}${m.membership_status!=='suspended'?`<button class="btn ghost tiny danger" onclick="setMemberStatus('${m.id}','suspended')">Suspend</button>`:''}<button class="btn ghost tiny" onclick="saveMember('${m.id}')">Save Team/Role</button>`:'<span class="muted">No action</span>'}</div></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">No creators match these filters.</td></tr>'}
 async function setMemberStatus(id,status){const m=adminMembers.find(x=>x.id===id);if(!m||!adminCanManage(m))return flash('You cannot manage this account.');if(preview){m.membership_status=status;renderAdminMembers();flash(status==='active'?'Creator activated':'Creator suspended');return}const {error}=await sb.from('profiles').update({membership_status:status}).eq('id',id);if(error){flash(error.message);return}flash(status==='active'?'Creator activated':'Creator suspended');await loadAdminMembers()}
 async function saveMember(id){const m=adminMembers.find(x=>x.id===id);if(!m||!adminCanManage(m))return flash('You cannot manage this account.');const roleEl=document.getElementById(`role_${id}`),teamEl=document.getElementById(`team_${id}`);const patch={role:roleEl?roleEl.value:m.role};if(profile.role==='network_admin'&&teamEl)patch.team_id=teamEl.value;if(preview){m.role=patch.role;if(patch.team_id){m.team_id=patch.team_id;const t=(teams.length?teams:teamFallback).find(x=>(x.id||x.name)===patch.team_id);if(t)m.team={name:t.name}}renderAdminMembers();flash('Member updated');return}const {error}=await sb.from('profiles').update(patch).eq('id',id);if(error){flash(error.message);return}flash('Member updated');await loadAdminMembers()}
