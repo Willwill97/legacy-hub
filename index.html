@@ -955,7 +955,20 @@ document.addEventListener('visibilitychange',()=>{
 @media(max-width:550px){.cw-art-panel{min-height:190px;max-height:190px}.cw-form-side{padding:16px 12px 30px}#auth .cw-login-card{padding:24px 18px}#auth .cw-login-card h1{font-size:29px}.cw-emblem{display:none}}
 @media(prefers-reduced-motion:reduce){#auth *{scroll-behavior:auto!important}}
 </style>
-</head><body>
+<style id="crestwarden-dashboard-phase-82">
+/* Brand masthead is independent of each tenant's network name and logo. */
+#Dashboard .cw-dashboard-masthead{height:clamp(180px,22vw,305px);border-radius:18px;border:1px solid #543478;background:#100b1c url('./crestwarden-dashboard-hero.webp') center center / cover no-repeat;box-shadow:0 12px 38px rgba(0,0,0,.28);overflow:hidden}
+#Dashboard .dashHero{min-height:0!important;padding:24px!important;background:linear-gradient(135deg,#121421,#0c0e17)!important;border:1px solid #423252!important}
+#Dashboard .dashHeroText{width:100%!important;max-width:none!important;padding-right:0!important}
+#Dashboard .dashGreeting{font-size:clamp(25px,3vw,39px)!important;line-height:1.14!important;max-width:100%!important;letter-spacing:-.6px!important;margin:8px 0 9px!important;overflow-wrap:anywhere!important}
+#Dashboard .dashTagline{margin:0 0 14px!important;color:#c8b5df!important}
+#Dashboard .dashStats4{width:100%!important;max-width:none!important;position:relative!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin-top:16px!important}
+#Dashboard .dashStat{min-width:0!important}
+#Dashboard .dashHeroBanner{display:none!important}
+@media(max-width:1100px){#Dashboard .dashStats4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:700px){#Dashboard .cw-dashboard-masthead{height:155px;background-position:40% center}#Dashboard .dashHero{padding:16px!important}#Dashboard .dashGreeting{font-size:clamp(22px,6vw,31px)!important}#Dashboard .dashStats4{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}}
+@media(max-width:390px){#Dashboard .dashStats4{grid-template-columns:1fr!important}}
+</style></head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
     <aside class="cw-art-panel" aria-label="Crestwarden branding">
@@ -1001,6 +1014,7 @@ document.addEventListener('visibilitychange',()=>{
 <div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>CRESTWARDEN</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V29 · PHASE 7.0.6</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active premiumDashboard"><div id="launch-onboarding"></div>
 <div class="dash2">
+  <div class="cw-dashboard-masthead" role="img" aria-label="Crestwarden crowned lion and Your Network, Your Command branding"></div>
   <div class="card dashHero">
     <div class="dashHeroText">
       <div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div>
@@ -1013,9 +1027,7 @@ document.addEventListener('visibilitychange',()=>{
         <div class="dashStat dashClickable" role="button" tabindex="0" onclick="showSection('Profile')"><small>💎 BATTLE DIAMONDS</small><strong id="dashDiamonds">0</strong><small id="diamondMeta">Battle total</small><div id="diamondRing" class="statRing blue" style="--ring:100%"></div></div>
       </div>
     </div>
-    <div class="dashHeroBanner" aria-hidden="true">
-      <img id="dashHeroBannerImg" src="./crestwarden-dashboard-banner.jpg" alt="">
-    </div>
+
   </div>
 
   <div class="commandGrid">
