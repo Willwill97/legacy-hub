@@ -916,8 +916,87 @@ document.addEventListener('visibilitychange',()=>{
   .bcPrimaryActions{grid-template-columns:1fr!important}
 }
 </style>
+
+<style>
+/* Phase 8.1 — isolated authentication redesign */
+#auth.cw-login{min-height:100vh;display:block;padding:0;background:radial-gradient(ellipse at 90% 15%,#291039 0,transparent 45%),#080810}
+.cw-auth-layout{display:grid;grid-template-columns:minmax(0,1.07fr) minmax(440px,.93fr);min-height:100vh}
+.cw-art-panel{position:relative;overflow:hidden;min-height:100vh;background:#10091b}
+.cw-art-image{position:absolute;inset:0;background:url('./crestwarden-login-art.webp') center center / cover no-repeat}
+.cw-art-panel:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 75%,rgba(8,8,16,.5)),linear-gradient(0deg,rgba(7,6,13,.75),transparent 24%);pointer-events:none}
+.cw-art-footer{position:absolute;bottom:30px;left:25px;right:25px;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;z-index:1;font-size:10px;letter-spacing:1.2px;color:#dfcaff;font-weight:700;text-align:center}
+.cw-form-side{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:38px clamp(24px,5vw,90px);background:radial-gradient(circle at 80% 20%,rgba(100,39,145,.18),transparent 42%),#090911}
+#auth .cw-login-card{width:min(100%,540px);padding:clamp(25px,3vw,46px);border:1px solid rgba(188,138,255,.28);border-radius:24px;background:linear-gradient(140deg,rgba(31,27,45,.93),rgba(11,12,22,.98));box-shadow:0 25px 85px rgba(0,0,0,.55),0 0 60px rgba(136,56,225,.10);text-align:center}
+.cw-emblem{display:grid;place-items:center;width:58px;height:58px;margin:0 auto 17px;border-radius:16px;background:linear-gradient(135deg,#47247a,#a55cf6);box-shadow:0 0 35px rgba(157,85,239,.25);font-weight:900;letter-spacing:1px;font-size:22px;color:white}
+#auth .cw-welcome{color:#cba6ff;letter-spacing:4px;font-size:11px}
+#auth .cw-login-card h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(29px,3.1vw,43px);letter-spacing:1.3px;line-height:1.15;margin:7px 0 9px;color:#f4f0ff}
+.cw-tagline{font-size:10px;letter-spacing:2.4px;color:#c69afa;font-weight:800}
+.cw-rule{height:1px;max-width:190px;margin:24px auto;background:linear-gradient(90deg,transparent,#b273f3,transparent)}
+#auth .cw-intro{font-size:13px;line-height:1.7;color:#aeb0c2;margin:0 auto 20px;max-width:350px}
+#auth .cw-tabs{display:grid;grid-template-columns:1fr 1fr;margin:0 0 18px;padding:4px;gap:4px;border:1px solid #353044;border-radius:12px;background:#10101a}
+#auth .cw-tabs button{background:transparent;box-shadow:none;border:0;border-radius:9px;padding:10px 8px;font-size:12px;color:#aeb0c2}
+#auth .cw-tabs button:not(.ghost){background:linear-gradient(110deg,#6832c8,#bb49d1);color:white}
+#auth form{text-align:left}
+#auth .cw-field-label{display:block;margin:13px 0 5px;color:#b7aec7;font-size:10px;letter-spacing:1.3px;font-weight:800}
+#auth .field{width:100%;height:47px;border:1px solid #444052;background:#1d1c2a;color:#f6f4ff;border-radius:11px;padding:0 13px;font-size:13px;margin:0}
+#auth .field:focus{outline:2px solid #9861e7;outline-offset:1px}
+#auth .cw-password-wrap{position:relative}
+#auth .cw-password-wrap .field{padding-right:70px}
+#auth .cw-eye{position:absolute;right:9px;top:8px;border:0;background:transparent;color:#c5a6ee;padding:8px;cursor:pointer;font-size:11px}
+#auth .cw-submit{width:100%;margin-top:20px;min-height:49px;background:linear-gradient(105deg,#7645ee,#d345b0);box-shadow:0 5px 25px rgba(151,68,219,.24);font-size:13px;display:flex;align-items:center;justify-content:center;gap:14px}
+#auth .cw-submit span{font-size:20px}
+.cw-divider{display:flex;align-items:center;gap:13px;color:#827b95;font-size:10px;margin:19px 0}
+.cw-divider:before,.cw-divider:after{content:"";height:1px;background:#393345;flex:1}
+#auth .cw-demo{width:100%;border:1px solid #534466;border-radius:11px;background:#181625;min-height:45px;font-size:12px}
+#auth .cw-footnote{margin:16px auto 0;max-width:370px;font-size:10px;line-height:1.6;color:#85849a}
+#auth #authMsg{margin:12px 0 0}
+.cw-legal{margin-top:20px;font-size:10px;color:#706d81;text-align:center}
+@media(max-width:950px){.cw-auth-layout{grid-template-columns:1fr}.cw-art-panel{min-height:280px;max-height:300px}.cw-art-image{background-position:center 39%}.cw-art-footer{display:none}.cw-form-side{padding:25px 16px 35px}}
+@media(max-width:550px){.cw-art-panel{min-height:190px;max-height:190px}.cw-form-side{padding:16px 12px 30px}#auth .cw-login-card{padding:24px 18px}#auth .cw-login-card h1{font-size:29px}.cw-emblem{display:none}}
+@media(prefers-reduced-motion:reduce){#auth *{scroll-behavior:auto!important}}
+</style>
 </head><body>
-<div id="auth" class="login"><div class="card loginCard"><div class="eyebrow">CREATOR NETWORK</div><h1>Crestwarden</h1><p class="muted">Creator management, LIVE progress and battle scheduling for the whole network.</p><div class="tabs"><button class="btn" id="signinTab">Sign in</button><button class="btn ghost" id="signupTab">Create account</button></div><form id="signinForm"><input class="field" id="inEmail" type="email" placeholder="Email address" required><input class="field" id="inPass" type="password" placeholder="Password" required><button class="btn" style="width:100%;margin-top:8px">Sign in</button></form><form id="signupForm" class="hidden"><input class="field" id="upName" placeholder="Display name" required><input class="field" id="upTikTok" placeholder="TikTok username (required) e.g. willwill1997" required autocomplete="off" autocapitalize="none" spellcheck="false"><div class="uploadHint" style="margin-top:-6px;margin-bottom:8px">Required so Crestwarden can automatically monitor your LIVE battles. Enter your username with or without @.</div><div id="inviteBanner" class="inviteBanner hidden"></div><select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select><input class="field" id="upEmail" type="email" placeholder="Email address" required><input class="field" id="upPass" type="password" placeholder="Password (6+ characters)" minlength="6" required><button class="btn" style="width:100%;margin-top:8px">Create account</button></form><button id="previewBtn" class="btn ghost" style="width:100%;margin-top:10px">Preview demo</button><p class="muted" style="margin-top:8px">Demo mode uses sample data. External push notifications require a real signed-in account.</p><p id="authMsg" class="muted" style="margin-top:12px"></p></div></div>
+<div id="auth" class="login cw-login">
+  <div class="cw-auth-layout">
+    <aside class="cw-art-panel" aria-label="Crestwarden branding">
+      <div class="cw-art-image"></div>
+      <div class="cw-art-footer"><span>CREATOR MANAGEMENT</span><span>LIVE &amp; BATTLE SCHEDULING</span><span>NETWORK ANALYTICS</span></div>
+    </aside>
+    <div class="cw-form-side">
+      <div class="card loginCard cw-login-card">
+        <div class="cw-emblem" aria-hidden="true">CW</div>
+        <div class="eyebrow cw-welcome">WELCOME TO</div>
+        <h1>CRESTWARDEN</h1>
+        <div class="cw-tagline">YOUR NETWORK. YOUR COMMAND.</div>
+        <div class="cw-rule"></div>
+        <p class="cw-intro">Your creators, battles and network performance — all in one place.</p>
+        <div class="tabs cw-tabs"><button class="btn" id="signinTab" type="button">Sign in</button><button class="btn ghost" id="signupTab" type="button">Create account</button></div>
+        <form id="signinForm">
+          <label class="cw-field-label" for="inEmail">EMAIL ADDRESS</label>
+          <input class="field" id="inEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+          <label class="cw-field-label" for="inPass">PASSWORD</label>
+          <div class="cw-password-wrap"><input class="field" id="inPass" type="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" class="cw-eye" data-toggle-password="inPass" aria-label="Show password">Show</button></div>
+          <button class="btn cw-submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        </form>
+        <form id="signupForm" class="hidden">
+          <label class="cw-field-label" for="upName">DISPLAY NAME</label><input class="field" id="upName" placeholder="Your name" required>
+          <label class="cw-field-label" for="upTikTok">TIKTOK USERNAME</label><input class="field" id="upTikTok" placeholder="@username" required autocomplete="off" autocapitalize="none" spellcheck="false">
+          <div class="uploadHint">Required to link your creator account. Enter your username with or without @.</div>
+          <div id="inviteBanner" class="inviteBanner hidden"></div>
+          <select class="field" id="upTeam"><option value="">Team will be assigned from your invite</option></select>
+          <label class="cw-field-label" for="upEmail">EMAIL ADDRESS</label><input class="field" id="upEmail" type="email" placeholder="you@example.com" autocomplete="email" required>
+          <label class="cw-field-label" for="upPass">PASSWORD</label><div class="cw-password-wrap"><input class="field" id="upPass" type="password" placeholder="At least 6 characters" minlength="6" autocomplete="new-password" required><button type="button" class="cw-eye" data-toggle-password="upPass" aria-label="Show password">Show</button></div>
+          <button class="btn cw-submit" type="submit">Create account <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="cw-divider"><span>OR</span></div>
+        <button id="previewBtn" class="btn ghost cw-demo" type="button">◉ &nbsp; Preview demo</button>
+        <p class="muted cw-footnote">Demo mode uses sample data. External push notifications require a signed-in account.</p>
+        <p id="authMsg" class="muted" role="status" aria-live="polite"></p>
+      </div>
+      <div class="cw-legal">© Crestwarden · Creator &amp; agency management</div>
+    </div>
+  </div>
+</div>
 <div id="pending" class="hidden"><div class="card pending"><div class="eyebrow">ACCOUNT CREATED</div><h2>Approval pending</h2><p class="muted">Your account is linked to <b id="pendingTeam">your team</b>. A team manager or network admin needs to approve it before you can access member data.</p><button class="btn ghost" onclick="logout()">Sign out</button></div></div>
 <div id="app" class="app hidden"><aside class="side"><div class="brand tenant-brand-lockup"><img data-network-logo class="tenant-sidebar-logo" hidden alt=""><div><span data-network-name>YOUR NETWORK</span><small>CRESTWARDEN</small><div style="font-size:7px;color:#6ce0ad;letter-spacing:.8px;margin-top:6px">V29 · PHASE 7.0.6</div><div style="font-size:7px;color:#555b66;letter-spacing:.8px;margin-top:6px">V25.4.6</div></div></div><button id="mobile-nav-toggle" class="mobile-nav-toggle" type="button" aria-expanded="false" onclick="toggleMobileNav()">☰ Menu</button><nav class="nav" id="nav"></nav><div class="who"><b id="whoName">Preview User</b><small id="whoMeta" class="muted">Network Preview</small><button class="btn ghost" style="margin-top:10px;width:100%" onclick="logout()">Sign out</button></div></aside><main class="main"><div class="top"><div><div class="eyebrow"><span data-network-name>YOUR NETWORK</span></div><h1 id="pageTitle">Dashboard</h1></div><div class="row" style="align-items:center"><div id="teamPill" class="badge">Network View</div><button id="notifBtn" class="btn ghost tiny" onclick="openNotificationCentre()">🔔 <span id="unreadCount" class="notifBadge">0</span></button></div></div>
 <section id="Dashboard" class="section active premiumDashboard"><div id="launch-onboarding"></div>
@@ -3444,4 +3523,15 @@ setTimeout(handleOwnerInviteLanding,0);
 setTimeout(async()=>{const q=new URLSearchParams(location.search);const billing=q.get('billing');if(!billing)return;if(billing==='success'){await loadNetworkBilling();flash('Subscription activated — thank you!')}else if(billing==='cancelled')flash('Checkout cancelled — no changes made');history.replaceState({},'',location.pathname+location.hash)},300);
 </script>
 
-</body></html>
+<script>
+document.addEventListener('click',function(event){
+ const btn=event.target.closest('[data-toggle-password]');
+ if(!btn)return;
+ const input=document.getElementById(btn.getAttribute('data-toggle-password'));
+ if(!input)return;
+ const visible=input.type==='password';
+ input.type=visible?'text':'password';
+ btn.textContent=visible?'Hide':'Show';
+ btn.setAttribute('aria-label',visible?'Hide password':'Show password');
+});
+</script></body></html>
