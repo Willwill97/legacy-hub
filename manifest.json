@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Legacy Hub",
-  "short_name": "Legacy Hub",
+  "name": "Crestwarden",
+  "short_name": "CW",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,13 +9,13 @@
   "theme_color": "#0a0c0f",
   "icons": [
     {
-      "src": "/legacy-icon-192.png",
+      "src": "/crestwarden-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/legacy-icon-512.png",
+      "src": "/crestwarden-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
