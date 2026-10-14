@@ -968,6 +968,38 @@ document.addEventListener('visibilitychange',()=>{
 @media(max-width:1100px){#Dashboard .dashStats4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:700px){#Dashboard .cw-dashboard-masthead{height:155px;background-position:40% center}#Dashboard .dashHero{padding:16px!important}#Dashboard .dashGreeting{font-size:clamp(22px,6vw,31px)!important}#Dashboard .dashStats4{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}}
 @media(max-width:390px){#Dashboard .dashStats4{grid-template-columns:1fr!important}}
+</style><style id="crestwarden-mobile-phase-83">
+/* Mobile-only layout: preserve desktop and tenant-specific network data. */
+@media(max-width:700px){
+ #Dashboard .cw-dashboard-masthead{height:auto!important;min-height:0!important;aspect-ratio:2.35/1!important;background-size:contain!important;background-position:center!important;background-color:#100b1c!important;border-radius:14px!important;margin:0 0 14px!important}
+ #Dashboard .dashHero{padding:17px 15px!important;border-radius:16px!important}
+ #Dashboard .dashGreeting{font-size:clamp(20px,5.5vw,27px)!important;line-height:1.17!important;letter-spacing:-.35px!important;overflow-wrap:normal!important;word-break:normal!important}
+ #Dashboard .dashGreeting span{display:inline-block;margin-top:5px;font-size:.88em;line-height:1.17}
+ #Dashboard .dashTagline{font-size:12px!important;margin:10px 0 12px!important}
+ #Dashboard .dashStats4{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin-top:14px!important}
+ #Dashboard .dashStat{min-width:0!important;padding:12px 10px!important;overflow:hidden!important;border-radius:12px!important}
+ #Dashboard .dashStat small{font-size:9px!important;line-height:1.35!important;letter-spacing:.2px!important;max-width:100%!important}
+ #Dashboard .dashStat strong{font-size:clamp(20px,5vw,26px)!important;line-height:1.2!important}
+ #Dashboard .dashStat .statRing{width:48px!important;height:48px!important;right:7px!important;top:12px!important;opacity:.8!important}
+ #Dashboard .dashStat .bar{max-width:90%!important}
+ .premiumDashboard .dash2{min-width:0!important}
+ .main{min-width:0!important;overflow-x:clip!important}
+ .top{gap:9px!important;align-items:flex-end!important;flex-wrap:wrap!important}
+ .top h1{font-size:26px!important}
+ .top .row{gap:6px!important}
+ #teamPill{max-width:120px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+ .tenant-brand-lockup{min-width:0!important;gap:9px!important}
+ .tenant-brand-lockup>div>span{font-size:13px!important;max-width:145px!important}
+ .side{min-width:0!important}
+ #mobile-nav-toggle{flex-shrink:0!important}
+}
+@media(max-width:390px){
+ #Dashboard .cw-dashboard-masthead{aspect-ratio:2.2/1!important}
+ #Dashboard .dashStats4{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #Dashboard .dashStat{padding:10px 8px!important}
+ #Dashboard .dashStat .statRing{width:38px!important;height:38px!important;right:5px!important;top:20px!important}
+ #Dashboard .dashGreeting{font-size:20px!important}
+}
 </style></head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
@@ -1486,7 +1518,7 @@ function updatePersonalGreeting(){
  const raw=(profile.display_name||profile.tiktok_display_name||profile.tiktok_handle||'CREATOR').replace(/^@/,'').trim();
  const first=(raw.split(/\s+/)[0]||'CREATOR').toUpperCase();
  const networkName=networkBranding?.name||'YOUR NETWORK';
- dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK TO ${escapeHtml(networkName.toUpperCase())}</span>`;
+ dg.innerHTML=`${greeting}, ${escapeHtml(first)} 👋<br><span>WELCOME BACK TO CRESTWARDEN</span>`;
  const heroBanner=document.getElementById('dashHeroBannerImg');
  if(heroBanner&&!heroBanner.getAttribute('src'))heroBanner.src='./crestwarden-dashboard-banner.jpg';
 }
