@@ -1026,6 +1026,13 @@ document.addEventListener('visibilitychange',()=>{
   }
 }
 </style>
+
+<style id="crestwarden-mobile-art-left-alignment">
+/* Phase 8.5.3: optical alignment of the lion artwork on narrow screens. */
+@media (max-width:950px) {
+  #auth .cw-art-image { background-position:calc(50% - 18px) center!important; }
+}
+</style>
 </head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
