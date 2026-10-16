@@ -1057,6 +1057,26 @@ document.addEventListener('visibilitychange',()=>{
  #Dashboard .cw-dashboard-masthead{aspect-ratio:2.35 / 1!important;margin:0 0 14px!important}
 }
 </style>
+<style id="crestwarden-dashboard-phase-88">
+/* Phase 8.8: intrinsic full-width banner; never crop or letterbox the wordmark. */
+#Dashboard .cw-dashboard-masthead {
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:1800 / 368!important;
+  background-image:url('./crestwarden-dashboard-hero-v2.webp')!important;
+  background-size:100% 100%!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  border-radius:16px!important;
+  margin:0 0 14px!important;
+}
+@media(max-width:700px){
+ #Dashboard .cw-dashboard-masthead{aspect-ratio:1800 / 368!important;border-radius:12px!important}
+}
+</style>
 </head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
