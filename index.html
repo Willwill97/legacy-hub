@@ -1033,6 +1033,30 @@ document.addEventListener('visibilitychange',()=>{
   #auth .cw-art-image { background-position:calc(50% - 27px) center!important; }
 }
 </style>
+
+<style id="crestwarden-dashboard-phase-87">
+/* Phase 8.7: full-image responsive masthead, no artwork cropping. */
+#Dashboard .cw-dashboard-masthead{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio: 2.55 / 1!important;
+  background-color:#100b1c!important;
+  background-image:url('./crestwarden-dashboard-hero.webp')!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  background-position:center center!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+}
+@media(max-width:900px){
+ #Dashboard .cw-dashboard-masthead{aspect-ratio:2.45 / 1!important;border-radius:14px!important}
+}
+@media(max-width:700px){
+ #Dashboard .cw-dashboard-masthead{aspect-ratio:2.35 / 1!important;margin:0 0 14px!important}
+}
+</style>
 </head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
