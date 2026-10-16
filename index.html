@@ -1000,7 +1000,14 @@ document.addEventListener('visibilitychange',()=>{
  #Dashboard .dashStat .statRing{width:38px!important;height:38px!important;right:5px!important;top:20px!important}
  #Dashboard .dashGreeting{font-size:20px!important}
 }
-</style></head><body>
+</style>
+<style>
+/* Phase 8.5: authentication view isolation.
+   Keep private app and pending screens hidden until explicitly activated,
+   even when responsive .app rules declare display:block!important. */
+#app.hidden, #auth.hidden, #pending.hidden { display:none!important; }
+</style>
+</head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
     <aside class="cw-art-panel" aria-label="Crestwarden branding">
@@ -2067,7 +2074,7 @@ async function loadNetworkBilling(){
 }
 async function startBillingCheckout(interval='monthly'){
  const b=networkBilling;if(!b)return flash('Billing details are still loading');
- if(b.plan==='legacy')return flash('Legacy workspaces do not require billing');
+ if(b.plan==='legacy')return flash('Founder’s Plan workspaces do not require billing');
  const {data,error}=await sb.functions.invoke('legacy-billing-checkout',{body:{interval,origin:location.origin+location.pathname}});
  if(error){console.error(error);return flash(error.message||'Could not start checkout')}
  if(data?.error)return flash(data.error);
@@ -2082,7 +2089,7 @@ async function openBillingPortal(){
 function renderBillingPanel(){
  const b=networkBilling;
  if(!b)return `<div class="billing-card"><div class="eyebrow">BILLING</div><p class="muted">Billing information is loading…</p></div>`;
- if(b.plan==='legacy')return `<div class="billing-card legacy-billing"><div class="billing-head"><div><div class="eyebrow">BILLING</div><h3>Legacy Workspace</h3><p class="muted">This workspace is permanently exempt from subscription billing.</p></div><span class="billing-status ok">NO CHARGE</span></div></div>`;
+ if(b.plan==='legacy')return `<div class="billing-card legacy-billing"><div class="billing-head"><div><div class="eyebrow">BILLING</div><h3>Founder’s Workspace</h3><p class="muted">Founder’s Plan · Active — No subscription charge. This workspace remains permanently exempt from subscription billing.</p></div><span class="billing-status ok">NO CHARGE</span></div></div>`;
  const monthly=moneyPence(b.monthly_price_pence,b.currency),yearly=moneyPence(b.yearly_price_pence,b.currency),setup=moneyPence(b.setup_fee_pence,b.currency);
  const active=['active','trialing'].includes(String(b.billing_status||''));
  return `<div class="billing-card"><div class="billing-head"><div><div class="eyebrow">BILLING & SUBSCRIPTION</div><h3>${escapeHtml(b.plan_name||b.plan)} Billing</h3><p class="muted">Status: ${escapeHtml(b.billing_status||'inactive')}${b.billing_current_period_end?' · Renews '+new Date(b.billing_current_period_end).toLocaleDateString():''}</p></div><span class="billing-status ${active?'ok':''}">${escapeHtml(b.billing_status||'inactive')}</span></div>
@@ -2095,7 +2102,7 @@ function renderBillingPanel(){
 let networkEntitlements=null;
 async function loadNetworkEntitlements(){if(preview||!profile?.id)return;const {data,error}=await sb.rpc('current_network_entitlements');if(!error)networkEntitlements=data?.[0]||null}
 function planFeature(ok,label){return `<div class="plan-feature ${ok?'on':'off'}"><span>${ok?'✓':'—'}</span>${escapeHtml(label)}</div>`}
-function renderPlanUsage(){const e=networkEntitlements;if(!e)return '<div class="plan-card"><p class="muted">Plan information is loading…</p></div>';const cm=e.max_creators,tm=e.max_teams,cp=cm?Math.min(100,Math.round(e.creator_count/cm*100)):0,tp=tm?Math.min(100,Math.round(e.team_count/tm*100)):0;return `<div class="plan-card"><div class="plan-card-head"><div><div class="eyebrow">SUBSCRIPTION & PLAN</div><h3>${escapeHtml(e.display_name||e.plan)} Plan</h3><p class="muted">${escapeHtml(e.status)}${e.plan==='trial'&&e.trial_ends_at?' · Trial ends '+new Date(e.trial_ends_at).toLocaleDateString():''}</p></div><span class="plan-badge">${escapeHtml(e.plan)}</span></div><div class="usage-grid"><div class="usage-box"><div><strong>Creators</strong><span>${e.creator_count} / ${cm??'∞'}</span></div><div class="usage-bar"><i style="width:${cm?cp:0}%"></i></div><small>${cm?Math.max(0,cm-e.creator_count)+' remaining':'Unlimited'}</small></div><div class="usage-box"><div><strong>Teams</strong><span>${e.team_count} / ${tm??'∞'}</span></div><div class="usage-bar"><i style="width:${tm?tp:0}%"></i></div><small>${tm?Math.max(0,tm-e.team_count)+' remaining':'Unlimited'}</small></div></div><div class="plan-features">${planFeature(e.battle_media,'Battle Media')}${planFeature(e.advanced_analytics,'Advanced analytics')}${planFeature(e.custom_branding,'Custom branding')}${planFeature(e.priority_support,'Priority support')}</div></div>`}
+function renderPlanUsage(){const e=networkEntitlements;if(!e)return '<div class="plan-card"><p class="muted">Plan information is loading…</p></div>';const cm=e.max_creators,tm=e.max_teams,cp=cm?Math.min(100,Math.round(e.creator_count/cm*100)):0,tp=tm?Math.min(100,Math.round(e.team_count/tm*100)):0;return `<div class="plan-card"><div class="plan-card-head"><div><div class="eyebrow">SUBSCRIPTION & PLAN</div><h3>${escapeHtml(e.plan==='legacy'?'Founder’s':(e.display_name||e.plan))} Plan</h3><p class="muted">${escapeHtml(e.status)}${e.plan==='trial'&&e.trial_ends_at?' · Trial ends '+new Date(e.trial_ends_at).toLocaleDateString():''}</p></div><span class="plan-badge">${escapeHtml(e.plan==='legacy'?'FOUNDER':e.plan)}</span></div><div class="usage-grid"><div class="usage-box"><div><strong>Creators</strong><span>${e.creator_count} / ${cm??'∞'}</span></div><div class="usage-bar"><i style="width:${cm?cp:0}%"></i></div><small>${cm?Math.max(0,cm-e.creator_count)+' remaining':'Unlimited'}</small></div><div class="usage-box"><div><strong>Teams</strong><span>${e.team_count} / ${tm??'∞'}</span></div><div class="usage-bar"><i style="width:${tm?tp:0}%"></i></div><small>${tm?Math.max(0,tm-e.team_count)+' remaining':'Unlimited'}</small></div></div><div class="plan-features">${planFeature(e.battle_media,'Battle Media')}${planFeature(e.advanced_analytics,'Advanced analytics')}${planFeature(e.custom_branding,'Custom branding')}${planFeature(e.priority_support,'Priority support')}</div></div>`}
 function renderNetworkSettings(){
  const host=document.getElementById('network-settings-panel');if(!host)return;
  if(profile?.role!=='network_admin'){
@@ -2129,7 +2136,7 @@ function renderNetworkSettings(){
        </label>
      </div>
      <div class="network-readonly-grid">
-       <div class="stat"><small>CURRENT PLAN</small><strong>${escapeHtml(n.plan||'legacy')}</strong></div>
+       <div class="stat"><small>CURRENT PLAN</small><strong>${escapeHtml((n.plan||'legacy')==='legacy'?'Founder':n.plan)}</strong></div>
        <div class="stat"><small>NETWORK STATUS</small><strong>${escapeHtml(n.status||'active')}</strong></div>
      </div>
      ${renderPlanUsage()}${renderBillingPanel()}<div class="network-actions">
