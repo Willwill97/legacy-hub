@@ -1007,6 +1007,24 @@ document.addEventListener('visibilitychange',()=>{
    even when responsive .app rules declare display:block!important. */
 #app.hidden, #auth.hidden, #pending.hidden { display:none!important; }
 </style>
+
+<style>
+/* Phase 8.5.1: mobile login artwork fills the available screen width. */
+@media (max-width:950px){
+  #auth .cw-art-panel{
+    width:100%!important;
+    min-height:0!important;
+    max-height:none!important;
+    height:auto!important;
+    aspect-ratio: 4 / 5;
+    margin:0!important;
+  }
+  #auth .cw-art-image{
+    background-size:100% 100%!important;
+    background-position:center!important;
+  }
+}
+</style>
 </head><body>
 <div id="auth" class="login cw-login">
   <div class="cw-auth-layout">
